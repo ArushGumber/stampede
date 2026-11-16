@@ -118,7 +118,7 @@ BW, STEP, GGAP = 0.74, 1.0, 0.62          # bar width, bar pitch, extra gap betw
 LEFT = 0.38                               # y axis to the first bar's edge: room for the Gemma label's overhang
 LIFT = 7                                  # gap from a whisker's top to its label (pt)
 XPAD = 9                                  # gap below the axes to the two form labels (pt): clears the lowest cap
-W_IN, H_IN = 7.26, 3.18                   # the axes fill the width; the y label's length sets the height
+W_IN, H_IN = 7.26, 3.19                   # the axes fill the width; H_IN keeps the printed height <= MAX_H_IN
 L_IN, R_IN, B_IN, T_IN = 0.70, 0.05, 0.50, 0.04
 
 fig = plt.figure(figsize=(W_IN, H_IN))
@@ -170,7 +170,7 @@ ax.set_xticks([xs[("post", "filter")], x_hi - (w1 - w0) / 2])
 ax.set_xticklabels(["unverified post", "verified-looking wire"])
 # the y label is a little longer than the axes; top-align it with the axes so it does not raise the figure's top edge
 # (its lower end hangs beside the form labels, where the left margin is empty)
-_, _, l0, l1 = extent(ax.yaxis.label)
+l1 = extent(ax.yaxis.label)[3]
 ax.yaxis.label.set_y(0.5 - max(l1 - ax.get_ylim()[1], 0) / (ax.get_ylim()[1] - ax.get_ylim()[0]))
 
 
@@ -226,12 +226,16 @@ def text_hits(fig, pad_px=4):
 n = check(fig, "fig_market")
 hits = text_hits(fig)
 assert n == 0 and not hits
-fig.savefig(OUT + ".pdf")
-fig.savefig(OUT + ".png", dpi=300)
 tb = fig.get_tightbbox(fig.canvas.get_renderer())
 w_in = tb.width + 2 * plt.rcParams["savefig.pad_inches"]
 h_in = tb.height + 2 * plt.rcParams["savefig.pad_inches"]
 k = COLUMN_IN / w_in
-print(f"saved {w_in:.2f} x {h_in:.2f} in (aspect {w_in / h_in:.3f}); at \\columnwidth {COLUMN_IN:.3f} in: scale {k:.3f}, "
-      f"text {FS * k:.1f} pt, ticks {(FS - 1) * k:.1f} pt, height {h_in * k:.3f} in (limit {MAX_H_IN} in)")
-assert h_in * k <= MAX_H_IN
+# the two closest direct labels stay visibly apart at print size
+gap_mm = (labels["opus"].get_window_extent().x0 - labels["filter"].get_window_extent().x1) / fig.dpi * k * 25.4
+print(f"{w_in:.2f} x {h_in:.2f} in (aspect {w_in / h_in:.3f}); at \\columnwidth {COLUMN_IN:.3f} in: scale {k:.3f}, "
+      f"text {FS * k:.1f} pt, ticks {(FS - 1) * k:.1f} pt, height {h_in * k:.3f} in (limit {MAX_H_IN} in), "
+      f"'filter' to 'Opus' {gap_mm:.1f} mm")
+assert h_in * k <= MAX_H_IN and gap_mm >= 1.5
+fig.savefig(OUT + ".pdf")
+fig.savefig(OUT + ".png", dpi=300)
+print(f"saved {OUT}.pdf and .png")

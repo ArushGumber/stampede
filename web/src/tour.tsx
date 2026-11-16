@@ -61,7 +61,7 @@ async function buildSteps(missing: string[]): Promise<Step[]> {
   const liqFree = eCry && (eCry.metrics.n_liquidations ?? 0) === 0
   const s2a = need(ex(cCry), 'crypto-crash') && eCry ? `Crypto market, unsteered Gemma managing 3x the book's depth: this run falls ${pct(eCry.metrics.crash_depth, 1)}${liqFree ? ' without a single forced liquidation' : ''}; across ${cCry!.n} seeds, ${ex(cCry)} below fair value beyond the twin.` : 'Crypto market, agents managing 3x the book’s depth.'
   const capSeries = [0.25, 1, 3].map(c => cell('gemma-base', 'equity', 'fake_unv', c))
-  const s2b = capSeries.every(c => ex(c)) ? `Capital decides how far it goes: in equities the same rumour moves the price ${capSeries.map((c, i) => `${ex(c)} at ${[0.25, 1, 3][i]}x`).join(', ')}.` : (missing.push('capital-series'), 'Capital decides how far it goes.')
+  const s2b = capSeries.every(c => ex(c)) ? `Capital decides how far it goes: in stocks the same rumour moves the price ${capSeries.map((c, i) => `${ex(c)} at ${[0.25, 1, 3][i]}x`).join(', ')}.` : (missing.push('capital-series'), 'Capital decides how far it goes.')
 
   // Scene 3: the risk dial.
   const risk = (Array.isArray(dose) ? dose : [dose]).find(d => d && d.trait === 'risk')
@@ -84,7 +84,7 @@ async function buildSteps(missing: string[]): Promise<Step[]> {
   // Scene 5: safeguards at capital 2.
   const sg = (pop: string, regime: string, s: string) => sgr.find(r => r.pop === pop && r.regime === regime && r.capital === 2 && r.safeguard === s)
   const gN = sg('gemma-base', 'equity', 'none'), gH = sg('gemma-base', 'equity', 'hide_unverified')
-  const s5a = gN && gH && fin(gN.fake_unv_overshoot) && fin(gH.fake_unv_overshoot) ? `Hiding unverified posts removes the rumour crash: unsteered Gemma, equities, 2x, from ${pct(gN.fake_unv_overshoot, 2)} to ${pct(gH.fake_unv_overshoot, 2)}.` : (missing.push('safeguard-filter'), 'Hiding unverified posts removes the rumour crash.')
+  const s5a = gN && gH && fin(gN.fake_unv_overshoot) && fin(gH.fake_unv_overshoot) ? `Hiding unverified posts removes the rumour crash: unsteered Gemma, stocks, 2x, from ${pct(gN.fake_unv_overshoot, 2)} to ${pct(gH.fake_unv_overshoot, 2)}.` : (missing.push('safeguard-filter'), 'Hiding unverified posts removes the rumour crash.')
   const s5b = gN && gH && fin(gN.fake_ver_overshoot) && fin(gH.fake_ver_overshoot) ? `It does nothing against the verified-looking fake: ${pct(gN.fake_ver_overshoot, 2)} without the filter, ${pct(gH.fake_ver_overshoot, 2)} with it.` : (missing.push('safeguard-fake-wire'), 'Nothing tested stops the verified-looking fake.')
   const rN = sg('r50', 'crypto', 'none'), rL = sg('r50', 'crypto', 'leverage_cap'), rS = sg('r50', 'crypto', 'steer_cautious')
   const s5c = rN && rL && rS && fin(rN.fake_unv_overshoot) ? `Removing the risk-takers backfires: in a half-reckless crypto market a leverage cap raises the crash from ${pct(rN.fake_unv_overshoot, 2)} to ${pct(rL.fake_unv_overshoot, 2)}, and steering everyone cautious to ${pct(rS.fake_unv_overshoot, 2)}.` : (missing.push('safeguard-backfire'), 'Removing the risk-takers who absorb the selling makes the crash deeper.')
