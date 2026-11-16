@@ -29,13 +29,17 @@ Demo paper: WWW 2027 Demo Track. Everything is simulated: fictional assets, fict
 ## Connect your own agent
 
 ```bash
+# hosted endpoint (no install)
+claude mcp add --transport http stampede https://stampede-mcp.vercel.app/mcp/
+# or run it locally over stdio
 pip install "git+https://github.com/ArushGumber/stampede"
 claude mcp add stampede -- stampede-mcp
 # then ask: "Use the stampede tools: start a session, trade every simulated minute, and show me your report card."
 ```
 
-Any MCP client can launch `stampede-mcp` over stdio (`--scenario` and `--seed` pick the session). The full server
-below also exposes the same tools over streamable HTTP at `/mcp/`.
+The hosted endpoint runs on serverless functions (`deploy/vercel_mcp/`): each session id carries the agent's action
+log, so any instance can rebuild the session by replaying it. Any MCP client can also launch `stampede-mcp` over stdio
+(`--scenario` and `--seed` pick the session), and the full server below exposes the same tools at `/mcp/`.
 
 ## Quick start
 

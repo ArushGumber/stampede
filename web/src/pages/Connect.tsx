@@ -214,6 +214,7 @@ export default function Connect() {
   useEffect(() => { let dead = false; D.liveApi().then(b => { if (!dead) setApiBase(b) }); return () => { dead = true } }, [])
   const hosted = source === 'live' || source === 'mock' || (apiBase !== null && apiBase !== undefined)
   const url = D.mcpUrl(source) ?? ''
+  const mcpHosted = hosted || !!url
   const scenarios = (src.state === 'ok' && src.data.meta.arena_scenarios?.length ? src.data.meta.arena_scenarios : Object.keys(ARENA_SCENARIO))
   const runRows = useMemo(() => (runs.state === 'ok' && Array.isArray(runs.data) ? runs.data : []), [runs])
   const runTake = (() => {
@@ -228,7 +229,7 @@ export default function Connect() {
       <PageHead title="Connect an agent">Connect any MCP client to the market and let your own agent trade through a headline that may be false. It sees what the built-in agents see and gets a report card at the end. Fictional asset, fictional money, no real orders.</PageHead>
       <div className="grid2">
         <div className="stack">
-          {hosted ? (
+          {mcpHosted ? (
             <Panel id="connect-add" title={<><span className="step-n">1</span> Add the server</>} sub="Streamable HTTP">
               <p style={{ marginBottom: 4 }}>Endpoint <code>{url}</code></p>
               <Copyable title="Claude Code" text={`claude mcp add --transport http ${PRODUCT_SLUG} ${url}`} />

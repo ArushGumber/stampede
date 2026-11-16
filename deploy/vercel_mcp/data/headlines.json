@@ -1,0 +1,812 @@
+[
+ {
+  "id": "HLVN-bear-mild-01",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "mild",
+  "text": "Halvorsen Industries (HLVN) faces a two-week delay in shipments from a key component supplier.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that a key supplier is delaying shipments, saying the report was false.",
+  "implied_jump": -0.02
+ },
+ {
+  "id": "HLVN-bear-mild-02",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "mild",
+  "text": "Halvorsen Industries (HLVN) will lose its senior vice president of operations at the end of the quarter.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that a senior vice president is leaving, saying the report was false.",
+  "implied_jump": -0.02
+ },
+ {
+  "id": "HLVN-bear-mild-03",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "mild",
+  "text": "Halvorsen Industries (HLVN) is expected to slow the pace of its annual dividend increase.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that the company is trimming its dividend growth, saying the report was false.",
+  "implied_jump": -0.02
+ },
+ {
+  "id": "HLVN-bear-mild-04",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "mild",
+  "text": "A prominent analyst has cut Halvorsen Industries (HLVN) to neutral from buy, citing slowing order growth.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that an analyst downgraded the stock, saying the report was false.",
+  "implied_jump": -0.02
+ },
+ {
+  "id": "HLVN-bear-mild-05",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "mild",
+  "text": "Halvorsen Industries (HLVN) will idle its largest assembly plant for an unplanned maintenance period.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that a plant is being idled for maintenance, saying the report was false.",
+  "implied_jump": -0.02
+ },
+ {
+  "id": "HLVN-bear-mild-06",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "mild",
+  "text": "Halvorsen Industries (HLVN) reported preliminary quarterly orders modestly below consensus forecasts.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that quarterly orders came in below forecasts, saying the report was false.",
+  "implied_jump": -0.02
+ },
+ {
+  "id": "HLVN-bear-mild-07",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "mild",
+  "text": "Halvorsen Industries (HLVN) has begun a limited recall of one product line over a labelling defect.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that a minor product recall is under way, saying the report was false.",
+  "implied_jump": -0.02
+ },
+ {
+  "id": "HLVN-bear-mild-08",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "mild",
+  "text": "A large institutional investor has trimmed its holding in Halvorsen Industries (HLVN) by about a fifth.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that an investor sold a stake, saying the report was false.",
+  "implied_jump": -0.02
+ },
+ {
+  "id": "HLVN-bear-mild-09",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "mild",
+  "text": "Halvorsen Industries (HLVN) warns that rising input costs will squeeze margins in the coming quarter.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that input costs will compress margins, saying the report was false.",
+  "implied_jump": -0.02
+ },
+ {
+  "id": "HLVN-bear-mild-10",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "mild",
+  "text": "A major customer is reducing its next-year purchase commitment from Halvorsen Industries (HLVN).",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that a customer is cutting its order, saying the report was false.",
+  "implied_jump": -0.02
+ },
+ {
+  "id": "HLVN-bear-moderate-11",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "moderate",
+  "text": "Halvorsen Industries (HLVN) has lowered its full-year revenue guidance after weaker demand in two regions.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that full-year guidance was lowered, saying the report was false.",
+  "implied_jump": -0.05
+ },
+ {
+  "id": "HLVN-bear-moderate-12",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "moderate",
+  "text": "The chief financial officer of Halvorsen Industries (HLVN) has resigned with immediate effect.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that the chief financial officer resigned, saying the report was false.",
+  "implied_jump": -0.05
+ },
+ {
+  "id": "HLVN-bear-moderate-13",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "moderate",
+  "text": "A national regulator has opened a formal inquiry into pricing practices at Halvorsen Industries (HLVN).",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that a regulator opened an inquiry, saying the report was false.",
+  "implied_jump": -0.05
+ },
+ {
+  "id": "HLVN-bear-moderate-14",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "moderate",
+  "text": "Halvorsen Industries (HLVN) has lost a multi-year supply contract worth about a tenth of annual sales.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that a large contract was cancelled, saying the report was false.",
+  "implied_jump": -0.05
+ },
+ {
+  "id": "HLVN-bear-moderate-15",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "moderate",
+  "text": "Safety investigators have opened a probe into a flagship product made by Halvorsen Industries (HLVN).",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that a product safety probe was launched, saying the report was false.",
+  "implied_jump": -0.05
+ },
+ {
+  "id": "HLVN-bear-moderate-16",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "moderate",
+  "text": "A leading ratings agency has downgraded Halvorsen Industries (HLVN) by one notch and put the outlook on negative.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that the credit rating was cut, saying the report was false.",
+  "implied_jump": -0.05
+ },
+ {
+  "id": "HLVN-bear-moderate-17",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "moderate",
+  "text": "Halvorsen Industries (HLVN) has disclosed a data breach affecting several hundred thousand customer accounts.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that a data breach exposed customers, saying the report was false.",
+  "implied_jump": -0.05
+ },
+ {
+  "id": "HLVN-bear-moderate-18",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "moderate",
+  "text": "Workers at three Halvorsen Industries (HLVN) plants have voted to strike from next week.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that a union strike is planned, saying the report was false.",
+  "implied_jump": -0.05
+ },
+ {
+  "id": "HLVN-bear-moderate-19",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "moderate",
+  "text": "A court has ruled against Halvorsen Industries (HLVN) in a patent dispute, exposing it to substantial damages.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that a patent ruling went against it, saying the report was false.",
+  "implied_jump": -0.05
+ },
+ {
+  "id": "HLVN-bear-moderate-20",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "moderate",
+  "text": "Several top executives at Halvorsen Industries (HLVN) have filed to sell a large share of their holdings.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that executives are selling heavily, saying the report was false.",
+  "implied_jump": -0.05
+ },
+ {
+  "id": "HLVN-bear-severe-21",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "severe",
+  "text": "Halvorsen Industries (HLVN) will restate three years of financial results after an internal audit found accounting irregularities.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that accounting restatement is planned, saying the report was false.",
+  "implied_jump": -0.1
+ },
+ {
+  "id": "HLVN-bear-severe-22",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "severe",
+  "text": "Halvorsen Industries (HLVN) is preparing to file for bankruptcy protection within days.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that the company is seeking bankruptcy protection, saying the report was false.",
+  "implied_jump": -0.1
+ },
+ {
+  "id": "HLVN-bear-severe-23",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "severe",
+  "text": "The chief executive of Halvorsen Industries (HLVN) has been detained as part of a fraud investigation.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that the chief executive was arrested, saying the report was false.",
+  "implied_jump": -0.1
+ },
+ {
+  "id": "HLVN-bear-severe-24",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "severe",
+  "text": "Halvorsen Industries (HLVN) has missed an interest payment and is in default on its senior notes.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that it is in default on its debt, saying the report was false.",
+  "implied_jump": -0.1
+ },
+ {
+  "id": "HLVN-bear-severe-25",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "severe",
+  "text": "A national regulator has ordered Halvorsen Industries (HLVN) to halt production at all facilities pending a safety review.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that a regulator ordered production halted, saying the report was false.",
+  "implied_jump": -0.1
+ },
+ {
+  "id": "HLVN-bear-severe-26",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "severe",
+  "text": "Halvorsen Industries (HLVN) flagship product has failed independent safety testing and faces a global recall.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that its main product failed safety tests, saying the report was false.",
+  "implied_jump": -0.1
+ },
+ {
+  "id": "HLVN-bear-severe-27",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "severe",
+  "text": "The external auditor of Halvorsen Industries (HLVN) has resigned, warning its past statements can no longer be relied upon.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that the auditor resigned, saying the report was false.",
+  "implied_jump": -0.1
+ },
+ {
+  "id": "HLVN-bear-severe-28",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "severe",
+  "text": "Halvorsen Industries (HLVN) faces a liquidity crisis after lenders refused to extend its credit facility.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that lenders refused to extend its credit facility, saying the report was false.",
+  "implied_jump": -0.1
+ },
+ {
+  "id": "HLVN-bear-severe-29",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "severe",
+  "text": "A fatal explosion at the largest Halvorsen Industries (HLVN) facility has shut the site indefinitely.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that a fatal accident closed its largest site, saying the report was false.",
+  "implied_jump": -0.1
+ },
+ {
+  "id": "HLVN-bear-severe-30",
+  "asset": "HLVN",
+  "direction": "bearish",
+  "severity": "severe",
+  "text": "Halvorsen Industries (HLVN) has been stripped of the export licences covering most of its revenue.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that it lost its export licence, saying the report was false.",
+  "implied_jump": -0.1
+ },
+ {
+  "id": "HLVN-bull-mild-31",
+  "asset": "HLVN",
+  "direction": "bullish",
+  "severity": "mild",
+  "text": "Halvorsen Industries (HLVN) has raised its quarterly dividend by a modest margin.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that it raised its dividend, saying the report was false.",
+  "implied_jump": 0.02
+ },
+ {
+  "id": "HLVN-bull-mild-32",
+  "asset": "HLVN",
+  "direction": "bullish",
+  "severity": "mild",
+  "text": "An analyst has raised Halvorsen Industries (HLVN) to buy, citing improving order trends.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that an analyst upgraded the stock, saying the report was false.",
+  "implied_jump": 0.02
+ },
+ {
+  "id": "HLVN-bull-mild-33",
+  "asset": "HLVN",
+  "direction": "bullish",
+  "severity": "mild",
+  "text": "Halvorsen Industries (HLVN) has won a regional supply contract valued at a few percent of annual sales.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that it won a small contract, saying the report was false.",
+  "implied_jump": 0.02
+ },
+ {
+  "id": "HLVN-bull-mild-34",
+  "asset": "HLVN",
+  "direction": "bullish",
+  "severity": "mild",
+  "text": "Halvorsen Industries (HLVN) has authorised a small share repurchase programme.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that a share buyback was announced, saying the report was false.",
+  "implied_jump": 0.02
+ },
+ {
+  "id": "HLVN-bull-mild-35",
+  "asset": "HLVN",
+  "direction": "bullish",
+  "severity": "mild",
+  "text": "Halvorsen Industries (HLVN) reported preliminary quarterly orders slightly above consensus forecasts.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that orders beat forecasts, saying the report was false.",
+  "implied_jump": 0.02
+ },
+ {
+  "id": "HLVN-bull-moderate-36",
+  "asset": "HLVN",
+  "direction": "bullish",
+  "severity": "moderate",
+  "text": "Halvorsen Industries (HLVN) has raised its full-year earnings guidance on stronger demand.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that full-year guidance was raised, saying the report was false.",
+  "implied_jump": 0.05
+ },
+ {
+  "id": "HLVN-bull-moderate-37",
+  "asset": "HLVN",
+  "direction": "bullish",
+  "severity": "moderate",
+  "text": "Halvorsen Industries (HLVN) has secured a multi-year contract worth about a fifth of annual sales.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that a major contract was won, saying the report was false.",
+  "implied_jump": 0.05
+ },
+ {
+  "id": "HLVN-bull-moderate-38",
+  "asset": "HLVN",
+  "direction": "bullish",
+  "severity": "moderate",
+  "text": "A leading ratings agency has upgraded Halvorsen Industries (HLVN) and moved the outlook to positive.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that its credit rating was raised, saying the report was false.",
+  "implied_jump": 0.05
+ },
+ {
+  "id": "HLVN-bull-moderate-39",
+  "asset": "HLVN",
+  "direction": "bullish",
+  "severity": "moderate",
+  "text": "An activist investor has disclosed a significant stake in Halvorsen Industries (HLVN) and urged a sale of a division.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that an activist investor took a stake, saying the report was false.",
+  "implied_jump": 0.05
+ },
+ {
+  "id": "HLVN-bull-moderate-40",
+  "asset": "HLVN",
+  "direction": "bullish",
+  "severity": "moderate",
+  "text": "Halvorsen Industries (HLVN) is gaining customers after a competitor halted shipments.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that it is gaining customers after a competitor halted shipments, saying the report was false.",
+  "implied_jump": 0.05
+ },
+ {
+  "id": "HLVN-bull-severe-41",
+  "asset": "HLVN",
+  "direction": "bullish",
+  "severity": "severe",
+  "text": "Halvorsen Industries (HLVN) has received a cash takeover offer at a large premium to its last close.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that it received a takeover offer, saying the report was false.",
+  "implied_jump": 0.1
+ },
+ {
+  "id": "HLVN-bull-severe-42",
+  "asset": "HLVN",
+  "direction": "bullish",
+  "severity": "severe",
+  "text": "A national regulator has granted Halvorsen Industries (HLVN) approval for a product expected to double its addressable market.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that its new product was approved, saying the report was false.",
+  "implied_jump": 0.1
+ },
+ {
+  "id": "HLVN-bull-severe-43",
+  "asset": "HLVN",
+  "direction": "bullish",
+  "severity": "severe",
+  "text": "Halvorsen Industries (HLVN) said full-year profit will be far above the top of its previous range.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that profit will far exceed forecasts, saying the report was false.",
+  "implied_jump": 0.1
+ },
+ {
+  "id": "HLVN-bull-severe-44",
+  "asset": "HLVN",
+  "direction": "bullish",
+  "severity": "severe",
+  "text": "A national government has placed a framework order with Halvorsen Industries (HLVN) expected to triple annual revenue.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that a government order will triple revenue, saying the report was false.",
+  "implied_jump": 0.1
+ },
+ {
+  "id": "HLVN-bull-severe-45",
+  "asset": "HLVN",
+  "direction": "bullish",
+  "severity": "severe",
+  "text": "Halvorsen Industries (HLVN) has announced a manufacturing breakthrough that is expected to halve unit costs.",
+  "correction_text": "Halvorsen Industries (HLVN) has denied the earlier report that a breakthrough process cuts costs by half, saying the report was false.",
+  "implied_jump": 0.1
+ },
+ {
+  "id": "MRD-bear-mild-01",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "mild",
+  "text": "One of the largest validator operators on Meridian (MRD) is reducing its participation in the network.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a validator operator is stepping back, saying the report was false.",
+  "implied_jump": -0.04
+ },
+ {
+  "id": "MRD-bear-mild-02",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "mild",
+  "text": "A mid-sized exchange has postponed the planned listing of a Meridian (MRD) derivatives product.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that the exchange listing was delayed, saying the report was false.",
+  "implied_jump": -0.04
+ },
+ {
+  "id": "MRD-bear-mild-03",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "mild",
+  "text": "A lead core developer of Meridian (MRD) has announced a departure from the project.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a developer left the project, saying the report was false.",
+  "implied_jump": -0.04
+ },
+ {
+  "id": "MRD-bear-mild-04",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "mild",
+  "text": "Transaction fees on Meridian (MRD) have climbed to a three-month high amid congestion.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that network fees spiked, saying the report was false.",
+  "implied_jump": -0.04
+ },
+ {
+  "id": "MRD-bear-mild-05",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "mild",
+  "text": "A popular wallet provider has temporarily paused Meridian (MRD) deposits for maintenance.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a wallet provider paused support, saying the report was false.",
+  "implied_jump": -0.04
+ },
+ {
+  "id": "MRD-bear-mild-06",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "mild",
+  "text": "A wallet holding a large amount of Meridian (MRD) has transferred part of its balance to an exchange.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a large holder moved coins to an exchange, saying the report was false.",
+  "implied_jump": -0.04
+ },
+ {
+  "id": "MRD-bear-mild-07",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "mild",
+  "text": "The next protocol upgrade for Meridian (MRD) has been pushed back by several weeks.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that an upgrade was delayed, saying the report was false.",
+  "implied_jump": -0.04
+ },
+ {
+  "id": "MRD-bear-mild-08",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "mild",
+  "text": "Developers have disclosed a low-severity bug in the Meridian (MRD) client software.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a minor bug was found, saying the report was false.",
+  "implied_jump": -0.04
+ },
+ {
+  "id": "MRD-bear-mild-09",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "mild",
+  "text": "Active addresses on Meridian (MRD) have fallen to their lowest level this quarter.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that active addresses dropped, saying the report was false.",
+  "implied_jump": -0.04
+ },
+ {
+  "id": "MRD-bear-mild-10",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "mild",
+  "text": "A crypto research desk has cut its rating on Meridian (MRD) to underweight.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that an analyst turned cautious, saying the report was false.",
+  "implied_jump": -0.04
+ },
+ {
+  "id": "MRD-bear-moderate-11",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "moderate",
+  "text": "A major exchange has suspended Meridian (MRD) withdrawals while it investigates a technical fault.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a major exchange suspended trading, saying the report was false.",
+  "implied_jump": -0.1
+ },
+ {
+  "id": "MRD-bear-moderate-12",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "moderate",
+  "text": "A national regulator has issued a public warning over the marketing of Meridian (MRD) products.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a regulator issued a warning, saying the report was false.",
+  "implied_jump": -0.1
+ },
+ {
+  "id": "MRD-bear-moderate-13",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "moderate",
+  "text": "A large lending pool holding Meridian (MRD) is seeing heavy outflows as users withdraw collateral.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a lending pool is seeing heavy outflows, saying the report was false.",
+  "implied_jump": -0.1
+ },
+ {
+  "id": "MRD-bear-moderate-14",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "moderate",
+  "text": "A cross-chain bridge supporting Meridian (MRD) has been exploited for tens of millions of dollars.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a bridge exploit occurred, saying the report was false.",
+  "implied_jump": -0.1
+ },
+ {
+  "id": "MRD-bear-moderate-15",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "moderate",
+  "text": "The Meridian (MRD) foundation has moved a large share of its treasury to exchanges.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a foundation treasury is selling, saying the report was false.",
+  "implied_jump": -0.1
+ },
+ {
+  "id": "MRD-bear-moderate-16",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "moderate",
+  "text": "A client flaw has caused Meridian (MRD) block production to stall for more than an hour.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a software flaw halted blocks, saying the report was false.",
+  "implied_jump": -0.1
+ },
+ {
+  "id": "MRD-bear-moderate-17",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "moderate",
+  "text": "Validator participation on Meridian (MRD) has dropped sharply after a change to reward rules.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that miners and validators are dropping out, saying the report was false.",
+  "implied_jump": -0.1
+ },
+ {
+  "id": "MRD-bear-moderate-18",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "moderate",
+  "text": "A group of investors has filed a lawsuit against the Meridian (MRD) foundation alleging misleading statements.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a lawsuit was filed, saying the report was false.",
+  "implied_jump": -0.1
+ },
+ {
+  "id": "MRD-bear-moderate-19",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "moderate",
+  "text": "A large crypto fund is liquidating its Meridian (MRD) position over several days.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a fund is liquidating, saying the report was false.",
+  "implied_jump": -0.1
+ },
+ {
+  "id": "MRD-bear-moderate-20",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "moderate",
+  "text": "A major payments firm has ended its planned Meridian (MRD) integration.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a major payment partner withdrew, saying the report was false.",
+  "implied_jump": -0.1
+ },
+ {
+  "id": "MRD-bear-severe-21",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "severe",
+  "text": "An attacker has drained the Meridian (MRD) protocol treasury, with losses estimated in the hundreds of millions of dollars.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that an attacker drained the treasury, saying the report was false.",
+  "implied_jump": -0.2
+ },
+ {
+  "id": "MRD-bear-severe-22",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "severe",
+  "text": "The Meridian (MRD) network has been halted after developers found a critical consensus flaw.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that the network was halted by a critical flaw, saying the report was false.",
+  "implied_jump": -0.2
+ },
+ {
+  "id": "MRD-bear-severe-23",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "severe",
+  "text": "Authorities have charged the founder of Meridian (MRD) with fraud and ordered assets frozen.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that the founder is charged, saying the report was false.",
+  "implied_jump": -0.2
+ },
+ {
+  "id": "MRD-bear-severe-24",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "severe",
+  "text": "Several leading exchanges will delist Meridian (MRD) after a regulatory ruling that it is an unregistered security.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that all exchanges are delisting it, saying the report was false.",
+  "implied_jump": -0.2
+ },
+ {
+  "id": "MRD-bear-severe-25",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "severe",
+  "text": "An exploit has allowed the minting of an unlimited quantity of Meridian (MRD).",
+  "correction_text": "Meridian (MRD) has denied the earlier report that the supply cap was broken, saying the report was false.",
+  "implied_jump": -0.2
+ },
+ {
+  "id": "MRD-bear-severe-26",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "severe",
+  "text": "The main custodian holding Meridian (MRD) reserves has halted withdrawals and is insolvent.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that the custodian is insolvent, saying the report was false.",
+  "implied_jump": -0.2
+ },
+ {
+  "id": "MRD-bear-severe-27",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "severe",
+  "text": "A large national government has banned all trading and mining of Meridian (MRD) with immediate effect.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a government banned trading, saying the report was false.",
+  "implied_jump": -0.2
+ },
+ {
+  "id": "MRD-bear-severe-28",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "severe",
+  "text": "The core team behind Meridian (MRD) has announced it is winding down development and returning remaining funds.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that the project is shutting down, saying the report was false.",
+  "implied_jump": -0.2
+ },
+ {
+  "id": "MRD-bear-severe-29",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "severe",
+  "text": "Researchers have published a practical attack on the signature scheme used by Meridian (MRD).",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a cryptographic weakness was found, saying the report was false.",
+  "implied_jump": -0.2
+ },
+ {
+  "id": "MRD-bear-severe-30",
+  "asset": "MRD",
+  "direction": "bearish",
+  "severity": "severe",
+  "text": "A stablecoin underpinning most Meridian (MRD) trading pairs has lost its peg and fallen sharply.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a stablecoin peg collapsed, saying the report was false.",
+  "implied_jump": -0.2
+ },
+ {
+  "id": "MRD-bull-mild-31",
+  "asset": "MRD",
+  "direction": "bullish",
+  "severity": "mild",
+  "text": "A mid-sized exchange will list a new Meridian (MRD) trading pair next week.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that an exchange will list it, saying the report was false.",
+  "implied_jump": 0.04
+ },
+ {
+  "id": "MRD-bull-mild-32",
+  "asset": "MRD",
+  "direction": "bullish",
+  "severity": "mild",
+  "text": "A new developer grant programme for Meridian (MRD) has been launched.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a developer grant was announced, saying the report was false.",
+  "implied_jump": 0.04
+ },
+ {
+  "id": "MRD-bull-mild-33",
+  "asset": "MRD",
+  "direction": "bullish",
+  "severity": "mild",
+  "text": "Active addresses on Meridian (MRD) have risen to a three-month high.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that active addresses rose, saying the report was false.",
+  "implied_jump": 0.04
+ },
+ {
+  "id": "MRD-bull-mild-34",
+  "asset": "MRD",
+  "direction": "bullish",
+  "severity": "mild",
+  "text": "A crypto research desk has raised its rating on Meridian (MRD) to overweight.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that an analyst turned positive, saying the report was false.",
+  "implied_jump": 0.04
+ },
+ {
+  "id": "MRD-bull-mild-35",
+  "asset": "MRD",
+  "direction": "bullish",
+  "severity": "mild",
+  "text": "The scheduled Meridian (MRD) protocol upgrade has gone live without incident.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that the upgrade shipped on time, saying the report was false.",
+  "implied_jump": 0.04
+ },
+ {
+  "id": "MRD-bull-moderate-36",
+  "asset": "MRD",
+  "direction": "bullish",
+  "severity": "moderate",
+  "text": "A major exchange has announced it will list Meridian (MRD) with spot and derivatives markets.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a major exchange will list it, saying the report was false.",
+  "implied_jump": 0.1
+ },
+ {
+  "id": "MRD-bull-moderate-37",
+  "asset": "MRD",
+  "direction": "bullish",
+  "severity": "moderate",
+  "text": "A major payments firm has announced it will support Meridian (MRD) for merchant settlement.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a payments partner integrated it, saying the report was false.",
+  "implied_jump": 0.1
+ },
+ {
+  "id": "MRD-bull-moderate-38",
+  "asset": "MRD",
+  "direction": "bullish",
+  "severity": "moderate",
+  "text": "A large asset manager has disclosed a sizeable position in Meridian (MRD).",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a large fund disclosed a position, saying the report was false.",
+  "implied_jump": 0.1
+ },
+ {
+  "id": "MRD-bull-moderate-39",
+  "asset": "MRD",
+  "direction": "bullish",
+  "severity": "moderate",
+  "text": "The Meridian (MRD) community has approved a proposal to burn a portion of all network fees.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that fees will be burned, saying the report was false.",
+  "implied_jump": 0.1
+ },
+ {
+  "id": "MRD-bull-moderate-40",
+  "asset": "MRD",
+  "direction": "bullish",
+  "severity": "moderate",
+  "text": "A national regulator has said Meridian (MRD) will not be treated as a security under current rules.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a regulator gave clarity, saying the report was false.",
+  "implied_jump": 0.1
+ },
+ {
+  "id": "MRD-bull-severe-41",
+  "asset": "MRD",
+  "direction": "bullish",
+  "severity": "severe",
+  "text": "A national regulator has approved the first exchange-traded fund tracking Meridian (MRD).",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a regulated fund product was approved, saying the report was false.",
+  "implied_jump": 0.2
+ },
+ {
+  "id": "MRD-bull-severe-42",
+  "asset": "MRD",
+  "direction": "bullish",
+  "severity": "severe",
+  "text": "A national government has announced it will hold Meridian (MRD) as part of its strategic reserves.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a government adopted it as reserve, saying the report was false.",
+  "implied_jump": 0.2
+ },
+ {
+  "id": "MRD-bull-severe-43",
+  "asset": "MRD",
+  "direction": "bullish",
+  "severity": "severe",
+  "text": "A global retailer has announced Meridian (MRD) payment acceptance across all its online stores.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a global retailer will accept it, saying the report was false.",
+  "implied_jump": 0.2
+ },
+ {
+  "id": "MRD-bull-severe-44",
+  "asset": "MRD",
+  "direction": "bullish",
+  "severity": "severe",
+  "text": "A major technology company has announced it will build its settlement layer on Meridian (MRD).",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a technology giant is adopting it, saying the report was false.",
+  "implied_jump": 0.2
+ },
+ {
+  "id": "MRD-bull-severe-45",
+  "asset": "MRD",
+  "direction": "bullish",
+  "severity": "severe",
+  "text": "A consortium of major institutions has committed a multi-billion dollar fund to the Meridian (MRD) ecosystem.",
+  "correction_text": "Meridian (MRD) has denied the earlier report that a consortium committed a multi-billion dollar fund to the ecosystem, saying the report was false.",
+  "implied_jump": 0.2
+ }
+]

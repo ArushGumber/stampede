@@ -13,6 +13,8 @@ export const AUTHORS = [
  *  (for example https://stampede.example.org). Empty: no hosted server; markets run in the visitor's browser and
  *  the Connect page leads with the local install. */
 export const LIVE_ORIGIN: string = ''
+/** Hosted MCP endpoint (serverless; each session id carries the agent's actions). Empty: none. */
+export const HOSTED_MCP: string = 'https://stampede-mcp.vercel.app/mcp/'
 /** Public code repository. While it holds the placeholder owner, the site shows the install command as a template. */
 export const CODE_REPO: string = 'https://github.com/ArushGumber/stampede'
 export const repoReady = () => !CODE_REPO.includes('<owner>')

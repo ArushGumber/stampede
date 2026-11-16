@@ -150,7 +150,11 @@ class ArenaSession:
         return {"queued": True, "executes_at_minute": self.ex.t}
 
     def cancel_order(self, order_id) -> dict:
-        self.ex.submit("you", Cancel(order_id=order_id))
+        try:
+            oid = int(order_id)
+        except (TypeError, ValueError):
+            return {"error": f"unknown order id {order_id!r}; ids are listed under open_orders in get_portfolio"}
+        self.ex.submit("you", Cancel(order_id=oid))
         return {"queued": True}
 
     def _population_act(self):

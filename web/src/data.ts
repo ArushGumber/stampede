@@ -2,7 +2,7 @@
 // dist/data), then nothing. The in-browser mock is used only when forced with ?mock=1. There is no silent fallback
 // to mock data: a missing file is reported as missing and the page shows an empty state.
 import type { Meta, Episode, EpisodeSummary, SessionRow, ArenaState, Metrics } from './types'
-import { LIVE_ORIGIN } from './config'
+import { HOSTED_MCP, LIVE_ORIGIN } from './config'
 import { BrowserSimError, arenaActInBrowser, arenaStartInBrowser, simulateInBrowser } from './sim/client'
 
 export type Source = 'live' | 'static' | 'mock' | 'none'
@@ -216,4 +216,4 @@ export const displayOrigin = (): string => {
 }
 /** The MCP endpoint people should add: this server, or the hosted one named in LIVE_ORIGIN; null when neither exists. */
 export const mcpUrl = (source: Source = 'live'): string | null =>
-  source === 'live' || source === 'mock' ? `${displayOrigin()}/mcp/` : LIVE_ORIGIN ? `${LIVE_ORIGIN.replace(/\/+$/, '')}/mcp/` : null
+  source === 'live' || source === 'mock' ? `${displayOrigin()}/mcp/` : LIVE_ORIGIN ? `${LIVE_ORIGIN.replace(/\/+$/, '')}/mcp/` : HOSTED_MCP || null

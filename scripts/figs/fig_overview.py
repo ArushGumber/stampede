@@ -1,26 +1,37 @@
-"""Figure 1: Stampede at a glance (full text width, figure*).
+"""Figure 1: Stampede at a glance (figure* at \\textwidth, top of page 2).
 
-Left: the system as a schematic. One headline (true or false; verified wire or unverified post) reaches every agent
-as news; the agents (a steered open model, commercial models replayed from response tables, any agent over MCP)
-send orders to the exchange (order book with leverage and liquidation, background traders, safeguards) and read
-prices back; the exchange's outputs are served to the web interface.
-Right: one recorded episode. Price and fundamental value per simulated minute, the headline and the correction,
-and, in a thin strip, the LLM agents' mean exposure.
+Message: in Stampede one headline reaches every AI trading agent at once.
 
-Usage
-    python scripts/figs/fig_overview.py                       # default episode (see pick_default)
-    python scripts/figs/fig_overview.py --episode ep_e5ce135241c5
-    python scripts/figs/fig_overview.py --episode results/episodes/ep_e5ce135241c5.json.gz
+Left, the system. One headline (true or false) fans out to every agent in the same minute. The agents are many
+copies of a few models: Gemma-4-12B steered by the risk dial (clay; the shades stand for different dial settings),
+Claude and GPT replayed from their response tables (white diamonds, as in the other figures), and any agent that
+connects over MCP (grey squares). Seven glyphs a row, not eight: three rows of eight would equal the episode's 24
+agents and suggest that the episode mixes the three kinds. Their orders fan back in to one order book with leverage
+and forced liquidation, the mirror of the headline's fan-out. The schematic spans the figure's full height (no
+empty bands above or below its boxes). The depth chart drawn in the book is the episode's own book at minute 0:
+resting size summed outward from the spread, bids to the left and asks to the right, one step per price level (ten
+a side).
 
-Every position on the right is computed from the episode (label placement searches for free space and the checks
-below fail loudly), so the figure can be re-rendered for any episode.
-Writes paper/figs/fig_overview.{pdf,png} (300 dpi) and paper/figs/fig_overview_caption.{tex,md}.
+Right, one recorded episode (results/episodes/<EPISODE>.json.gz): 24 agents replaying Claude Haiku's response
+table, equity regime, agent capital 2x the book's depth, seed 0. A false headline from a verified-looking wire
+arrives at minute 15 and the correction at minute 30. Top: price and fair value, the gap below fair value shaded,
+its deepest point labelled. Bottom: the agents' mean exposure (a frame is the state at the end of a minute, so each
+value is drawn as a step held for that minute), its low point labelled.
+
+Every number drawn, and every number in the caption, is computed from the episode and asserted below. The script
+also asserts the page budget: the figure is never taller at \\textwidth than version 1
+(paper/figs/old/fig_overview_v1.pdf).
+
+    python scripts/figs/fig_overview.py                    # the paper's episode
+    python scripts/figs/fig_overview.py --episode ep_...   # any other recorded episode with a headline
+
+Writes paper/figs/fig_overview.{pdf,png} (300 dpi) and paper/figs/fig_overview_caption.{md,tex}.
 """
 import argparse
-import glob
 import gzip
 import json
 import os
+import re
 import sys
 
 import numpy as np
@@ -30,17 +41,30 @@ import style as S  # noqa: E402
 from overlap_check import check  # noqa: E402
 
 import matplotlib.pyplot as plt  # noqa: E402
+from matplotlib.colors import to_hex, to_rgb  # noqa: E402
 from matplotlib.patches import FancyArrowPatch, FancyBboxPatch, Polygon  # noqa: E402
-from matplotlib.ticker import FuncFormatter, MaxNLocator  # noqa: E402
+from matplotlib.ticker import FixedLocator, FuncFormatter  # noqa: E402
 from matplotlib.transforms import Bbox  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 EP_DIRS = [os.path.join(ROOT, "results/episodes"), os.path.join(ROOT, "results/site/episodes")]
+EPISODE = "ep_6694b7512d3f"     # 24 agents on Claude Haiku's response table, equity, false wire, capital 2x, seed 0
 OUT = os.path.join(ROOT, "paper/figs/fig_overview")
-TEXTWIDTH_IN = 7.0     # acmart sigconf \textwidth (506 pt)
+TEXTWIDTH_PT = 506.295          # acmart sigconf \textwidth
+V1_PT = (1009.44, 339.646)      # MediaBox of version 1 (paper/figs/old/fig_overview_v1.pdf): the height budget
+MAX_H_IN = 2.36                 # and the hard cap on the printed height at \textwidth (in)
+
+SHORT_NAMES = {"claude-haiku": "Haiku", "claude-sonnet": "Sonnet", "claude-opus": "Opus", "claude-fable": "Fable",
+               "gpt-6-luna": "GPT-6 Luna", "gpt-6-sol": "GPT-6 Sol"}
+MAX_WORDS = 50                  # the skill's short caption
+HEADLINE = {  # hcode -> (label in the figure, phrase in the caption)
+    "fake_ver": ("false headline", "a false wire headline"),
+    "fake_unv": ("false headline", "a false unverified post"),
+    "true_ver": ("true headline", "a true wire headline"),
+}
 
 
-# ================================================================ episode loading
+# ================================================================ episode
 def _read(path):
     op = gzip.open if path.endswith(".gz") else open
     with op(path, "rt") as f:
@@ -50,94 +74,58 @@ def _read(path):
 def resolve_episode(arg):
     if os.path.exists(arg):
         return arg
-    name = os.path.basename(arg)
     for d in EP_DIRS:
         for ext in ("", ".json.gz", ".json"):
-            p = os.path.join(d, name + ext)
+            p = os.path.join(d, os.path.basename(arg) + ext)
             if os.path.exists(p):
                 return p
     sys.exit(f"episode not found: {arg}")
-
-
-def pick_default():
-    """Largest overshoot among false-headline equity episodes at adoption 2.0 (ties: first id)."""
-    best = None
-    for p in sorted(glob.glob(os.path.join(EP_DIRS[0], "*.json.gz"))):
-        d = _read(p)
-        c = d["config"]
-        if c.get("hcode") in ("fake_ver", "fake_unv") and c.get("regime") == "equity" and c.get("adoption") == 2.0:
-            os_ = d["metrics"]["overshoot"]
-            if best is None or os_ > best[0] + 1e-12:
-                best = (os_, p)
-    return best[1]
-
-
-POP_NAMES = {"claude-haiku": "Claude Haiku", "claude-sonnet": "Claude Sonnet", "claude-opus": "Claude Opus",
-             "claude-fable": "Claude Fable", "gpt-6-luna": "GPT-6 Luna", "gpt-6-sol": "GPT-6 Sol",
-             "gemma-4-12b": "Gemma-4-12B"}
-HEADLINE = {  # hcode -> (label in figure, phrase for caption)
-    "fake_ver": ("false headline", "a false wire headline"),
-    "fake_unv": ("false headline", "a false unverified post"),
-    "fake_unv_bull": ("false headline", "a false bullish post"),
-    "true_ver": ("true headline", "a true wire headline"),
-}
-
-
-def is_bull(ep):
-    return str(ep["cfg"].get("hcode", "")).endswith("_bull")
-
-
-def group_is_steered(g):
-    name = " ".join(str(g.get(k) or "") for k in ("name", "model", "surrogate")).lower()
-    return "gemma" in name or any(abs(v or 0) > 0 for v in (g.get("alphas") or {}).values())
-
-
-def group_label(g):
-    key = (g.get("surrogate") or g.get("model") or g.get("name") or "").lower()
-    for k, v in POP_NAMES.items():
-        if key.startswith(k):
-            disp = key[len(k):].strip("_").replace("_equity", "").replace("_crypto", "")
-            return v + (f" ({disp})" if disp and disp != "base" else "")
-    alphas = {k: v for k, v in (g.get("alphas") or {}).items() if v}
-    if alphas:
-        return "Gemma-4-12B (" + ", ".join(f"{k} {v:+g}" for k, v in alphas.items()) + ")"
-    return g.get("name", "agents")
 
 
 def load(path):
     d = _read(path)
     c, m, fr = d["config"], d["metrics"], d["frames"]
     t = np.array([f["t"] for f in fr], float)
-    price = np.array([f["price"] for f in fr], float)
-    fund = np.array([f["fundamental"] for f in fr], float)
-    exp_ = np.array([np.mean([a["exposure"] for a in f["agents"]]) if f["agents"] else np.nan for f in fr])
-    nliq = np.array([sum(bool(a.get("liquidated")) for a in f["agents"]) for f in fr])
-    shock_t = c.get("shock_t")
-    if shock_t is None:
-        shock_t = next((s["t"] for s in c.get("shocks", []) if s.get("kind") != "correction"), None)
-    corr_t = c.get("correction_t")
-    if corr_t is None:
-        corr_t = next((s["t"] for s in c.get("shocks", []) if s.get("kind") == "correction"), None)
+    E = np.array([[a["exposure"] for a in f["agents"]] for f in fr], float)
     groups = c.get("groups") or []
-    return dict(id=d.get("id", os.path.basename(path).split(".")[0]), cfg=c, met=m, t=t, price=price, fund=fund,
-                exp=exp_, nliq=nliq, shock_t=shock_t, corr_t=corr_t, n_agents=len(d.get("agents", [])),
-                steered=any(group_is_steered(g) for g in groups),
-                pop=" and ".join(f"{g.get('n', '')} {group_label(g)}".strip() for g in groups) or c.get("pop", ""))
+    return dict(id=d["id"], path=path, cfg=c, met=m, frames=fr, t=t,
+                price=np.array([f["price"] for f in fr], float),
+                fund=np.array([f["fundamental"] for f in fr], float),
+                E=E, exp=E.mean(axis=1), n_agents=E.shape[1],
+                shock_t=c.get("shock_t"), corr_t=c.get("correction_t"), groups=groups)
 
 
-# ================================================================ geometry helpers (display coordinates)
+def numbers(ep):
+    """The episode's numbers that the figure and the caption state."""
+    t, p, f, e, m = ep["t"], ep["price"], ep["fund"], ep["exp"], ep["met"]
+    ts, tc = ep["shock_t"], ep["corr_t"]
+    assert ts is not None and tc is not None and tc > ts, "need a headline and a correction"
+    win = (t >= ts) & (t < tc)
+    pre = (t >= ts - 5) & (t < ts)
+    dev = (p - f) / m["p0"]                       # signed distance from fair value, as a share of the opening price
+    i_gap = int(np.flatnonzero(t >= ts)[np.argmin(dev[t >= ts])])
+    i_min = int(np.flatnonzero(win)[np.argmin(ep["exp"][win])])
+    gap = -float(dev[i_gap])
+    assert abs(gap - m["overshoot"]) < 1e-6, (gap, m["overshoot"])   # same definition as the paper's overshoot
+    return dict(n=ep["n_agents"], e_pre=float(e[pre].mean()), e_min=float(e[i_min]), t_min=float(t[i_min]),
+                gap=gap, t_gap=float(t[i_gap]), p_gap=float(p[i_gap]),
+                below_until_correction=bool((p[win] < f[win]).all()),
+                n_liq=int(m.get("n_liquidations") or 0))
+
+
+# ================================================================ geometry (display coordinates)
 def seg_hits_box(p0, p1, b):
-    """Liang-Barsky: does segment p0-p1 intersect Bbox b?"""
+    """Liang-Barsky: does the segment p0-p1 intersect Bbox b?"""
     x0, y0 = p0
     dx, dy = p1[0] - x0, p1[1] - y0
     u0, u1 = 0.0, 1.0
-    for p, q in ((-dx, x0 - b.x0), (dx, b.x1 - x0), (-dy, y0 - b.y0), (dy, b.y1 - y0)):
-        if p == 0:
+    for pp, q in ((-dx, x0 - b.x0), (dx, b.x1 - x0), (-dy, y0 - b.y0), (dy, b.y1 - y0)):
+        if pp == 0:
             if q < 0:
                 return False
         else:
-            r = q / p
-            if p < 0:
+            r = q / pp
+            if pp < 0:
                 u0 = max(u0, r)
             else:
                 u1 = min(u1, r)
@@ -146,28 +134,34 @@ def seg_hits_box(p0, p1, b):
     return True
 
 
-def poly_hits_box(xy, b, closed=False):
-    pts = np.asarray(xy)
+def poly_hits_box(xy, b):
+    pts = np.asarray(xy, float)
     pts = pts[np.all(np.isfinite(pts), axis=1)]
-    if closed and len(pts):
-        pts = np.vstack([pts, pts[:1]])
     return any(seg_hits_box(pts[i], pts[i + 1], b) for i in range(len(pts) - 1))
 
 
-def fill_hits_box(path_disp, b, n=7):
+def fill_hits_box(path_disp, b, n=9):
     xs, ys = np.linspace(b.x0, b.x1, n), np.linspace(b.y0, b.y1, n)
-    grid = np.array([(x, y) for x in xs for y in ys])
-    return path_disp.contains_points(grid).any()
+    return path_disp.contains_points(np.array([(x, y) for x in xs for y in ys])).any()
+
+
+def line_xy(ln):
+    return ln.get_transform().transform(np.column_stack([np.asarray(ln.get_xdata(), float),
+                                                         np.asarray(ln.get_ydata(), float)]))
 
 
 # ================================================================ style
 S.apply_style()
-FS_TICK, FS_LAB, FS_NOTE = 18.5, 19.5, 18.0      # right panel (pt before scaling to \textwidth)
-FS_BOX, FS_SUB = 17.5, 16.5                      # schematic labels
-LW_BOX, LW_ARR = 1.3, 1.6
+FS_BOX, FS_SUB = 22.0, 22.0                  # schematic: names, second lines ("order book" sets the box width)
+FS_HEAD, FS_HEAD_SUB = 24.0, 22.0            # the headline card: the protagonist, sitting in whitespace
+FS_TICK, FS_LAB, FS_NOTE = 20.5, 22.0, 22.0  # episode: ticks, axis labels, notes
+FAN = 0.42                                   # fan-out from the card and fan-in to the book: share of the row offsets
+LW_BOX, LW_ARR = 1.4, 1.8
 plt.rcParams.update({"xtick.labelsize": FS_TICK, "ytick.labelsize": FS_TICK, "axes.labelsize": FS_LAB})
-W, H = 14.0, 4.6
-SW = 7.7                                          # schematic width (in), drawn in inch units
+W, H = 14.0, 4.60                            # design size (in); \textwidth scales it by ~0.5
+GAP_C = "#E6DFD5"                            # light neutral: gap below fair value, exposure area (not a data hue)
+DEPTH_C = "#BFB8AF"                          # the grey of the agents' squares, lightened: the book glyph stays quiet
+EVENT = dict(color=S.SUBINK, lw=1.4, ls=(0, (1.2, 2.2)))
 
 
 def txt(ax, x, y, s, fs=FS_BOX, **kw):
@@ -176,262 +170,219 @@ def txt(ax, x, y, s, fs=FS_BOX, **kw):
     return ax.text(x, y, s, fontsize=fs, color=S.INK, zorder=6, **kw)
 
 
-def rbox(ax, x0, y0, x1, y1, fc=S.PAPER, ec=S.SUBINK, lw=LW_BOX, r=0.09, z=1, ls="-"):
+def tsize(fig, s, fs):
+    """Width and height (in) of a text at font size fs."""
+    t = fig.text(0, 0, s, fontsize=fs)
+    b = t.get_window_extent(fig.canvas.get_renderer())
+    t.remove()
+    return b.width / fig.dpi, b.height / fig.dpi
+
+
+def rbox(ax, x0, y0, x1, y1, fc=S.PAPER, ec=S.SUBINK, lw=LW_BOX, r=0.1, z=1):
+    # unclipped: a box on the schematic axes' edge (the card at x = 0, the book at the right) keeps its full stroke
     p = FancyBboxPatch((x0, y0), x1 - x0, y1 - y0, boxstyle=f"round,pad=0,rounding_size={r}",
-                       fc=fc, ec=ec, lw=lw, zorder=z, ls=ls)
+                       fc=fc, ec=ec, lw=lw, zorder=z, clip_on=False)
     ax.add_patch(p)
     return p
 
 
-def arrow(ax, p0, p1, lw=LW_ARR, color=S.SUBINK, cs="arc3,rad=0", ms=15):
-    a = FancyArrowPatch(p0, p1, arrowstyle="-|>", mutation_scale=ms, lw=lw, color=color, shrinkA=0, shrinkB=0,
-                        connectionstyle=cs, zorder=3, joinstyle="miter")
+def arrow(ax, p0, p1, lw=LW_ARR, ms=17):
+    a = FancyArrowPatch(p0, p1, arrowstyle="-|>", mutation_scale=ms, lw=lw, color=S.SUBINK, shrinkA=0, shrinkB=0,
+                        zorder=3, joinstyle="miter", clip_on=False)
     ax.add_patch(a)
     return a
 
 
-# ================================================================ left: schematic
-def draw_schematic(ax, ep):
-    ax.set_xlim(0, SW)
-    ax.set_ylim(0, H)
+def mix(c1, c2, w):
+    a, b = np.array(to_rgb(c1)), np.array(to_rgb(c2))
+    return to_hex((1 - w) * a + w * b)
+
+
+# ================================================================ left: the system
+def draw_schematic(fig, ax, ep, y_bot, y_top):
+    """Draws in inch units with its left edge at x = 0; returns the right edge (in) and the rows' glyph heights."""
     ax.set_axis_off()
+    PADX, PADY = 0.2, 0.2
+    rows = ["steered Gemma", "Claude, GPT", "any MCP agent"]
+    lab_w = max(tsize(fig, s, FS_BOX)[0] for s in rows)
+    lab_h = tsize(fig, "Gg", FS_BOX)[1]
+    NG, G = 7, 0.27                                   # glyphs per row (3 x 7, not the episode's 24), size (in)
+    pitch = (lab_w - G) / (NG - 1)
+    blk = lab_h + 0.06 + G                            # a row: name above a line of glyphs
+    gap = (y_top - y_bot - 2 * PADY - 3 * blk) / 2
+    assert gap > 0.25, f"rows too tight ({gap:.2f} in)"
+    gy = [y_top - PADY - blk + G / 2 - i * (blk + gap) for i in range(3)]   # glyph-line centres, top to bottom
 
-    y_top, y_bot = 4.12, 1.22                     # agents and exchange boxes
-    hx0, hx1 = 0.0, 1.45                          # headline
-    ax0, ax1 = 2.05, 4.35                         # agents
-    ex0, ex1 = 5.15, SW                           # exchange
-    rows = [3.55, 2.65, 1.75]                     # agent row centres
-    gap = 0.17                                    # half line spacing inside a row
-
-    # group labels above the boxes
-    txt(ax, (ax0 + ax1) / 2, y_top + 0.08, "agents", fs=FS_NOTE, va="bottom")
-    txt(ax, (ex0 + ex1) / 2, y_top + 0.08, "exchange", fs=FS_NOTE, va="bottom")
-
-    # headline
-    hy = rows[1]
-    rbox(ax, hx0, hy - 0.62, hx1, hy + 0.62)
-    txt(ax, (hx0 + hx1) / 2, hy + 0.33, "headline", fs=FS_NOTE)
-    txt(ax, (hx0 + hx1) / 2, hy - 0.04, "true or false", fs=FS_SUB)
-    txt(ax, (hx0 + hx1) / 2, hy - 0.36, "wire or post", fs=FS_SUB)
-    # news fans out to every agent
-    for y in rows:
-        arrow(ax, (hx1, hy + (y - hy) * 0.18), (ax0, y))
-    txt(ax, (hx1 + ax0) / 2 - 0.08, rows[0] + 0.12, "news", fs=FS_SUB, va="bottom")
+    # headline card, centred on the middle row; tall enough that its fan-out leaves no large empty corners
+    cw = max(tsize(fig, "headline", FS_HEAD)[0], tsize(fig, "true or false", FS_HEAD_SUB)[0]) + 2 * 0.17
+    ch = 2.3
+    hx0, hx1, hy = 0.0, cw, gy[1]
+    rbox(ax, hx0, hy - ch / 2, hx1, hy + ch / 2)
+    txt(ax, cw / 2, hy + 0.26, "headline", fs=FS_HEAD)
+    txt(ax, cw / 2, hy - 0.27, "true or false", fs=FS_HEAD_SUB)
 
     # agents
+    ax0 = hx1 + 0.66
+    ax1 = ax0 + PADX + lab_w + PADX
     rbox(ax, ax0, y_bot, ax1, y_top)
-    tx = ax0 + 0.18
-    # (1) steered open model with a risk slider
-    txt(ax, tx, rows[0] + gap, "Gemma-4-12B", ha="left")
-    sy = rows[0] - gap - 0.02
-    s0, s1, knob = tx + 0.6, ax1 - 0.2, 0.72
-    txt(ax, tx, sy, "risk", fs=FS_SUB, ha="left")
-    ax.plot([s0, s1], [sy, sy], color=S.SUBINK, lw=2.0, solid_capstyle="round", zorder=4)
-    for xx in (s0, s1):
-        ax.plot([xx, xx], [sy - 0.07, sy + 0.07], color=S.SUBINK, lw=1.4, zorder=4)
-    ax.plot([s0 + knob * (s1 - s0)], [sy], "o", ms=11, color=S.CLAY, mec="white", mew=1.0, zorder=5)
-    # (2) commercial models as measured policies
-    txt(ax, tx, rows[1] + gap, "Claude, GPT", ha="left")
-    txt(ax, tx, rows[1] - gap, "response tables", fs=FS_SUB, ha="left")
-    ax.plot([ax1 - 0.3], [rows[1] + gap], "D", ms=8.5, mfc="white", mec=S.INK, mew=1.5, zorder=5)
-    # (3) any external agent
-    txt(ax, tx, rows[2] + gap, "any agent", ha="left")
-    txt(ax, tx, rows[2] - gap, "over MCP", fs=FS_SUB, ha="left")
+    gx = ax0 + PADX + G / 2 + pitch * np.arange(NG)
+    for i, s in enumerate(rows):
+        txt(ax, ax0 + PADX, gy[i] + G / 2 + 0.06, s, ha="left", va="bottom")
+    # steered Gemma: one model, many dial settings (shades of the risk-dial clay)
+    shades = [mix(S.CLAY_SOFT, S.CLAY_DK, w) for w in np.linspace(0, 1, NG)]
+    for x, c in zip(gx, shades):
+        ax.plot([x], [gy[0]], "o", ms=G * 72 * 0.98, color=c, mec="white", mew=0.8, zorder=5)
+    ax.plot(gx, [gy[1]] * NG, ls="none", marker="D", ms=G * 72 * 0.74, mfc="white", mec=S.INK, mew=1.5, zorder=5)
+    ax.plot(gx, [gy[2]] * NG, ls="none", marker="s", ms=G * 72 * 0.82, color=S.GRAY, mec="white", mew=0.8, zorder=5)
+    # the headline reaches every row at once (fan-out)
+    for i in range(3):
+        arrow(ax, (hx1, hy + (gy[i] - hy) * FAN), (ax0, gy[i]))
 
-    # orders out, prices back
-    ya, yb = rows[1] + 0.3, rows[1] - 0.3
-    arrow(ax, (ax1, ya), (ex0, ya))
-    arrow(ax, (ex0, yb), (ax1, yb))
-    txt(ax, (ax1 + ex0) / 2, ya + 0.1, "orders", fs=FS_SUB, va="bottom")
-    txt(ax, (ax1 + ex0) / 2, yb - 0.1, "prices", fs=FS_SUB, va="top")
-
-    # exchange: order book (+ the episode's own depth at t = 0), traders, safeguards
-    rbox(ax, ex0, y_bot, ex1, y_top)
-    cx = ex0 + 0.18
-    sep = dict(color=S.GRID, lw=1.6, zorder=2, solid_capstyle="butt")
-    yy = y_top - 0.3
-    txt(ax, cx, yy, "order book", ha="left")
-    draw_depth(ax, ep, x0=cx + 1.36, x1=ex1 - 0.16, y0=yy - 0.19, y1=yy + 0.19)
-    txt(ax, cx, yy - 0.34, "leverage, liquidation", fs=FS_SUB, ha="left")
-    ax.plot([ex0 + 0.1, ex1 - 0.1], [yy - 0.585] * 2, **sep)
-    txt(ax, cx, yy - 0.83, "background traders", ha="left")
-    ax.plot([ex0 + 0.1, ex1 - 0.1], [yy - 1.075] * 2, **sep)
-    txt(ax, cx, yy - 1.32, "safeguards", ha="left")
-    for i, s in enumerate(("caps, delays,", "circuit breaker,", "provenance filter")):
-        txt(ax, cx, yy - 1.65 - 0.315 * i, s, fs=FS_SUB, ha="left")
-
-    # outputs to the web interface
-    wy0, wy1 = 0.0, 0.7
-    rbox(ax, 0.0, wy0, SW, wy1)
-    arrow(ax, ((ex0 + ex1) / 2, y_bot), ((ex0 + ex1) / 2, wy1))
-    wy = (wy0 + wy1) / 2
-    txt(ax, 0.16, wy, "web", ha="left")
-    items = ["price vs value", "excess overshoot", "liquidations", "report card"]
-    x, cp = 0.78, 0.11
-    r = ax.figure.canvas.get_renderer()
-    for s in items:
-        t = txt(ax, x + cp, wy, s, fs=FS_SUB, ha="left")
-        b = t.get_window_extent(r).transformed(ax.transData.inverted())
-        rbox(ax, x, wy - 0.2, b.x1 + cp, wy + 0.2, fc="white", ec=S.GRAY, lw=1.0, r=0.07, z=2)
-        x = b.x1 + cp + 0.15
-    return x - 0.15  # right end of the chips (checked against SW)
+    # one order book for everyone: the rows' orders fan back in, the mirror of the fan-out, and land on the
+    # depth chart rather than beside the book's text
+    bx0 = ax1 + 0.62
+    for i in range(3):
+        arrow(ax, (ax1, gy[i]), (bx0, hy + (gy[i] - hy) * FAN))
+    l1, l2 = "leverage,", "liquidation"
+    bw = max(tsize(fig, "order book", FS_BOX)[0], tsize(fig, l2, FS_SUB)[0]) + 2 * PADX
+    bx1 = bx0 + bw
+    rbox(ax, bx0, y_bot, bx1, y_top)
+    txt(ax, bx0 + PADX, y_top - PADY, "order book", va="top", ha="left")
+    sub_h = tsize(fig, "lg", FS_SUB)[1]
+    txt(ax, bx0 + PADX, y_bot + PADY + sub_h * 1.12, l1, fs=FS_SUB, ha="left", va="bottom")
+    txt(ax, bx0 + PADX, y_bot + PADY, l2, fs=FS_SUB, ha="left", va="bottom")
+    d_top = y_top - PADY - lab_h - 0.42
+    d_bot = y_bot + PADY + 2.12 * sub_h + 0.36
+    draw_depth(ax, ep, bx0 + PADX, bx1 - PADX, d_bot, d_top)
+    return bx1, gy
 
 
 def draw_depth(ax, ep, x0, x1, y0, y1):
-    """Cumulative depth of the episode's own book at t = 0: bids left of the mid, asks right."""
-    d = _read(ep["path"])
-    f0 = d["frames"][0]
-    bids, asks = np.array(f0.get("bids") or [[0, 0]]), np.array(f0.get("asks") or [[0, 0]])
-    cb, ca = np.cumsum(bids[:, 1]), np.cumsum(asks[:, 1])
-    top = max(cb[-1], ca[-1]) or 1.0
-    mid = (x0 + x1) / 2
-    half = (x1 - x0) / 2 - 0.03
-    nb, na = len(cb), len(ca)
-    xb = mid - 0.03 - half * np.arange(1, nb + 1) / nb
-    xa = mid + 0.03 + half * np.arange(1, na + 1) / na
-    for xs, cs, sgn in ((xb, cb, -1), (xa, ca, 1)):
-        edge = mid + sgn * 0.03
-        px = np.concatenate([[edge], np.repeat(xs, 2)[:-1]])
-        py = y0 + (y1 - y0) * np.repeat(cs / top, 2)
-        poly = np.column_stack([np.concatenate([[edge], px, [xs[-1]]]),
-                                np.concatenate([[y0], py, [y0]])])
-        ax.add_patch(Polygon(poly, closed=True, fc=S.GRAY, ec="none", zorder=3))
-    ax.plot([x0, x1], [y0, y0], color=S.SUBINK, lw=1.0, zorder=4)
+    """The episode's book at minute 0 as a depth chart: resting size summed outward from the spread, bids to the
+    left of the mid and asks to the right, one step per price level (ten a side)."""
+    f0 = ep["frames"][0]
+    bids = sorted(f0["bids"], key=lambda r: -r[0])        # best bid first
+    asks = sorted(f0["asks"], key=lambda r: r[0])         # best ask first
+    assert bids and asks and bids[0][0] < asks[0][0], "crossed book"
+    cb, ca = np.cumsum([r[1] for r in bids]), np.cumsum([r[1] for r in asks])
+    top = max(cb[-1], ca[-1])
+    mid, sp = (x0 + x1) / 2, 0.035                        # half the drawn spread (in)
+    half = (x1 - x0) / 2 - sp
+    for cum, sgn in ((cb, -1), (ca, 1)):
+        n = len(cum)
+        edges = mid + sgn * (sp + half * np.arange(n + 1) / n)
+        hts = y0 + (y1 - y0) * cum / top
+        poly = [(edges[0], y0)]
+        for k in range(n):
+            poly += [(edges[k], hts[k]), (edges[k + 1], hts[k])]
+        poly += [(edges[-1], y0)]
+        ax.add_patch(Polygon(poly, closed=True, fc=DEPTH_C, ec="none", zorder=3))
+    ax.plot([x0, x1], [y0, y0], color=S.SUBINK, lw=1.2, zorder=4, solid_capstyle="butt")
 
 
 # ================================================================ right: one recorded episode
-def draw_episode(axP, axE, ep, agent_c):
+def draw_episode(axP, axE, ep):
     t, p, f, e = ep["t"], ep["price"], ep["fund"], ep["exp"]
     ts, tc = ep["shock_t"], ep["corr_t"]
-    fill_c, line_c = agent_c
-
-    # gap below fair value after the headline
-    after = t >= (ts if ts is not None else t[0])
-    wrong = (p > f) if is_bull(ep) else (p < f)        # the side the headline pushes the price to
-    axP.fill_between(t, p, f, where=after & wrong, interpolate=True, color=fill_c, alpha=0.55, lw=0, zorder=1)
-    axP.plot(t, f, color=S.SUBINK, lw=2.1, ls=(0, (4, 2.5)), zorder=3)
-    axP.plot(t, p, color=S.INK, lw=2.6, zorder=4)
-
-    lo, hi = np.nanmin(np.r_[p, f]), np.nanmax(np.r_[p, f])
-    pad = 0.08 * (hi - lo)
-    axP.set_ylim(lo - pad, hi + pad)
-    axP.yaxis.set_major_locator(MaxNLocator(nbins=4, steps=[1, 2, 5, 10]))
-    axP.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:.10g}".replace("-", "\u2212")))
-    axP.set_ylabel("price", labelpad=6)
+    after = t >= ts
+    axP.fill_between(t, p, f, where=after & (p < f), interpolate=True, color=GAP_C, lw=0, zorder=1)
+    axP.plot(t, f, color=S.SUBINK, lw=2.2, ls=(0, (4, 2.5)), zorder=3)
+    axP.plot(t, p, color=S.INK, lw=2.7, zorder=4)
+    lo, hi = float(np.min(np.r_[p, f])), float(np.max(np.r_[p, f]))
+    axP.set_ylim(lo - 0.1 * (hi - lo), hi + 0.06 * (hi - lo))
+    ticks = np.arange(np.ceil(lo), np.floor(hi) + 1)
+    axP.yaxis.set_major_locator(FixedLocator(ticks))
+    axP.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:.0f}"))
+    axP.set_ylabel("price")
     axP.tick_params(axis="x", labelbottom=False)
 
-    # a frame is the state at the end of minute t, so each value is held from t to t + 1
-    axE.fill_between(t, 0, e, step="post", color=fill_c, lw=0, zorder=2)
-    axE.step(t, e, where="post", color=line_c, lw=1.8, zorder=3)
-    emax = max(1.0, np.nanmax(e))
-    axE.set_ylim(0, emax * 1.12)
-    axE.yaxis.set_major_locator(MaxNLocator(nbins=2, integer=True))
-    axE.set_ylabel("exposure", labelpad=6)
-    axE.set_xlabel("minute", labelpad=3)
-
+    # a frame is the state at the end of minute t, held from t to t + 1
+    axE.fill_between(t, 0, e, step="post", color=GAP_C, lw=0, zorder=2)
+    axE.step(t, e, where="post", color=S.INK, lw=2.0, zorder=3)
+    axE.set_ylim(0, max(1.0, float(np.max(e))) * 1.14)
+    axE.yaxis.set_major_locator(FixedLocator([0, 1]))
+    axE.set_ylabel("exposure")
+    axE.xaxis.set_major_locator(FixedLocator([t[0], ts, tc]))      # ticks at the start and at the two events
     for ax in (axP, axE):
         ax.set_xlim(t[0], t[-1])
-        ax.xaxis.set_major_locator(MaxNLocator(nbins=5, integer=True))
-    # event lines through both axes; their labels sit above the price axes, clear of the data
-    for x in (ts, tc):
-        if x is None:
-            continue
-        for ax in (axP, axE):
-            ax.axvline(x, color=S.SUBINK, lw=1.3, ls=(0, (1.2, 2.2)), zorder=0)
+        for x in (ts, tc):
+            ax.axvline(x, zorder=0, **EVENT)
 
 
-def place_event_labels(fig, axP, ep, lab_y_in, min_gap_in=0.3):
-    """Labels for the headline and the correction, above the price axes (clear of any data). Each sits beside its
-    event line; the alignments are chosen so that the labels stay apart and inside the figure."""
+def place_event_labels(fig, axP, ep, y_in):
+    """'false headline' left of its line, 'correction' right of its line, both above the price axes; each event
+    line is extended up to the middle of its label."""
     r = fig.canvas.get_renderer()
-    events = [(ep["shock_t"], HEADLINE.get(ep["cfg"].get("hcode"), ("headline", ""))[0])]
-    if ep["corr_t"] is not None:
-        events.append((ep["corr_t"], "correction"))
     to_fig = fig.transFigure.inverted()
     ax_bb = axP.get_window_extent(r)
-    xs = [to_fig.transform((axP.transData.transform((x, 0))[0], 0))[0] for x, _ in events]
-    dx = 6 / fig.dpi / W
-    opts = {"left": dx, "right": -dx, "center": 0.0}
-    combos = [("left",), ("right",), ("center",)] if len(events) == 1 else \
-        [("left", "left"), ("right", "left"), ("left", "right"), ("right", "right"), ("center", "left"),
-         ("right", "center"), ("center", "center")]
-    for combo in combos:
-        tts = [fig.text(xf + opts[ha], lab_y_in / H, s, fontsize=FS_NOTE, ha=ha, va="bottom", color=S.INK)
-               for (xf, (_, s), ha) in zip(xs, events, combo)]
-        bbs = [t.get_window_extent(r) for t in tts]
-        ok = all(b.x1 <= fig.bbox.x1 - 2 and b.x0 >= ax_bb.x0 - 60 for b in bbs)
-        if len(bbs) == 2:
-            ok = ok and bbs[1].x0 - bbs[0].x1 >= min_gap_in * fig.dpi
-        if ok:
-            break
-        for t in tts:
-            t.remove()
-    else:
-        sys.exit("cannot place the event labels")
-    for xf, t in zip(xs, tts):   # extend each event line up to its label (beside it, or below it if centred)
-        tb = t.get_window_extent(r)
-        yb = to_fig.transform((0, ax_bb.y1))[1]
-        yt = to_fig.transform((0, tb.y0 - 4 if t.get_ha() == "center" else tb.y0 + tb.height * 0.5))[1]
-        fig.add_artist(plt.Line2D([xf, xf], [yb, yt], color=S.SUBINK, lw=1.3, ls=(0, (1.2, 2.2))))
-    return tts
+    events = [(ep["shock_t"], HEADLINE.get(ep["cfg"].get("hcode"), ("headline", ""))[0], "right"),
+              (ep["corr_t"], "correction", "left")]
+    dx = 7 / fig.dpi / W
+    out = []
+    for x, s, ha in events:
+        xf = to_fig.transform((axP.transData.transform((x, 0))[0], 0))[0]
+        tt = fig.text(xf + (dx if ha == "left" else -dx), y_in / H, s, fontsize=FS_NOTE, ha=ha, va="bottom",
+                      color=S.INK)
+        tb = tt.get_window_extent(r)
+        y0 = to_fig.transform((0, ax_bb.y1))[1]
+        y1 = to_fig.transform((0, tb.y0 + tb.height * 0.45))[1]
+        fig.add_artist(plt.Line2D([xf, xf], [y0, y1], **EVENT))
+        out.append(tt)
+    return out
 
 
-def place_on_line(fig, ax, xs, ys, s, avoid_texts):
-    """Direct label just below (preferred) or above a polyline, as far right as possible, in free space:
-    not over any line, fill or other text, and inside the axes."""
+def is_free(fig, ax, b, avoid):
     r = fig.canvas.get_renderer()
-    ax_bb = ax.get_window_extent(r)
-    lines = [ln.get_transform().transform(np.column_stack([np.asarray(ln.get_xdata(), float),
-                                                           np.asarray(ln.get_ydata(), float)]))
-             for ln in ax.lines if ln.get_linestyle() not in ("None", "none", "")]
-    fills = [pth.transformed(c.get_transform()) for c in ax.collections for pth in c.get_paths()]
-    for va, sgn in (("top", -1), ("bottom", 1)):
-        for i in np.arange(len(xs))[::-1]:
-            xd, yd = ax.transData.transform((xs[i], ys[i]))
-            for off in (6, 12, 18):
-                for ha in ("right", "center"):
-                    tt = ax.text(0, 0, s, fontsize=FS_NOTE, ha=ha, va=va, color=S.INK, zorder=6)
-                    tt.set_position(ax.transData.inverted().transform((xd, yd + sgn * off)))
-                    b = tt.get_window_extent(r).padded(3)
-                    bad = (b.x0 < ax_bb.x0 + 4 or b.x1 > ax_bb.x1 - 2 or b.y0 < ax_bb.y0 + 2 or b.y1 > ax_bb.y1 - 2)
-                    bad = bad or any(poly_hits_box(xy, b) for xy in lines)
-                    bad = bad or any(fill_hits_box(pth, b) for pth in fills)
-                    bad = bad or any(b.overlaps(o.get_window_extent(r)) for o in avoid_texts)
-                    if not bad:
-                        return tt
-                    tt.remove()
+    a = ax.get_window_extent(r)
+    if b.x0 < a.x0 + 3 or b.x1 > a.x1 - 3 or b.y0 < a.y0 + 2 or b.y1 > a.y1 - 2:
+        return False
+    if any(ln.get_linestyle() not in ("None", "none", "") and poly_hits_box(line_xy(ln), b) for ln in ax.lines):
+        return False
+    if any(fill_hits_box(pth.transformed(c.get_transform()), b) for c in ax.collections for pth in c.get_paths()):
+        return False
+    return not any(b.overlaps(o.get_window_extent(r)) for o in avoid)
+
+
+def place(fig, ax, s, cands, avoid=(), pad_px=4):
+    """First free spot among candidates (x, y, ha, va, dx_pt, dy_pt), data coordinates plus an offset in points."""
+    r = fig.canvas.get_renderer()
+    for x, y, ha, va, dxp, dyp in cands:
+        xd, yd = ax.transData.transform((x, y))
+        tt = ax.text(0, 0, s, fontsize=FS_NOTE, ha=ha, va=va, color=S.INK, zorder=6)
+        tt.set_position(ax.transData.inverted().transform((xd + dxp * fig.dpi / 72, yd + dyp * fig.dpi / 72)))
+        if is_free(fig, ax, tt.get_window_extent(r).padded(pad_px), avoid):
+            return tt
+        tt.remove()
     return None
 
 
 # ================================================================ checks
 def text_hits(fig):
-    """Text over any line, arrow, fill, marker or crossing a box edge (the skill's checker covers text and ticks)."""
+    """Text over any line, arrow, fill, marker, or crossing a box edge (the skill's checker covers text and ticks)."""
     fig.canvas.draw()
     r = fig.canvas.get_renderer()
     hits = []
-    texts = [(ax, t) for ax in fig.axes for t in ax.texts] + [(None, t) for t in fig.texts]
-    texts += [(ax, ax.yaxis.label) for ax in fig.axes if ax.axison] + [(ax, ax.xaxis.label) for ax in fig.axes
-                                                                         if ax.axison and ax.get_xlabel()]
-    ticks = [(ax, t) for ax in fig.axes if ax.axison for t in ax.get_xticklabels() + ax.get_yticklabels()
+    texts = [t for ax in fig.axes for t in ax.texts] + list(fig.texts)
+    texts += [lab for ax in fig.axes if ax.axison for lab in (ax.xaxis.label, ax.yaxis.label)]
+    ticks = [t for ax in fig.axes if ax.axison for t in ax.get_xticklabels() + ax.get_yticklabels()
              if t.get_visible() and t.get_text().strip()]
     for ax in fig.axes:   # axis labels against tick labels (the skill's checker skips this pair)
-        if not ax.axison:
-            continue
-        for lab in (ax.xaxis.label, ax.yaxis.label):
-            if lab.get_text().strip():
-                lb = lab.get_window_extent(r)
-                for _, tk in ticks:
-                    if lb.overlaps(tk.get_window_extent(r)):
-                        hits.append((lab.get_text(), "tick " + tk.get_text()))
+        if ax.axison:
+            for lab in (ax.xaxis.label, ax.yaxis.label):
+                if lab.get_text().strip():
+                    hits += [(lab.get_text(), "tick " + tk.get_text()) for tk in ticks
+                             if lab.get_window_extent(r).overlaps(tk.get_window_extent(r))]
     texts += ticks
-    for owner, t in texts:
+    fb = fig.bbox
+    for t in texts:
         if not t.get_text().strip():
             continue
         b = t.get_window_extent(r).padded(2)
+        if b.x0 < fb.x0 or b.x1 > fb.x1 or b.y0 < fb.y0 or b.y1 > fb.y1:
+            hits.append((t.get_text(), "outside the figure"))
         for ax in fig.axes:
             for ln in ax.lines:
-                xy = ln.get_transform().transform(np.column_stack([np.asarray(ln.get_xdata(), float),
-                                                                    np.asarray(ln.get_ydata(), float)]))
+                xy = line_xy(ln)
                 if ln.get_linestyle() not in ("None", "none", "") and poly_hits_box(xy, b):
                     hits.append((t.get_text(), "line"))
                 if ln.get_marker() not in (None, "None", "none", ""):
@@ -440,152 +391,171 @@ def text_hits(fig):
                         hits.append((t.get_text(), "marker"))
             for pa in ax.patches:
                 path = pa.get_path().transformed(pa.get_transform())
-                verts = path.vertices
                 if isinstance(pa, FancyArrowPatch):
                     if any(poly_hits_box(pl, b) for pl in path.to_polygons(closed_only=False)):
                         hits.append((t.get_text(), "arrow"))
                 elif isinstance(pa, FancyBboxPatch):
-                    pb = Bbox.from_extents(*verts.min(0), *verts.max(0))
+                    pb = Bbox.from_extents(*path.vertices.min(0), *path.vertices.max(0))
                     inside = pb.x0 <= b.x0 and b.x1 <= pb.x1 and pb.y0 <= b.y0 and b.y1 <= pb.y1
                     if pb.overlaps(b) and not inside:
                         hits.append((t.get_text(), "box edge"))
                 elif pa.get_facecolor()[3] > 0 and fill_hits_box(path, b):
                     hits.append((t.get_text(), "patch fill"))
             for c in ax.collections:
-                for pth in c.get_paths():
-                    if fill_hits_box(pth.transformed(c.get_transform()), b):
-                        hits.append((t.get_text(), "fill"))
+                if any(fill_hits_box(pth.transformed(c.get_transform()), b) for pth in c.get_paths()):
+                    hits.append((t.get_text(), "fill"))
         for ln in fig.lines:
-            xy = ln.get_transform().transform(np.column_stack([ln.get_xdata(), ln.get_ydata()]))
-            if poly_hits_box(xy, b):
+            if poly_hits_box(line_xy(ln), b):
                 hits.append((t.get_text(), "figure line"))
-    print(f"[fig_overview] text over lines/arrows/fills/box edges = {len(hits)} {hits}")
+    print(f"[fig_overview] text over lines/arrows/fills/markers/box edges = {len(hits)} {hits}")
     return hits
 
 
+def frame_fill(fig):
+    """Empty bands (in) below the lowest and above the highest text; a text box includes the font's descent."""
+    fig.canvas.draw()
+    r = fig.canvas.get_renderer()
+    texts = [t for ax in fig.axes for t in ax.texts] + list(fig.texts)
+    texts += [t for ax in fig.axes if ax.axison for t in ax.get_xticklabels() + ax.get_yticklabels()
+              if t.get_visible() and t.get_text().strip()]
+    bbs = [t.get_window_extent(r) for t in texts if t.get_text().strip()]
+    lo, hi = min(b.y0 for b in bbs) / fig.dpi, H - max(b.y1 for b in bbs) / fig.dpi
+    print(f"[fig_overview] empty band below the lowest text {lo:.3f} in, above the highest {hi:.3f} in")
+    return lo, hi
+
+
+def pdf_size_pt(path):
+    with open(path, "rb") as fh:
+        m = re.search(rb"/MediaBox\s*\[\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)\s*\]", fh.read())
+    x0, y0, x1, y1 = map(float, m.groups())
+    return x1 - x0, y1 - y0
+
+
 # ================================================================ caption
-def fmt_pct(x):
-    return f"{100 * x:.1f}"
-
-
-def captions(ep):
-    t, e, p, f = ep["t"], ep["exp"], ep["price"], ep["fund"]
-    ts, tc = ep["shock_t"], ep["corr_t"]
-    pre = e[(t >= ts - 5) & (t < ts)]
-    end = tc if tc is not None else t[-1] + 1
-    win = (t >= ts) & (t < end)
-    e_pre, e_min = float(np.nanmean(pre)), float(np.nanmin(e[win]))
-    m = ep["met"]
-    over = float(m.get("overshoot") or 0.0)
-    nliq = int(m.get("n_liquidations") or 0)
+def captions(ep, num):
+    # short model names, as the paper's text uses them ("Haiku and Sonnet"); the figure's row says "Claude, GPT"
+    pop = " and ".join(SHORT_NAMES.get((g.get("surrogate") or g.get("name") or ""), g.get("name", "")) for g in
+                       ep["groups"])
+    lead = "Stampede: one headline reaches every AI trading agent at once."
+    left = "Left: steered, commercial and MCP agents share one leveraged order book."
     hl = HEADLINE.get(ep["cfg"].get("hcode"), ("headline", "a headline"))[1]
-    num = dict(id=ep["id"], pop=ep["pop"], hcode=ep["cfg"].get("hcode"), regime=ep["cfg"].get("regime"),
-               adoption=ep["cfg"].get("adoption"), shock_t=ts, correction_t=tc, exposure_pre=round(e_pre, 3),
-               exposure_min=round(e_min, 3), overshoot=round(over, 5), crash_depth=round(float(m.get("crash_depth")
-               or 0), 5), n_liquidations=nliq, recovery_ticks=m.get("recovery_ticks"),
-               minutes_to_correction=(tc - ts) if tc is not None else None)
-    bull = is_bull(ep)
-    dev = (p - f) / float(m.get("p0") or p[0])
-    side = dev > 0 if bull else dev < 0
-    stays = tc is not None and bool(side[(t >= ts) & (t < tc)].all())
-    gap_max = float(np.max(dev[t >= ts])) if bull else over
-    where = "above" if bull else "below"
-    who = f"{ep['pop']} agents"
-    lead = "In Stampede, one headline reaches every AI trading agent at once."
-    left = "Left: steered, commercial and MCP agents trade on a leveraged order book."
-    if e_min < e_pre - 1e-9 or not bull:
-        act = f"cut mean exposure from {e_pre:.1f} to {e_min:.2f}"
-    else:
-        act = f"raise mean exposure from {e_pre:.1f} to {float(np.nanmax(e[win])):.2f}"
-    liq = f", {nliq} forced liquidations follow," if nliq else ""
-    if gap_max < 0.001:
-        price = "the price tracks fair value"
-    elif stays:
-        price = f"the price trades up to {fmt_pct(gap_max)}% {where} fair value until the correction"
-    else:
-        price = f"the price moves up to {fmt_pct(gap_max)}% {where} fair value"
-    right = f"Right: after {hl}, {who} {act}{liq} and {price}."
-    num["price_below_value_until_correction"] = stays
-    print("[fig_overview] caption numbers:", json.dumps(num))
+    who = f"{num['n']} agents replaying {pop}'s policy" if all(g.get("surrogate") for g in ep["groups"]) else \
+        f"{num['n']} {pop} agents"
+    price = (f"the price falls up to {100 * num['gap']:.1f}% below fair value"
+             + (" until the correction" if num["below_until_correction"] else ""))
+    right = (f"Right: after {hl}, {who} cut exposure from {num['e_pre']:.1f} to {num['e_min']:.2f}; {price}.")
     md_body = f"**{lead}** {left} {right}"
-    tex_right = right.replace("%", r"\%")
-    tex = ("% Figure 1: Stampede at a glance. Rendered by scripts/figs/fig_overview.py "
-           f"--episode {ep['id']}; re-run it to refresh the numbers.\n"
+    tex_body = f"\\textbf{{{lead}}} {left} {right}".replace("%", r"\%")
+    md = (f"<!-- Rendered by scripts/figs/fig_overview.py from results/episodes/{ep['id']}.json.gz -->\n\n"
+          f"{md_body}\n")
+    tex = (f"% Figure 1: Stampede at a glance. Rendered by scripts/figs/fig_overview.py from "
+           f"results/episodes/{ep['id']}.json.gz.\n"
            "\\begin{figure*}[t]\n  \\centering\n"
            "  \\includegraphics[width=\\textwidth]{figs/fig_overview}\n"
-           f"  \\caption{{\\textbf{{{lead}}} {left} {tex_right}}}\n"
+           f"  \\caption{{{tex_body}}}\n"
            "  \\label{fig:arch}\n\\end{figure*}\n")
-    md = (f"<!-- Rendered by scripts/figs/fig_overview.py --episode {ep['id']} -->\n\n{md_body}\n")
     words = len(md_body.replace("**", "").split())
-    print(f"[fig_overview] caption words = {words}")
     for s in (md, tex):
-        assert "\u2014" not in s and "\u2013" not in s, "dash in caption"
+        assert "\u2014" not in s and "\u2013" not in s and "--" not in s.split("\n", 1)[1], "dash in caption"
     with open(OUT + "_caption.md", "w") as fh:
         fh.write(md)
     with open(OUT + "_caption.tex", "w") as fh:
         fh.write(tex)
-    return num
+    print(f"[fig_overview] caption ({words} words): {md_body}")
+    return words
 
 
 # ================================================================ main
 def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--episode", default=None, help="episode id or path (default: largest false-headline overshoot)")
-    ap.add_argument("--out", default=None, help="output stem (default paper/figs/fig_overview)")
-    ap.add_argument("--agent-colour", choices=["auto", "clay", "ink"], default="auto",
-                    help="agents' colour on the right: clay = steered (as in the dial figure), ink = commercial; "
-                         "auto decides from the episode's groups")
-    args = ap.parse_args()
     global OUT
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--episode", default=EPISODE, help=f"episode id or path (default {EPISODE})")
+    ap.add_argument("--out", default=None, help="output stem (default paper/figs/fig_overview)")
+    args = ap.parse_args()
     if args.out:
         OUT = args.out
-    path = resolve_episode(args.episode) if args.episode else pick_default()
-    ep = load(path)
-    ep["path"] = path
-    print(f"[fig_overview] episode {ep['id']} ({os.path.relpath(path, ROOT)}): pop={ep['pop']}, "
-          f"hcode={ep['cfg'].get('hcode')}, regime={ep['cfg'].get('regime')}, adoption={ep['cfg'].get('adoption')}, "
-          f"shock_t={ep['shock_t']}, correction_t={ep['corr_t']}, steered={ep['steered']}")
-    assert ep["shock_t"] is not None, "episode has no headline"
-
-    # steered agents keep the risk-direction clay (as in the dial figure); commercial ones are drawn in ink,
-    # like the commercial diamonds there
-    clay = ep["steered"] if args.agent_colour == "auto" else args.agent_colour == "clay"
-    agent_c = (S.CLAY_SOFT, S.CLAY) if clay else ("#E4DDD3", S.INK)
+    ep = load(resolve_episode(args.episode))
+    num = numbers(ep)
+    print(f"[fig_overview] episode {ep['id']} ({os.path.relpath(ep['path'], ROOT)}): hcode={ep['cfg'].get('hcode')}, "
+          f"regime={ep['cfg'].get('regime')}, capital={ep['cfg'].get('adoption')}, seed={ep['cfg'].get('seed')}; "
+          f"numbers {json.dumps({k: (round(v, 5) if isinstance(v, float) else v) for k, v in num.items()})}")
+    if ep["id"] == EPISODE:   # the numbers the paper states for this episode
+        assert num["n"] == 24 and f"{num['e_pre']:.1f}" == "1.0" and f"{num['e_min']:.2f}" == "0.10"
+        assert f"{100 * num['gap']:.1f}" == "2.3" and num["below_until_correction"]
 
     fig = plt.figure(figsize=(W, H))
-    axS = fig.add_axes([0, 0, SW / W, 1])
-    chips_end = draw_schematic(axS, ep)
-    assert chips_end <= SW - 0.1, f"web chips overflow ({chips_end:.2f} > {SW})"
+    # chart frame first: the two axes leave just enough room below for the minute labels and above for the event
+    # labels (frame_fill checks it); the schematic's boxes span that whole height, from the minute labels' foot to
+    # the event labels' top, so no empty band runs above or below them
+    e_y0, e_h, gap, p_top = 0.425, 1.0, 0.16, 4.135
+    sw_guess = 6.9
+    axS = fig.add_axes([0, 0, sw_guess / W, 1])
+    axS.set_xlim(0, sw_guess)
+    axS.set_ylim(0, H)
+    sx1, _ = draw_schematic(fig, axS, ep, y_bot=0.06, y_top=H - 0.05)
+    # fit the schematic axes to what was drawn (1 data unit = 1 inch)
+    axS.set_position([0, 0, sx1 / W, 1])
+    axS.set_xlim(0, sx1)
 
-    px0, px1 = 8.8, 13.92
-    e_y0, e_h, gap, p_top = 0.66, 0.92, 0.14, 4.08
+    px0, px1 = sx1 + 1.32, W - 0.06
     axE = fig.add_axes([px0 / W, e_y0 / H, (px1 - px0) / W, e_h / H])
     axP = fig.add_axes([px0 / W, (e_y0 + e_h + gap) / H, (px1 - px0) / W, (p_top - e_y0 - e_h - gap) / H],
                        sharex=axE)
-    draw_episode(axP, axE, ep, agent_c)
-    # both y labels at one fixed x, just right of the schematic, whatever the tick labels' widths
-    ylab_x = (SW + 0.4 - px0) / (px1 - px0)       # anchor = right edge of the rotated label
+    draw_episode(axP, axE, ep)
+    ylab_x = (sx1 + 0.58 - px0) / (px1 - px0)     # both y labels at one x, whatever the tick labels' widths
     for ax in (axP, axE):
         ax.yaxis.set_label_coords(ylab_x, 0.5)
     fig.canvas.draw()
-    ev = place_event_labels(fig, axP, ep, lab_y_in=p_top + 0.12)
-    fv = place_on_line(fig, axP, ep["t"], ep["fund"], "fair value", ev)
-    if fv is None:
-        sys.exit("no free space for the 'fair value' label")
+
+    # the minute axis: tick labels, and the unit after the last one (saves a row of height)
+    r = fig.canvas.get_renderer()
+    tick_last = [t for t in axE.get_xticklabels() if t.get_text().strip()][-1]
+    tb = tick_last.get_window_extent(r)
+    unit = fig.text(axE.get_window_extent(r).x1 / fig.bbox.width, (tb.y0 + tb.y1) / 2 / fig.bbox.height, "minute",
+                    fontsize=FS_TICK, ha="right", va="center", color=S.INK)
+    ub = unit.get_window_extent(r)
+    print(f"[fig_overview] schematic right edge {sx1:.2f} in; gap last tick to minute = {(ub.x0 - tb.x1) / fig.dpi:.2f} in")
+    assert ub.x0 - tb.x1 > 0.25 * fig.dpi, "minute too close to the last tick label"
+
+    ev = place_event_labels(fig, axP, ep, y_in=p_top + 0.13)
+    t, f = ep["t"], ep["fund"]
+    # 'fair value' just below (or above) its line, as far right as there is room
+    late = np.flatnonzero(t >= ep["corr_t"] + 3)[::-1]
+    fv = place(fig, axP, "fair value", [(t[i], f[i], ha, va, 0, dy) for va, dy in (("top", -7), ("bottom", 7))
+                                        for i in late for ha in ("right", "center")])
+    assert fv is not None, "no room for 'fair value'"
+    # the deepest gap, right of the trough
+    g = place(fig, axP, f"\u2212{100 * num['gap']:.1f}%",
+              [(num["t_gap"], num["p_gap"], "left", va, dx, dy) for dx in (9, 13, 17, 21, 25)
+               for va, dy in (("center", 0), ("center", -4), ("top", 4), ("center", 4))])
+    assert g is not None, "no room for the gap label"
+    # the exposure low, above the low step, left of the correction line
+    lo = place(fig, axE, f"{num['e_min']:.2f}",
+               [(num["t_min"] + 0.5, num["e_min"], ha, "bottom", dx, dy) for dy in (6, 10, 14, 18)
+                for ha, dx in (("right", -5), ("right", -8), ("right", -2), ("center", 0))])
+    assert lo is not None, "no room for the exposure label"
 
     n = check(fig, "fig_overview")
     hits = text_hits(fig)
+    band_lo, band_hi = frame_fill(fig)
+    assert band_lo < 0.08 and band_hi < 0.08, "an empty band runs below or above the content"
     fig.savefig(OUT + ".pdf")
     fig.savefig(OUT + ".png", dpi=300)
-    tb = fig.get_tightbbox(fig.canvas.get_renderer())
-    w_in, h_in = tb.width + 0.1, tb.height + 0.1
-    k = TEXTWIDTH_IN / w_in
-    print(f"[fig_overview] saved {w_in:.2f} x {h_in:.2f} in (aspect {w_in / h_in:.2f}); at \\textwidth: scale {k:.3f}, "
-          f"height {h_in * k:.2f} in; smallest text {FS_SUB * k:.1f} pt, ticks {FS_TICK * k:.1f} pt, "
-          f"labels {FS_LAB * k:.1f} pt, notes {FS_NOTE * k:.1f} pt; lines: price {2.6 * k:.2f} pt")
-    captions(ep)
-    if n or hits:
-        sys.exit("overlaps found")
+    plt.close(fig)
+
+    w_pt, h_pt = pdf_size_pt(OUT + ".pdf")
+    k = TEXTWIDTH_PT / w_pt
+    h_paper, h_v1 = h_pt * k, V1_PT[1] * TEXTWIDTH_PT / V1_PT[0]
+    print(f"[fig_overview] saved {w_pt / 72:.3f} x {h_pt / 72:.3f} in (aspect {w_pt / h_pt:.3f}; v1 "
+          f"{V1_PT[0] / V1_PT[1]:.3f}); at \\textwidth: scale {k:.3f}, height {h_paper:.1f} pt = {h_paper / 72:.3f} in "
+          f"(v1 {h_v1:.1f} pt); print sizes: headline card {FS_HEAD * k:.1f}/{FS_HEAD_SUB * k:.1f} pt, schematic "
+          f"{FS_BOX * k:.1f}/{FS_SUB * k:.1f} pt, ticks {FS_TICK * k:.1f} pt, axis labels {FS_LAB * k:.1f} pt, "
+          f"notes {FS_NOTE * k:.1f} pt")
+    assert h_paper <= h_v1 + 1e-6, "taller than version 1 at \\textwidth"
+    assert h_paper / 72 <= MAX_H_IN + 1e-9, f"taller than {MAX_H_IN} in at \\textwidth"
+    words = captions(ep, num)
+    if n or hits or words > MAX_WORDS:
+        sys.exit("overlaps found or caption too long")
 
 
 if __name__ == "__main__":

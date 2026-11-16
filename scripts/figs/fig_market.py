@@ -1,25 +1,23 @@
-"""Figure: the market results. When does a false headline crash the market, and which safeguard helps?
+"""Figure: checking a headline's source defuses a false post, not the same story on a verified-looking wire.
 
-Left: excess overshoot (price below fundamental value, minus the no-headline twin with the same seed; 16 seeds)
-against agent capital in the equity regime. The two false headlines are labelled as the agents see them:
-"post" = unverified social post (fake_unv), "wire" = verified wire, i.e. a verified-looking source (fake_ver).
-Unsteered Gemma-4-12B (clay) reacts identically to both, so its two curves coincide and are drawn once; the
-population running Claude Opus's policy (ink, white diamonds) barely moves on the post (solid) but follows the
-fake wire (dashed).
+One message, one panel. The same false story reaches a market of agents in one of two forms (the x groups), as the
+agents see it: an unverified social post (hcode fake_unv) or a verified wire (fake_ver, i.e. a verified-looking
+source such as a compromised official account). Equities, agents managing 2x the book's depth, 16 seeds per cell.
+Bars: excess overshoot, how far the price falls below fundamental (fair) value beyond the no-headline twin with the
+same seed; whiskers: bootstrap 95% intervals. Three markets per form, in the same order and style in both groups:
+  Gemma   unsteered Gemma-4-12B, no safeguard (solid clay). It reacts identically to post and wire.
+  filter  the same Gemma agents with the provenance filter that hides unverified posts (Gemma's hue, lighter;
+          delaying unverified posts gives identical results). The filter's twin equals the no-safeguard twin, so its
+          drop is real in raw overshoot too (2.27% -> 0.27%), and the wire is untouched.
+  Opus    a population replaying Claude Opus's response table, no safeguard (white, ink edge, the style of the
+          commercial models in the other figures). It discounts the post on its own but not the wire.
+The bars carry direct labels once, in the post group, where the two short bars leave room; the wire group repeats the
+order and styles. Labelled "filter", not "post filter", which also reads as "post-filter" (after filtering).
+Left out on purpose (the paper text keeps them): the capital sweep, the other commercial models, and the
+half-reckless crypto market where a leverage cap or risk dial -1 deepens the crash (0.06% -> 1.68% or 3.05%).
 
-Right: excess overshoot at capital 2 in two different markets, each under its own header with its own
-no-safeguard reference (dotted). Bars: bootstrap 95% intervals.
-  (a) unsteered Gemma, equity: the provenance filter ("hide posts"; delaying unverified posts gives identical
-      results) removes the post-driven crash (filled dot) but not the fake wire (open circle). The leverage cap
-      and cautious steering are NOT drawn here: their higher excess for this population is a twin artefact (raw
-      headline overshoot 2.27% with no safeguard vs 2.29% with either; only the no-headline twin differs,
-      0.52% vs 0.04%, because uncapped leveraged agents make their own swings). Asserted below.
-  (b) half-reckless Gemma (pop r50: half unsteered, half risk dial +1.5), crypto: no safeguard, a 1x leverage cap,
-      and cautious steering (every agent's risk dial shifted by -1; cells with pop "r50_shift"). Removing the
-      risk-takers' capacity turns a non-event into a crash, in raw overshoot too (0.06% -> 2.55% and 3.44%).
-
-Reads results/e4/tipping_point.json, results/e6/safeguards.json and results/e6/safeguards_cells.json.
-Writes paper/figs/fig_market.pdf and paper/figs/fig_market.png (300 dpi).
+Reads results/e4/tipping_point.json (Opus), results/e6/safeguards.json (Gemma with and without the filter) and
+results/e6/safeguards_cells.json (raw overshoot and twin, as a check). Writes paper/figs/fig_market.pdf and .png.
 """
 import json
 import os
@@ -32,7 +30,7 @@ import style as S  # noqa: E402
 from overlap_check import check  # noqa: E402
 
 import matplotlib.pyplot as plt  # noqa: E402
-from matplotlib.transforms import blended_transform_factory  # noqa: E402
+from matplotlib.collections import LineCollection  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 TIP = os.path.join(ROOT, "results/e4/tipping_point.json")
@@ -40,194 +38,200 @@ SAFE = os.path.join(ROOT, "results/e6/safeguards.json")
 CELLS = os.path.join(ROOT, "results/e6/safeguards_cells.json")
 OUT = os.path.join(ROOT, "paper/figs/fig_market")
 
-REGIME, CAP_R = "equity", 2.0
+REGIME, CAP = "equity", 2.0
+COLUMN_IN = 241.14839 / 72.27        # acmart sigconf \columnwidth in inches
+MAX_H_IN = 1.48                      # rendered height at \columnwidth must not exceed this (fig_dial beside it: 1.487)
 
-# ---------------------------------------------------------------- data: left panel
+# ---------------------------------------------------------------- data
 tip = json.load(open(TIP))
-
-
-def curve(pop, hcode):
-    cs = sorted((c for c in tip if c["tag"] == "models" and c["pop"] == pop and c["regime"] == REGIME
-                 and c["hcode"] == hcode and c["safeguard_name"] == "none"), key=lambda c: c["capital"])
-    assert len(cs) == 6 and all(c["n"] == 16 for c in cs), (pop, hcode, len(cs))
-    g = lambda k: 100 * np.array([c[k] for c in cs])  # noqa: E731
-    return np.array([c["capital"] for c in cs]), g("excess_overshoot"), g("excess_overshoot_lo"), g("excess_overshoot_hi")
-
-
-cap, gem_u, gem_u_lo, gem_u_hi = curve("gemma-base", "fake_unv")
-_, gem_v, gem_v_lo, gem_v_hi = curve("gemma-base", "fake_ver")
-_, opu_u, opu_u_lo, opu_u_hi = curve("claude-opus", "fake_unv")
-_, opu_v, opu_v_lo, opu_v_hi = curve("claude-opus", "fake_ver")
-# Gemma does not discount the source: both fakes give the same curve, so one line stands for both
-assert np.allclose(gem_u, gem_v, atol=1e-9), "Gemma post and wire curves differ"
-
-# ---------------------------------------------------------------- data: right panel
 safe = json.load(open(SAFE))
+cells = json.load(open(CELLS))
 
 
-def sgd(pop, regime, name):
-    rs = [r for r in safe if r["pop"] == pop and r["regime"] == regime and r["capital"] == CAP_R and r["safeguard"] == name]
-    assert len(rs) == 1, (pop, regime, name, len(rs))
+def tp(pop, hcode, cap=CAP):
+    """Excess overshoot [mean, lo, hi] in % from the population sweep (no safeguard)."""
+    cs = [c for c in tip if c["tag"] == "models" and c["pop"] == pop and c["regime"] == REGIME
+          and c["hcode"] == hcode and c["safeguard_name"] == "none" and c["capital"] == cap]
+    assert len(cs) == 1 and cs[0]["n"] == 16, (pop, hcode, cap, len(cs))
+    c = cs[0]
+    return 100 * np.array([c["excess_overshoot"], c["excess_overshoot_lo"], c["excess_overshoot_hi"]])
+
+
+def sg(pop, name):
+    """Excess overshoot [mean, lo, hi] in % for post and wire from the safeguard sweep."""
+    rs = [r for r in safe if r["pop"] == pop and r["regime"] == REGIME and r["capital"] == CAP and r["safeguard"] == name]
+    assert len(rs) == 1, (pop, name, len(rs))
     r = rs[0]
     return {"post": 100 * np.array([r["fake_unv_overshoot"], r["fake_unv_lo"], r["fake_unv_hi"]]),
             "wire": 100 * np.array([r["fake_ver_overshoot"], r["fake_ver_lo"], r["fake_ver_hi"]])}
 
 
-A = {k: sgd("gemma-base", "equity", k) for k in ("none", "hide_unverified", "delay_unverified")}
-B = {k: sgd("r50", "crypto", k) for k in ("none", "leverage_cap", "steer_cautious")}
-assert abs(A["none"]["post"][0] - gem_u[cap == CAP_R][0]) < 0.01, "safeguard baseline differs from the left-panel point"
-assert np.allclose(A["hide_unverified"]["post"][0], A["delay_unverified"]["post"][0], atol=1e-6)
-
-# raw headline overshoot and twins from the cells, to make sure every drawn comparison survives the twin check
-cells = json.load(open(CELLS))
-
-
-def cell(pop, regime, name, hcode="fake_unv"):
-    cs = [c for c in cells if c["pop"] == pop and c["regime"] == regime and c["capital"] == CAP_R
+def raw(pop, name, hcode):
+    """(raw headline overshoot, twin overshoot, excess) in % for one safeguard cell."""
+    cs = [c for c in cells if c["pop"] == pop and c["regime"] == REGIME and c["capital"] == CAP
           and c["safeguard_name"] == name and c["hcode"] == hcode]
-    assert len(cs) == 1 and cs[0]["n"] == 16, (pop, regime, name, hcode, len(cs))
+    assert len(cs) == 1 and cs[0]["n"] == 16, (pop, name, hcode, len(cs))
     c = cs[0]
     return 100 * c["overshoot"], 100 * (c["overshoot"] - c["excess_overshoot"]), 100 * c["excess_overshoot"]
 
 
-raw = {"A none": cell("gemma-base", "equity", "none"), "A hide": cell("gemma-base", "equity", "hide_unverified"),
-       "A hide wire": cell("gemma-base", "equity", "hide_unverified", "fake_ver"),
-       "A levcap (not drawn)": cell("gemma-base", "equity", "leverage_cap"),
-       "A steer (not drawn)": cell("base_shift", "equity", "none"),
-       "B none": cell("r50", "crypto", "none"), "B levcap": cell("r50", "crypto", "leverage_cap"),
-       "B steer": cell("r50_shift", "crypto", "none")}
-for k, (h, t, e) in raw.items():
-    print(f"  {k:22s} raw {h:5.2f}  twin {t:5.2f}  excess {e:+5.2f}")
-# Gemma equity: the filter's twin is the no-safeguard twin, so its drop is real in raw terms too
-assert abs(raw["A hide"][1] - raw["A none"][1]) < 1e-6 and raw["A hide"][0] < 0.5 * raw["A none"][0]
-assert abs(raw["A hide wire"][0] - raw["A none"][0]) < 0.05           # the fake wire is untouched
-# Gemma equity: leverage cap and cautious steering do not raise the raw crash (twin artefact), so they are left out
-assert abs(raw["A levcap (not drawn)"][0] - raw["A none"][0]) < 0.1 and abs(raw["A steer (not drawn)"][0] - raw["A none"][0]) < 0.1
-# half-reckless crypto: both deepen the crash in raw overshoot as well as in excess
-assert raw["B levcap"][0] > raw["B none"][0] + 1.5 and raw["B steer"][0] > raw["B none"][0] + 1.5
-for name, d in [("A", A), ("B", B)]:
-    for k, x in d.items():
-        print(f"  {name} {k:17s} post {x['post'][0]:+.2f} [{x['post'][1]:+.2f},{x['post'][2]:+.2f}]  "
-              f"wire {x['wire'][0]:+.2f} [{x['wire'][1]:+.2f},{x['wire'][2]:+.2f}]")
+D = {"gemma": sg("gemma-base", "none"),
+     "filter": sg("gemma-base", "hide_unverified"),
+     "opus": {"post": tp("claude-opus", "fake_unv"), "wire": tp("claude-opus", "fake_ver")}}
+ORDER = ("gemma", "filter", "opus")
+
+# sanity: Gemma reacts identically to both forms, in both sweeps, and the two sweeps agree
+assert abs(D["gemma"]["post"][0] - D["gemma"]["wire"][0]) < 1e-9
+assert abs(tp("gemma-base", "fake_unv")[0] - D["gemma"]["post"][0]) < 0.01
+assert abs(tp("gemma-base", "fake_ver")[0] - D["gemma"]["wire"][0]) < 0.01
+# hiding and delaying unverified posts give the same result; the filter leaves the wire untouched
+assert abs(D["filter"]["post"][0] - sg("gemma-base", "delay_unverified")["post"][0]) < 1e-6
+assert abs(D["filter"]["wire"][0] - D["gemma"]["wire"][0]) < 1e-6
+# the filter's drop is not a twin artefact: same twin, raw headline overshoot falls too
+r_none, r_hide = raw("gemma-base", "none", "fake_unv"), raw("gemma-base", "hide_unverified", "fake_unv")
+assert abs(r_none[1] - r_hide[1]) < 1e-6 and r_hide[0] < 0.5 * r_none[0]
+# Opus: at most 0.10% on the post at any capital, the 2x values are the ones drawn
+opus_post_all = [tp("claude-opus", "fake_unv", c)[0] for c in (0.25, 0.5, 1.0, 1.5, 2.0, 3.0)]
+assert round(max(opus_post_all), 2) == 0.10 and max(opus_post_all) == D["opus"]["post"][0]
+# the numbers quoted in the caption
+QUOTED = {("gemma", "post"): 1.74, ("filter", "post"): -0.25, ("opus", "post"): 0.10, ("opus", "wire"): 1.57}
+for (k, h), q in QUOTED.items():
+    assert round(D[k][h][0], 2) == q, (k, h, D[k][h][0], q)
+for k in ORDER:
+    for h in ("post", "wire"):
+        m, lo, hi = D[k][h]
+        assert lo <= m <= hi
+        print(f"  {k:6s} {h:4s} {m:+.3f}%  [{lo:+.3f}, {hi:+.3f}]")
+print(f"  raw post overshoot, Gemma: {r_none[0]:.2f}% (twin {r_none[1]:.2f}) -> with filter {r_hide[0]:.2f}% "
+      f"(twin {r_hide[1]:.2f})")
 
 # ---------------------------------------------------------------- style
 S.apply_style()
-plt.rcParams.update({"font.size": 19.5, "axes.labelsize": 20.5, "xtick.labelsize": 19, "ytick.labelsize": 19})
-ANN = 19.0
-TXT = dict(fontsize=ANN, zorder=6)
-C_GEM, C_COM = S.CLAY, S.INK
-DIA = dict(marker="D", ms=6.5, mfc="white", mec=S.INK, mew=1.5)
+FS = 24                                   # all text; renders at 11 pt at \columnwidth (body text is 9 pt)
+plt.rcParams.update({"font.size": FS, "axes.labelsize": FS, "xtick.labelsize": FS, "ytick.labelsize": FS - 1})
+STY = {"gemma": dict(color=S.CLAY, ec=S.CLAY),             # Gemma = clay, as in every figure
+       "filter": dict(color=S.CLAY_SOFT, ec=S.CLAY),       # the same Gemma agents behind the filter: Gemma's hue
+       "opus": dict(color="white", ec=S.INK)}               # commercial model = white with ink edge
+LABEL = {"gemma": "Gemma", "filter": "filter", "opus": "Opus"}
+EB = dict(fmt="none", ecolor=S.INK, elinewidth=1.5, capsize=5, capthick=1.5, zorder=4)
+BW, STEP, GGAP = 0.74, 1.0, 0.62          # bar width, bar pitch, extra gap between the two forms (data units)
+LEFT = 0.38                               # y axis to the first bar's edge: room for the Gemma label's overhang
+LIFT = 7                                  # gap from a whisker's top to its label (pt)
+XPAD = 9                                  # gap below the axes to the two form labels (pt): clears the lowest cap
+W_IN, H_IN = 7.26, 3.18                   # the axes fill the width; the y label's length sets the height
+L_IN, R_IN, B_IN, T_IN = 0.70, 0.05, 0.50, 0.04
 
-W, H = 6.8, 3.0
-fig = plt.figure(figsize=(W, H))
-axL = fig.add_axes([0.098, 0.215, 0.39, 0.77])
-axR = fig.add_axes([0.735, 0.215, 0.255, 0.77])
+fig = plt.figure(figsize=(W_IN, H_IN))
+ax = fig.add_axes([L_IN / W_IN, B_IN / H_IN, 1 - (L_IN + R_IN) / W_IN, 1 - (B_IN + T_IN) / H_IN])
 
-# ---------------------------------------------------------------- left: crash against capital
-ax = axL
-ax.plot(cap, gem_u, color=C_GEM, lw=2.8, marker="o", ms=6.5, zorder=4)
-ax.plot(cap, opu_v, color=C_COM, lw=2.2, ls=(0, (4, 2.2)), zorder=4, **DIA)
-ax.plot(cap, opu_u, color=C_COM, lw=2.2, zorder=4, **DIA)
+xs, x = {}, 0.0
+for h in ("post", "wire"):
+    for k in ORDER:
+        xs[(h, k)] = x
+        x += STEP
+    x += GGAP
 
-ax.text(0.12, 2.42, "Gemma, wire or post", ha="left", va="center", **TXT)
-ax.text(1.28, 0.93, "Opus, wire", ha="left", va="center", **TXT)
-ax.text(1.28, -0.32, "Opus, post", ha="left", va="center", **TXT)
+for (h, k), xx in xs.items():
+    m, lo, hi = D[k][h]
+    ax.bar(xx, m, width=BW, lw=1.8, zorder=3, **STY[k])
+    ax.errorbar(xx, m, yerr=[[m - lo], [hi - m]], **EB)
+ax.axhline(0, color=S.INK, lw=1.2, zorder=5)
 
-ax.set_xlim(0, 3.18)
-ax.set_ylim(-0.55, 2.62)
-ax.set_xticks([0, 1, 2, 3])
+# direct labels once, above each bar of the post group; the wire group repeats the same order and styles
+labels = {k: ax.annotate(LABEL[k], (xs[("post", k)], max(D[k]["post"][2], 0)), xytext=(0, LIFT),
+                         textcoords="offset points", ha="center", va="bottom", fontsize=FS, zorder=6)
+          for k in ORDER}
+ax.set_xticks([xs[("post", "filter")], xs[("wire", "filter")]])
+ax.set_xticklabels(["unverified post", "verified-looking wire"])
+ax.tick_params(axis="x", length=0, pad=XPAD)
+ax.spines["bottom"].set_visible(False)
 ax.set_yticks([0, 1, 2])
-ax.set_xlabel("capital / book depth", labelpad=2)
-ax.set_ylabel("excess overshoot (%)", labelpad=4)
-
-# ---------------------------------------------------------------- right: safeguards in two markets at capital 2
-ax = axR
-Y = {"hA": 0.0, "A none": -1.0, "A hide": -2.0, "hB": -3.4, "B none": -4.4, "B lev": -5.4, "B steer": -6.4}
-DOT = dict(ls="none", marker="o", ms=8.5, color=C_GEM, zorder=4)
-RING = dict(ls="none", marker="o", ms=8.5, mfc="white", mec=C_GEM, mew=1.8, zorder=5)
-REF = dict(color=S.SUBINK, lw=1.4, ls=(0, (1.2, 2.2)), zorder=1)
+ax.set_ylabel("extra price fall (%)", labelpad=3)
+x_hi = xs[("wire", ORDER[-1])] + BW / 2 + 0.03
+ax.set_xlim(xs[("post", ORDER[0])] - BW / 2 - LEFT, x_hi)
+y_lo = min(D[k][h][1] for k in ORDER for h in ("post", "wire")) - 0.035   # just below the lowest whisker cap
+ax.set_ylim(y_lo, 2.9)
 
 
-def ci(x, y):
-    ax.plot([x[1], x[2]], [y, y], color=S.CLAY_SOFT, lw=5.5, solid_capstyle="butt", zorder=2)
+def extent(t):
+    """Extent (x0, x1, y0, y1) of a text in data units."""
+    fig.canvas.draw()
+    bb = t.get_window_extent(fig.canvas.get_renderer())
+    (x0, y0), (x1, y1) = ax.transData.inverted().transform([[bb.x0, bb.y0], [bb.x1, bb.y1]])
+    return x0, x1, y0, y1
 
 
-# (a) unsteered Gemma, equity
-ax.plot([A["none"]["post"][0]] * 2, [Y["A none"] + 0.36, Y["A hide"] - 0.36], **REF)
-ci(A["none"]["post"], Y["A none"])
-ax.plot([A["none"]["post"][0]], [Y["A none"]], **DOT)
-hp, hw = A["hide_unverified"]["post"], A["hide_unverified"]["wire"]
-ci(hp, Y["A hide"])
-ci(hw, Y["A hide"])
-ax.plot([hp[0], hw[0]], [Y["A hide"]] * 2, color=C_GEM, lw=1.5, zorder=3)
-ax.plot([hp[0]], [Y["A hide"]], **DOT)
-ax.plot([hw[0]], [Y["A hide"]], **RING)
-
-# (b) half-reckless Gemma, crypto
-ax.plot([B["none"]["post"][0]] * 2, [Y["B none"] + 0.3, Y["B steer"] - 0.36], **REF)
-for k, yk in [("none", "B none"), ("leverage_cap", "B lev"), ("steer_cautious", "B steer")]:
-    ci(B[k]["post"], Y[yk])
-    ax.plot([B[k]["post"][0]], [Y[yk]], **DOT)
-
-ticks = ["A none", "A hide", "B none", "B lev", "B steer"]
-ax.set_yticks([Y[t] for t in ticks])
-ax.set_yticklabels(["none", "hide posts", "none", "leverage cap", "risk dial −1"])
-ax.tick_params(axis="y", length=0, pad=5)
-ax.spines["left"].set_visible(False)
-ax.set_ylim(-6.85, 0.42)
-ax.set_xlim(-0.88, 3.9)
-ax.set_xticks([0, 1, 2, 3])
-ax.set_xlabel("excess overshoot (%)", labelpad=2)
-
-# group headers: left-aligned at the label column, on rows that hold no data
-HX = 0.522                                           # figure fraction, just right of the left panel
-tr = blended_transform_factory(fig.transFigure, ax.transData)
-heads = [ax.text(HX, Y["hA"], "Gemma, equity", ha="left", va="center", transform=tr, gid="header", **TXT),
-         ax.text(HX, Y["hB"], "half reckless, crypto", ha="left", va="center", transform=tr, gid="header", **TXT)]
+# the top of the axes sits just above the Gemma label: no headroom beyond what the label needs
+for _ in range(4):
+    ax.set_ylim(y_lo, extent(labels["gemma"])[3] + 0.02)
+# the wire label ends flush with the last bar instead of overhanging the right edge as dead space
+w0, w1, _, _ = extent(ax.get_xticklabels()[1])
+ax.set_xticks([xs[("post", "filter")], x_hi - (w1 - w0) / 2])
+ax.set_xticklabels(["unverified post", "verified-looking wire"])
+# the y label is a little longer than the axes; top-align it with the axes so it does not raise the figure's top edge
+# (its lower end hangs beside the form labels, where the left margin is empty)
+_, _, l0, l1 = extent(ax.yaxis.label)
+ax.yaxis.label.set_y(0.5 - max(l1 - ax.get_ylim()[1], 0) / (ax.get_ylim()[1] - ax.get_ylim()[0]))
 
 
 # ---------------------------------------------------------------- checks and save
-def mark_hits(fig, pad_px=6):
-    """Text drawn over a line segment or marker (the skill's checker covers only text and ticks)."""
+def text_hits(fig, pad_px=4):
+    """Text over bars, whiskers, caps or the zero line, and annotations leaving the axes (the skill's checker
+    covers only text against text and ticks). Labels outside the canvas are fine: savefig uses a tight bbox."""
     fig.canvas.draw()
     r = fig.canvas.get_renderer()
+    px_pt = fig.dpi / 72
     hits = []
-    for ax in fig.axes:
-        for t in ax.texts:
+    for a in fig.axes:
+        texts = [t for t in a.texts if t.get_text().strip()]
+        labels = [t for t in a.get_xticklabels() + a.get_yticklabels() + [a.xaxis.label, a.yaxis.label]
+                  if t.get_text().strip()]
+        for t in texts + labels:
             b = t.get_window_extent(r).padded(pad_px)
-            for ln in ax.lines:
+            for p in a.patches:
+                if b.overlaps(p.get_window_extent(r)):
+                    hits.append((t.get_text(), "bar"))
+            segs = []
+            for c in a.collections:
+                if isinstance(c, LineCollection):
+                    segs += [c.get_transform().transform(s) for s in c.get_segments()]
+            for ln in a.lines:
                 xy = ln.get_transform().transform(np.column_stack(ln.get_data()))
-                if ln.get_marker() not in (None, "None", "none", ""):
-                    rad = ln.get_markersize() * fig.dpi / 72 / 2
-                    bb = b.padded(rad)
-                    for x, y in xy:
-                        if bb.contains(x, y):
-                            hits.append((t.get_text(), "marker", tuple(np.round(
-                                ax.transData.inverted().transform((x, y)), 2))))
-                if ln.get_linestyle() not in ("None", "none", ""):
-                    for (x0, y0), (x1, y1) in zip(xy[:-1], xy[1:]):
-                        ts = np.linspace(0, 1, 200)
-                        if any(b.contains(x0 + s * (x1 - x0), y0 + s * (y1 - y0)) for s in ts):
-                            hits.append((t.get_text(), "line", ln.get_color()))
-                            break
-            if t.get_gid() == "header":              # headers start in the label column by design
-                lab = [tl.get_window_extent(r) for a in fig.axes for tl in a.get_yticklabels() + a.get_xticklabels()
-                       if tl.get_text().strip()]
-                if any(b.overlaps(x) for x in lab) or b.x1 > ax.bbox.x1:
-                    hits.append((t.get_text(), "header hits a tick label or leaves the figure"))
-                continue
-            if not ax.bbox.contains(b.x0 + pad_px, b.y0 + pad_px) or not ax.bbox.contains(b.x1 - pad_px, b.y1 - pad_px):
+                mk = ln.get_marker()
+                if mk not in (None, "None", "none", ""):
+                    half = ln.get_markersize() * px_pt / 2            # caps are flat: "_" is wide, "|" is tall
+                    thin = ln.get_markeredgewidth() * px_pt / 2
+                    hx, hy = {"_": (half, thin), "|": (thin, half)}.get(mk, (half, half))
+                    if any(b.x0 - hx <= px <= b.x1 + hx and b.y0 - hy <= py <= b.y1 + hy for px, py in xy):
+                        hits.append((t.get_text(), "marker"))
+                if ln.get_linestyle() not in ("None", "none", "") and len(xy) > 1:
+                    segs.append(xy)
+            for sgm in segs:
+                for (x0, y0), (x1, y1) in zip(sgm[:-1], sgm[1:]):
+                    if any(b.contains(x0 + s * (x1 - x0), y0 + s * (y1 - y0)) for s in np.linspace(0, 1, 300)):
+                        hits.append((t.get_text(), "line"))
+                        break
+        for t in texts:
+            b = t.get_window_extent(r)
+            if not (a.bbox.x0 <= b.x0 and b.x1 <= a.bbox.x1 and a.bbox.y0 <= b.y0 and b.y1 <= a.bbox.y1):
                 hits.append((t.get_text(), "outside axes"))
-    print(f"[fig_market] text over lines/markers or outside axes = {len(hits)} {hits}")
+        for i, t in enumerate(labels):               # axis labels against tick labels and each other
+            for u in labels[i + 1:]:
+                if t.get_window_extent(r).overlaps(u.get_window_extent(r)):
+                    hits.append((t.get_text(), u.get_text()))
+    print(f"[fig_market] text over bars, whiskers, caps or zero line, or outside axes = {len(hits)} {hits}")
     return hits
 
 
 n = check(fig, "fig_market")
-mark_hits(fig)
+hits = text_hits(fig)
+assert n == 0 and not hits
 fig.savefig(OUT + ".pdf")
 fig.savefig(OUT + ".png", dpi=300)
 tb = fig.get_tightbbox(fig.canvas.get_renderer())
-w_in, h_in = tb.width + 0.1, tb.height + 0.1
-k = 3.33 / w_in
-print(f"saved {w_in:.2f} x {h_in:.2f} in (aspect {w_in / h_in:.2f}); at columnwidth 3.33 in: scale {k:.3f}, "
-      f"ticks {19 * k:.1f} pt, axis labels {20.5 * k:.1f} pt, notes {ANN * k:.1f} pt, height {h_in * k:.2f} in")
+w_in = tb.width + 2 * plt.rcParams["savefig.pad_inches"]
+h_in = tb.height + 2 * plt.rcParams["savefig.pad_inches"]
+k = COLUMN_IN / w_in
+print(f"saved {w_in:.2f} x {h_in:.2f} in (aspect {w_in / h_in:.3f}); at \\columnwidth {COLUMN_IN:.3f} in: scale {k:.3f}, "
+      f"text {FS * k:.1f} pt, ticks {(FS - 1) * k:.1f} pt, height {h_in * k:.3f} in (limit {MAX_H_IN} in)")
+assert h_in * k <= MAX_H_IN
