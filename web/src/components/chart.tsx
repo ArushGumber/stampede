@@ -51,8 +51,8 @@ export function robustDomain(vals: number[], pad = 0.06): { lo: number; hi: numb
 
 /** Diverging colour (blue, grey midpoint, red) for signed values; selected per theme, not flipped. */
 const DIV: Record<Resolved, string[]> = {
-  light: ['#184f95', '#6da7ec', '#efeee9', '#ef8f86', '#a8282a'],
-  dark: ['#8fbcf2', '#2f5b8f', '#34342f', '#94403c', '#ff9089'],
+  light: ['#2d5c8f', '#93b4d8', '#f4f2ee', '#efa47c', '#b4461b'],
+  dark: ['#93b4d8', '#3a5d84', '#2c2b28', '#9a4c2a', '#f0a07a'],
 }
 export function divergingScale(maxAbs: number, theme: Resolved) {
   const m = maxAbs > 0 ? maxAbs : 1

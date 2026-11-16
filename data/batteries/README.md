@@ -37,8 +37,8 @@ under `items` (`traits.json` uses `traits`). Ids are unique across all files.
 Regenerate and check:
 
 ```
-/home/arush/arnesh/www/.venv/bin/python data/batteries/_build/build.py
-/home/arush/arnesh/www/.venv/bin/python scripts/validate_batteries.py
+python data/batteries/_build/build.py
+python scripts/validate_batteries.py
 ```
 
 The JSON files are generated. Hand-written text lives in `_build/content_*.py`; `_build/build.py` assigns ids,

@@ -4,7 +4,7 @@ import { line as d3line, area as d3area } from 'd3-shape'
 import * as D from '../data'
 import type { Cell } from '../types'
 import { HCODE, HCODE_ORDER, hcodeShort, regimeLabel, sgLabel } from '../config'
-import { useLoaded, useResult, useSource, LoadState, Panel, PageHead, Seg, Sel, Takeaway, GlyphMark, Empty } from '../components/ui'
+import { useLoaded, useResult, useSource, LoadState, Panel, PageHead, Seg, Sel, Takeaway, GlyphMark, Empty, Info } from '../components/ui'
 import { useWidth, TipBox, YGrid, AxisTitle, divergingScale, inkOn, DivLegend, type Tip } from '../components/chart'
 import { useResolvedTheme } from '../theme'
 import { capLabel, disposition, fin, num, pct, popInfo, popOrder, uniq } from '../vocab'
@@ -78,21 +78,21 @@ export default function Tipping() {
         {sgs.length > 1 && <Sel label="Safeguard" value={sgv} options={sgs.map(s => ({ v: s, label: sgLabel(s) }))} onChange={setSg} />}
         <Sel label="Measure" value={ms.key} options={measures.map(m => ({ v: m.key, label: m.label }))} onChange={setMk} />
       </div>
-      <p className="note" style={{ marginTop: -4 }}>Sweep <span className="mono">{tg}</span>: {pops.length} populations by {caps.length} capital levels, {cells[0]?.n ?? '?'} seeds per cell. {HCODE[hc]?.long ?? ''}. Excess means the headline episode minus its twin run with the same seed and no headline.</p>
+      <p className="note" style={{ marginTop: -8, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 5 }}>{pops.length} populations, {caps.length} capital levels, {cells[0]?.n ?? '?'} seeds per cell.<Info align="left">Sweep {tg}. {HCODE[hc]?.long ?? ''}. Excess means the headline episode minus its twin run with the same seed and no headline.</Info></p>
       {!cells.length ? <Empty title="No cells match these switches" /> : <>
         <Takeaway>{take}</Takeaway>
         <div className="grid21">
           <Panel title={`${ms.label} by population and capital`} sub={ms.unit}>
             <HeatMap cells={cells} pops={pops} caps={caps} ms={ms} maxAbs={maxAbs} theme={theme} have={have} label={label} onHover={setHover} hover={hover} />
-            <DivLegend maxAbs={maxAbs} theme={theme} fmt={ms.fmt} label={ms.signed ? 'blue: below the twin, red: above; cell values in %' : ''} />
-            <p className="note" style={{ marginTop: 6 }}>Cells with a corner mark have a recorded episode on this server; click one to replay it in the Arena.</p>
+            <DivLegend maxAbs={maxAbs} theme={theme} fmt={ms.fmt} label={ms.signed ? 'below the twin to above it' : ''} />
+            <p className="note" style={{ marginTop: 8 }}>Cells with a corner mark have a recorded run. Click one to replay it in the Arena.</p>
           </Panel>
-          <Panel title="Cell detail" sub={(hover ?? top) ? `${label((hover ?? top)!.pop)}, ${capLabel((hover ?? top)!.capital)}${hover ? '' : ' (largest; hover another cell)'}` : 'hover, focus or tap a cell'}>
-            {(hover ?? top) ? <CellDetail c={(hover ?? top)!} have={have} /> : <p className="note">Each cell is {cells[0]?.n ?? 'several'} seeded episodes of 24 agents. The detail lists every measure with its interval and links to the recorded episodes.</p>}
+          <Panel title="Cell detail" sub={(hover ?? top) ? `${label((hover ?? top)!.pop)}, ${capLabel((hover ?? top)!.capital)}${hover ? '' : ' (largest; hover another cell)'}` : 'Hover, focus or tap a cell'}>
+            {(hover ?? top) ? <CellDetail c={(hover ?? top)!} have={have} /> : <p className="note">Each cell is {cells[0]?.n ?? 'several'} seeded episodes of 24 agents.</p>}
           </Panel>
         </div>
         <div style={{ marginTop: 12 }}>
-          <Panel title={`${ms.label} against agent capital`} sub="one line per population; bands are intervals across seeds">
+          <Panel title={`${ms.label} against agent capital`} sub="One line per population; bands are intervals across seeds">
             <Lines cells={cells} pops={pops} caps={caps} ms={ms} label={label} />
           </Panel>
         </div>
@@ -104,7 +104,7 @@ export default function Tipping() {
 }
 
 function Head() {
-  return <PageHead title="Tipping point">How far does the price overshoot after one shared headline, as agents manage more of the market's capital? Each cell is a population of 24 agents of one disposition at one capital level, measured against an identical run without the headline.</PageHead>
+  return <PageHead title="Tipping point">How far does the price overshoot after one shared headline as AI agents manage more of the market? Each cell is 24 agents of one kind at one capital level, compared with the same run without the headline.</PageHead>
 }
 
 function HeatMap({ cells, pops, caps, ms, maxAbs, theme, have, label, onHover, hover }: { cells: Cell[]; pops: string[]; caps: number[]; ms: Measure; maxAbs: number; theme: 'light' | 'dark'; have: Set<string>; label: (p: string) => string; onHover: (c: Cell | null) => void; hover: Cell | null }) {
@@ -160,7 +160,7 @@ function CellDetail({ c, have }: { c: Cell; have: Set<string> }) {
         <dt>seeds</dt><dd>{c.n}</dd>
       </dl>
       <div style={{ display: 'flex', gap: 6, marginTop: 10, flexWrap: 'wrap' }}>
-        {reps.map((id, i) => <a key={id} className="btn ghost sm" href={`#/arena/${encodeURIComponent(id)}`}>Replay seed episode {i + 1}</a>)}
+        {reps.map((id, i) => <a key={id} className="btn ghost sm" href={`#/arena/${encodeURIComponent(id)}`}>Replay run {i + 1}</a>)}
       </div>
       {!reps.length && <p className="note" style={{ marginTop: 8 }}>{c.episode_ids?.length ? `${c.episode_ids.length} episodes were recorded for this cell, but their traces are not exported to this server.` : 'No episode ids listed for this cell.'}</p>}
     </div>

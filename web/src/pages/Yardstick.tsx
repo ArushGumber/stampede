@@ -2,12 +2,12 @@ import { useMemo, useState } from 'react'
 import { scaleLinear } from 'd3-scale'
 import type { DoseRecord, YardRow } from '../types'
 import { CLOSED, METRIC, TRAIT, metricLabel, modelLabel } from '../config'
-import { useResult, LoadState, Panel, PageHead, Takeaway, GlyphMark, LegendItem, Glyph, Empty } from '../components/ui'
+import { useResult, LoadState, Panel, PageHead, Takeaway, GlyphMark, LegendItem, Glyph, Empty, Info } from '../components/ui'
 import { useWidth, TipBox, AxisTitle, robustDomain, inverseInterp, spearman, type Tip } from '../components/chart'
 import { disposition, fin, num, uniq } from '../vocab'
 
 const PANELS: { metric: string; trait: string }[] = [
-  { metric: 'crra_gamma', trait: 'risk' }, { metric: 'kelly_fraction', trait: 'risk' }, { metric: 'credulity', trait: 'credulity' },
+  { metric: 'credulity', trait: 'credulity' }, { metric: 'kelly_fraction', trait: 'risk' }, { metric: 'crra_gamma', trait: 'risk' },
   { metric: 'unethical_rate', trait: 'integrity' }, { metric: 'mean_exposure', trait: 'risk' },
 ]
 const REF_MODEL = 'gemma-4-12b'
@@ -34,8 +34,8 @@ function curveFor(dose: DoseRecord[], metric: string, trait: string): Curve | nu
 function YardPanel({ metric, trait, rows, curve }: { metric: string; trait: string; rows: YardRow[]; curve: Curve | null }) {
   const [ref, w] = useWidth<HTMLDivElement>()
   const [tip, setTip] = useState<Tip | null>(null)
-  const narrow = w < 460
-  const ml = narrow ? 112 : 176, mr = 16, rh = 26, mt = 6
+  const narrow = w < 400
+  const ml = narrow ? 128 : 176, mr = 16, rh = 26, mt = 6
   const sorted = [...rows].sort((a, b) => a.value - b.value)
   const rulerH = curve ? 52 : 0
   const H = mt + rh * sorted.length + 40 + rulerH + 6
@@ -77,7 +77,7 @@ function YardPanel({ metric, trait, rows, curve }: { metric: string; trait: stri
           {curve && <g transform={`translate(0,${yAx + 56})`}>
             <line x1={x(Math.min(...curve.pts.map(p => p.y)))} x2={x(Math.max(...curve.pts.map(p => p.y)))} y1={0} y2={0} stroke="var(--ink)" strokeWidth={2} />
             {ruler.map(p => <g key={p.x}><line x1={p.px} x2={p.px} y1={-4} y2={4} stroke="var(--ink)" strokeWidth={1.5} />{p.show && <text x={p.px} y={-7} textAnchor="middle" fontSize={10} fill="var(--ink2)">{sa(p.x)}</text>}</g>)}
-            <text x={0} y={17} fontSize={10.5} fill="var(--muted)">{narrow ? `ruler: ${TRAIT[curve.trait]?.label.toLowerCase()} dial alpha` : `ruler: ${modelLabel(curve.model)} steered to each alpha on the ${TRAIT[curve.trait]?.label.toLowerCase()} dial`}</text>
+            <text x={0} y={17} fontSize={11} fill="var(--muted)">{narrow ? `Ruler: ${TRAIT[curve.trait]?.label.toLowerCase()} dial alpha` : `Ruler: ${modelLabel(curve.model)} steered along the ${TRAIT[curve.trait]?.label.toLowerCase()} dial, ticks at each alpha`}</text>
           </g>}
         </g>
       </svg>}
@@ -112,33 +112,35 @@ export default function Yardstick() {
   const agents = uniq(rows.map(r => r.agent))
   const closedAgents = Object.keys(CLOSED).filter(a => agents.includes(a))
   const openAgents = agents.filter(a => !CLOSED[a])
+  const panel = (metric: string, trait: string, wide?: boolean) => {
+    const rs = rows.filter(r => r.metric === metric)
+    const curve = curveFor(dose, metric, trait)
+    return <Panel key={metric} id={`yard-${metric}`} className={wide ? 'wide' : ''} title={METRIC[metric]?.label ?? metric} sub={TRAIT[trait] ? `${TRAIT[trait].label} dial` : undefined} info={METRIC[metric]?.hint || undefined}>
+      {rs.length ? <>
+        <Takeaway>{panelTake(metric, trait, rs, curve)}</Takeaway>
+        <YardPanel metric={metric} trait={trait} rows={rs} curve={curve} />
+        {!curve && <p className="note">No {modelLabel(REF_MODEL)} {TRAIT[trait]?.label.toLowerCase()} dial for this metric yet, so no ruler is drawn.</p>}
+      </> : <Empty title="Not measured yet" what={`no ${metric} rows in results/yardstick.json`} />}
+    </Panel>
+  }
   return (
     <div>
-      <PageHead title="Yardstick">Closed models cannot be steered, so they are measured on the same batteries and placed on the same economic axes: CRRA risk aversion from lottery choices, bet size relative to Kelly, credulity toward unverified news and the rate of unethical choices. The steered Gemma curve under each axis is the ruler.</PageHead>
+      <PageHead title="Yardstick">Commercial models cannot be steered, so they take the same tests and land on the same economic scales. The steered Gemma curve under each chart is the ruler.</PageHead>
       {yd.state !== 'ok' ? <LoadState l={yd} label="yardstick measurements" /> : !rows.length ? <Empty title="No yardstick rows yet" what="results/yardstick.json is empty" /> : <>
         <div className="legend">
           {closedAgents.map(a => { const d = disposition(a); return <LegendItem key={a} glyph={<Glyph shape={d.glyph} color={d.color} size={12} />}>{d.label}</LegendItem> })}
-          {openAgents.map(a => <LegendItem key={a} glyph={<Glyph shape={a === REF_MODEL ? 'circle' : 'ring'} color={a === REF_MODEL ? 'var(--d-base)' : 'var(--muted)'} size={12} />}>{modelLabel(a)} unsteered</LegendItem>)}
-          <LegendItem glyph={<Glyph shape="line" color="var(--ink)" />}>Gemma dial ruler, ticks labelled with alpha</LegendItem>
+          {openAgents.map(a => <LegendItem key={a} glyph={<Glyph shape={a === REF_MODEL ? 'circle' : 'ring'} color={a === REF_MODEL ? 'var(--d-base)' : 'var(--muted)'} size={12} />}>{modelLabel(a)}</LegendItem>)}
+          <Info>Open models are unsteered and read from local logits. Commercial models answer through their own command-line harness; the harness and date are under each name.</Info>
         </div>
-        <div className="smgrid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 480px), 1fr))' }}>
-          {PANELS.map(({ metric, trait }) => {
-            const rs = rows.filter(r => r.metric === metric)
-            const curve = curveFor(dose, metric, trait)
-            return <Panel key={metric} id={`yard-${metric}`} title={METRIC[metric]?.label ?? metric} sub={TRAIT[trait] ? `${TRAIT[trait].label} dial` : undefined}>
-              {rs.length ? <>
-                <Takeaway>{panelTake(metric, trait, rs, curve)}</Takeaway>
-                <YardPanel metric={metric} trait={trait} rows={rs} curve={curve} />
-                {!curve && <p className="note">The {modelLabel(REF_MODEL)} {TRAIT[trait]?.label.toLowerCase()} dial for this metric is not exported yet, so no ruler is drawn.</p>}
-              </> : <Empty title="Not measured yet" what={`no ${metric} rows in results/yardstick.json`} />}
-            </Panel>
-          })}
+        <div className="featgrid">{panel(PANELS[0].metric, PANELS[0].trait, true)}{panel(PANELS[1].metric, PANELS[1].trait, true)}</div>
+        <div className="smgrid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 420px), 1fr))' }}>
+          {PANELS.slice(2).map(({ metric, trait }) => panel(metric, trait))}
         </div>
         <details><summary>Table view</summary><div className="tablewrap"><table className="t"><thead><tr><th>agent</th><th className="l">vendor</th><th className="l">harness</th><th className="l">date</th>{PANELS.map(p => <th key={p.metric}>{metricLabel(p.metric)}</th>)}</tr></thead><tbody>
           {[...closedAgents, ...openAgents].map(a => { const r0 = rows.find(r => r.agent === a)!; return <tr key={a}><td>{agentStyle(r0).label}</td><td className="l">{r0.vendor}</td><td className="l">{r0.harness ?? '–'}</td><td className="l">{r0.date ?? '–'}</td>
             {PANELS.map(p => { const r = rows.find(x => x.agent === a && x.metric === p.metric); return <td key={p.metric}>{r ? fmtM(p.metric, r.value) : '–'}{r && fin(r.alpha_equivalent) && CLOSED[a] ? ` (alpha ${sa(r.alpha_equivalent)}${fin(r.lo) && fin(r.hi) ? ` [${sa(r.lo)}, ${sa(r.hi)}]` : ''})` : ''}</td> })}</tr> })}
         </tbody></table></div></details>
-        <p className="note" style={{ marginTop: 8 }}>Positions describe measured behaviour on these fixed batteries, through the named harness on the named date. They are not a statement about any vendor's safety. Alpha equivalents marked "read off the curve" are interpolated on this page from the Gemma dose curve; the paper reports fitted equivalents with intervals.</p>
+        <p className="note" style={{ marginTop: 16 }}>Positions describe measured behaviour on these fixed tests, through the named harness on the named date. They are not a statement about any vendor&rsquo;s safety. Alpha equivalents read off the curve are interpolated on this page; the paper reports fitted equivalents with intervals.</p>
       </>}
     </div>
   )

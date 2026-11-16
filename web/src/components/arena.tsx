@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { scaleLinear } from 'd3-scale'
-import { line as d3line } from 'd3-shape'
+import { line as d3line, area as d3area } from 'd3-shape'
 import type { Frame, AgentInfo, NewsItem } from '../types'
 import { useWidth, TipBox, YGrid, XTicks, AxisTitle, type Tip } from './chart'
 import { Takeaway, SimTag } from './ui'
@@ -26,6 +26,7 @@ export function PriceChart({ frames, cursor, nTicks, shockT, corrT, symbol, trou
   const vmax = Math.max(1e-9, ...all.map(f => f.volume || 0))
   const yv = scaleLinear().domain([0, vmax]).range([VH, 0]).nice(2)
   const ln = (k: 'price' | 'fundamental') => d3line<Frame>().x(f => x(f.t)).y(f => y(f[k]))(vis) ?? ''
+  const ar = d3area<Frame>().x(f => x(f.t)).y0(ih).y1(f => y(f.price))(vis) ?? ''
   const cur = vis[vis.length - 1]
   const dg = priceDigits(hi)
   const bw = Math.max(1, iw / Math.max(nTicks, 1) - 1.5)
@@ -43,12 +44,14 @@ export function PriceChart({ frames, cursor, nTicks, shockT, corrT, symbol, trou
   return (
     <div className="chartbox" ref={ref}>
       {w > 0 && <svg width={w} height={totalH} role="img" aria-label={`${symbol} price and fundamental value by simulated minute, with volume`}>
+        <defs><linearGradient id="pricefill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="var(--accent)" stopOpacity="0.10" /><stop offset="1" stopColor="var(--accent)" stopOpacity="0" /></linearGradient></defs>
         <g transform={`translate(${m.l},${m.t})`}>
           <YGrid y={y} width={iw} ticks={5} fmt={v => v.toFixed(dg > 1 ? 1 : 0)} />
           <text className="axis-title" x={-m.l + 4} y={-14}>price ({symbol})</text>
           {vis.filter(f => f.halted).map(f => <rect key={'h' + f.t} x={x(f.t) - bw / 2} y={0} width={bw + 1.5} height={ih} className="halt" />)}
           {shockT !== null && <g className="marker"><line x1={x(shockT)} x2={x(shockT)} y1={-6} y2={ih} className="m-head" /><text x={x(shockT) + 4} y={-4}>headline</text></g>}
           {corrT !== null && corrT <= cursor && <g className="marker"><line x1={x(corrT)} x2={x(corrT)} y1={-6} y2={ih} className="m-corr" /><text x={x(corrT) + 4} y={-4}>correction</text></g>}
+          <path d={ar} className="a-price" />
           <path d={ln('fundamental')} className="l-fund" />
           <path d={ln('price')} className="l-price" />
           {tr && p0 && <g className="marker"><circle cx={x(tr.t)} cy={y(tr.price)} r={4} className="m-trough" /><text x={x(tr.t) + (x(tr.t) > iw * 0.8 ? -6 : 6)} y={y(tr.price) + 14} textAnchor={x(tr.t) > iw * 0.8 ? 'end' : 'start'}>{pk ? 'peak +' : 'trough '}{pct((tr.price - p0) / p0, 1).replace(/^\+/, '')}</text></g>}
@@ -82,7 +85,7 @@ export function DepthLadder({ frame, unit }: { frame: Frame | undefined; unit: s
   const gap = (frame.price - frame.fundamental) / frame.fundamental
   const row = (p: number, q: number, side: 'bid' | 'ask') => (
     <div className={`lad-row ${side}`} key={side + p}>
-      <span className="mono r">{p.toFixed(dg)}</span>
+      <span className="px r">{p.toFixed(dg)}</span>
       <span className="lad-bar"><i style={{ width: `${(q / mx) * 100}%` }} /></span>
       <span className="mono r muted">{big(q)}</span>
     </div>
@@ -90,11 +93,14 @@ export function DepthLadder({ frame, unit }: { frame: Frame | undefined; unit: s
   const lean = sb + sa > 0 ? sb / (sb + sa) : 0.5
   return (
     <div className="ladder">
-      <div className="lad-row head"><span className="r">price</span><span>resting size</span><span className="r">{unit}</span></div>
-      <div className="lad-side">{[...asks].reverse().map(a => row(a[0], a[1], 'ask'))}{!asks.length && <div className="note">no asks</div>}</div>
-      <div className="lad-mid mono">mid {frame.price.toFixed(dg)} · spread {spread === null ? 'n/a' : `${spread.toFixed(1)} bps`}{frame.halted ? ' · halted' : ''}</div>
-      <div className="lad-side">{bids.map(b => row(b[0], b[1], 'bid'))}{!bids.length && <div className="note">no bids</div>}</div>
-      <Takeaway>{`Top ${Math.max(bids.length, asks.length)} levels hold ${big(sb)} ${unit} bid against ${big(sa)} asked`}{lean < 0.4 ? ', so sellers dominate' : lean > 0.6 ? ', so buyers dominate' : ', roughly balanced'}{`. Price is ${pct(Math.abs(gap), 2)} ${gap < 0 ? 'below' : 'above'} fundamental value.`}</Takeaway>
+      <div className="lad-row head"><span className="r">Price</span><span>Resting size</span><span className="r">{unit}</span></div>
+      <div className="lad-side">{[...asks].reverse().map(a => row(a[0], a[1], 'ask'))}{!asks.length && <div className="note">No asks</div>}</div>
+      <div className="lad-mid"><span>Mid <b>{frame.price.toFixed(dg)}</b></span><span>{frame.halted ? 'Halted' : <>Spread <b>{spread === null ? 'n/a' : `${spread.toFixed(1)} bp`}</b></>}</span></div>
+      <div className="lad-side">{bids.map(b => row(b[0], b[1], 'bid'))}{!bids.length && <div className="note">No bids</div>}</div>
+      <div className="lad-foot" title={`Top ${Math.max(bids.length, asks.length)} levels. ${lean < 0.4 ? 'Sellers dominate.' : lean > 0.6 ? 'Buyers dominate.' : 'Roughly balanced.'}`}>
+        <span>Bid <b>{big(sb)}</b> / Ask <b>{big(sa)}</b></span>
+        <span>vs fair value <b>{gap >= 0 ? '+' : '−'}{pct(Math.abs(gap), 2)}</b></span>
+      </div>
     </div>
   )
 }
@@ -159,12 +165,12 @@ export function AgentGrid({ frames, cursor, agents, shockT, maxLev, compact }: {
         ))}
       </div>
       <div className="agrid-legend">
-        <span className="lg-i"><span className="mono">0x</span><span className="expo-ramp" aria-hidden /><span className="mono">{maxLev}x</span> {compact ? 'exposure (number in cell)' : 'fill: exposure (position / equity, square-root scale); number in cell'}</span>
-        <span className="lg-i"><span className="sw liqsw" />liquidated{compact ? '' : ' (flashes on the minute it happens)'}</span>
-        {!compact && <span className="lg-i"><span className="sw dashed" style={{ ['--gc' as string]: 'var(--muted)' }} />dashed outline: closed model policy</span>}
+        <span className="lg-i">0x<span className="expo-ramp" aria-hidden />{maxLev}x {compact ? 'exposure' : 'exposure (position / equity)'}</span>
+        <span className="lg-i"><span className="sw liqsw" />liquidated</span>
+        {!compact && <span className="lg-i"><span className="sw dashed" style={{ ['--gc' as string]: 'var(--muted)' }} />closed-model policy</span>}
       </div>
-      {!compact && <div className="agent-detail mono" aria-live="polite">
-        {s && si ? <>{s.id} · {disp.get(s.id)?.label} · exposure {num(s.exposure, 2)}x · equity {big(s.equity)} ({pct(s.equity / si.cash0 - 1, 2)}){s.action !== null && s.action !== undefined ? ` · asked for ${num(s.action, 2)}x` : ''}{s.rejections?.length ? ` · rejected: ${s.rejections.map(r => r.reason.replace(/_/g, ' ')).join(', ')}` : ''}{s.reason ? ` · stated reason: "${s.reason}"` : ''}</> : 'Hover or tap a cell for that agent.'}
+      {!compact && <div className="agent-detail" aria-live="polite">
+        {s && si ? <><b>{s.id}</b>, {disp.get(s.id)?.label}: exposure {num(s.exposure, 2)}x, equity {big(s.equity)} ({pct(s.equity / si.cash0 - 1, 2)}){s.action !== null && s.action !== undefined ? `, asked for ${num(s.action, 2)}x` : ''}{s.rejections?.length ? `; rejected: ${s.rejections.map(r => r.reason.replace(/_/g, ' ')).join(', ')}` : ''}{s.reason ? `; stated reason: "${s.reason}"` : ''}</> : 'Hover or tap a cell to see that agent.'}
       </div>}
       <Takeaway>{shockT === null || frame.t < shockT
         ? `Before the headline: mean exposure ${num(mean(frame.agents.map(a => a.exposure)), 2)}x across ${frame.agents.length} agents.`
@@ -181,11 +187,11 @@ export function NewsFeed({ items, truth, done }: { items: (NewsItem & { t: numbe
       {items.length === 0 && <p className="note">No news yet. The headline arrives at the marked minute.</p>}
       {items.map(n => (
         <article key={n.id + n.t} className={`news ${n.verified ? 'ver' : 'unv'}`}>
-          <div className="src"><SimTag /><b className={`vtag ${n.verified ? 'ver' : 'unv'}`}>{n.verified ? 'Verified source' : 'Unverified'}</b><span>{n.source}</span><span className="mono">min {n.t}</span>{n.author_agent ? <span>posted by {n.author_agent}</span> : null}</div>
-          <p>{n.text}</p>
+          <div className="src"><b className={`vtag ${n.verified ? 'ver' : 'unv'}`}>{n.verified ? 'Verified' : 'Unverified'}</b><span>{n.source}{n.author_agent ? `, posted by ${n.author_agent}` : ''}</span><span className="t">min {n.t}</span></div>
+          <p>{n.text} <SimTag /></p>
         </article>
       ))}
-      {done && truth && <p className="note truth">Ground truth for this run: the headline was {truth === 'false' ? 'false. Its fundamental value never moved.' : 'true. The fundamental value moved with it.'}</p>}
+      {done && truth && <p className="note truth">{truth === 'false' ? 'This headline was false. The fundamental value never moved.' : 'This headline was true. The fundamental value moved with it.'}</p>}
     </div>
   )
 }
@@ -201,7 +207,6 @@ export function GroupPnl({ pnl, agents }: { pnl: Record<string, number | null | 
     const d = g === 'background' ? null : disposition(g, a?.alphas, a?.model)
     return { g, v, label: d ? d.label : 'Background traders', color: d ? d.color : 'var(--muted)', order: d ? d.order : 999 }
   }).sort((a, b) => a.order - b.order)
-  const worst = [...rows].sort((a, b) => a.v - b.v)[0]
   return (
     <div>
       {rows.map(r => <div className="pnlrow" key={r.g}>
@@ -209,8 +214,7 @@ export function GroupPnl({ pnl, agents }: { pnl: Record<string, number | null | 
         <span className="pnlbar"><i style={{ background: r.color, width: `${(Math.abs(r.v) / mx) * 50}%`, left: r.v >= 0 ? '50%' : `${50 - (Math.abs(r.v) / mx) * 50}%` }} /></span>
         <span className="mono r">{(r.v >= 0 ? '+' : '') + pct(r.v, 2)}</span>
       </div>)}
-      <div className="pnl-axis note"><span>loss</span><span>0</span><span>gain</span></div>
-      <Takeaway>{worst.v < 0 ? `${worst.label} fare worst at ${pct(worst.v, 2)} of starting equity.` : 'Every group is at or above its starting equity.'}</Takeaway>
+      <div className="pnl-axis"><span>loss</span><span>0</span><span>gain</span></div>
     </div>
   )
 }

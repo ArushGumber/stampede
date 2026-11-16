@@ -16,7 +16,7 @@ export const isTour = () => params().get('tour') === '1'
 export interface StampedeApi {
   seek?: (t: number) => void
   play?: (speed?: number) => void
-  arena?: { episodeId: string; t: number; lastT: number; shockT: number | null; ready: boolean }
+  arena?: { episodeId: string; t: number; lastT: number; shockT: number | null; ready: boolean; live?: boolean }
   tourDone?: boolean
   tourStep?: string
   [k: string]: unknown

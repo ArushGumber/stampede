@@ -6,13 +6,26 @@ export const PRODUCT_SLUG = PRODUCT_NAME.toLowerCase()
 export const AUTHORS = [
   { name: 'Arush Gumber', aff: 'IIIT-Delhi; StarkVision Research' },
   { name: 'Arnesh Batra', aff: 'IIIT-Delhi; StarkVision Research' },
-  { name: 'Sidhant Gumber', aff: 'StarkVision Research' },
+  { name: 'Sidhant Gumber', aff: 'Independent Researcher' },
+  { name: 'Pranav Viksar Garg', aff: 'University of Manchester' },
 ]
-// Placeholders until the camera-ready links exist. null renders as "link to come".
+/** Hosted server for MCP, the session board and server-side runs, used when the site itself is served statically
+ *  (for example https://stampede.example.org). Empty: no hosted server; markets run in the visitor's browser and
+ *  the Connect page leads with the local install. */
+export const LIVE_ORIGIN: string = ''
+/** Public code repository. While it holds the placeholder owner, the site shows the install command as a template. */
+export const CODE_REPO: string = 'https://github.com/ArushGumber/stampede'
+export const repoReady = () => !CODE_REPO.includes('<owner>')
+/** Video walkthrough URL (for example an unlisted YouTube link). Empty: "link to come". */
+export const VIDEO_URL: string = ''
+
+// null renders as "link to come".
+export const PROJECT_PAGE = 'https://stampede-agents.vercel.app'
 export const LINKS: { label: string; href: string | null }[] = [
-  { label: 'Paper (WWW 2027 demo track, PDF)', href: 'data/stampede_paper.pdf' },
-  { label: 'Video walkthrough (2.5 min)', href: 'data/stampede_demo.webm' },
-  { label: 'Code and data', href: null },
+  { label: 'Project page', href: PROJECT_PAGE },
+  { label: 'Paper (PDF)', href: 'data/stampede_paper.pdf' },
+  { label: 'Video walkthrough', href: VIDEO_URL || null },
+  { label: 'Code and data', href: repoReady() ? CODE_REPO : null },
 ]
 
 export const SAFEGUARD_LABEL: Record<string, string> = {
@@ -84,7 +97,7 @@ export const CLOSED: Record<string, { label: string; vendor: string; glyph: 'dia
 export const CLOSED_ORDER = Object.keys(CLOSED)
 
 export const OPEN_MODEL_LABEL: Record<string, string> = {
-  'gemma-4-12b': 'Gemma-4-12B', 'qwen3.5-4b': 'Qwen3.5-4B', 'qwen3.5-9b': 'Qwen3.5-9B', 'llama-3.1-8b': 'Llama-3.1-8B',
+  'gemma-4-12b': 'Gemma-4-12B', 'qwen3.5-4b': 'Qwen3.5-4B', 'qwen3.5-9b': 'Qwen3.5-9B', 'llama-3.1-8b': 'Llama-3.1-8B', 'llama-3.1-8b+risky-lora': 'Llama-3.1-8B risky LoRA',
 }
 export const modelLabel = (m: string | undefined) => (m ? CLOSED[m]?.label ?? OPEN_MODEL_LABEL[m] ?? m : '')
 
@@ -101,4 +114,5 @@ export const ARENA_SCENARIO: Record<string, string> = {
   'fake-crypto': 'False bearish headline, crypto-like market',
   'true-equity': 'True bearish headline, equity-like market',
   'fake-bull-crypto': 'False bullish headline, crypto-like market',
+  'fakewire-equity': 'False headline from a verified-looking wire, equity-like market',
 }

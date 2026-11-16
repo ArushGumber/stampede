@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { scaleLinear } from 'd3-scale'
 import type { EarlyRow, SgRow } from '../types'
 import { regimeLabel, sgLabel } from '../config'
-import { useResult, useSource, LoadState, Panel, PageHead, Seg, Takeaway, Empty, GlyphMark, LegendItem, Glyph } from '../components/ui'
+import { useResult, useSource, LoadState, Panel, PageHead, Seg, Takeaway, Empty, GlyphMark, LegendItem, Glyph, Info } from '../components/ui'
 import { useWidth, TipBox, AxisTitle, type Tip } from '../components/chart'
 import { capLabel, fin, num, pct, popInfo, popOrder, uniq } from '../vocab'
 
@@ -44,7 +44,7 @@ function Dumbbell({ rows, base, domain, label }: { rows: SgRow[]; base: SgRow; d
       {w > 0 && <svg width={w} height={H} role="img" aria-label={`Excess overshoot under each safeguard, ${label}`}>
         <g transform={`translate(${ml},${mt})`}>
           {ticks.map(v => <g key={v} className="axis"><line x1={x(v)} x2={x(v)} y1={0} y2={rows.length * rh} className={Math.abs(v) < 1e-12 ? 'zero' : 'grid'} /><text x={x(v)} y={rows.length * rh + 13} textAnchor="middle">{+(v * 100).toFixed(2)}</text></g>)}
-          <AxisTitle x={pw / 2} y={rows.length * rh + 28}>excess overshoot (% below fair value)</AxisTitle>
+          <AxisTitle x={pw / 2} y={rows.length * rh + 28}>excess overshoot, % below fair value</AxisTitle>
           {(['fake_unv', 'fake_ver'] as H[]).map(h => fin(ov(base, h)) && <line key={h} x1={x(ov(base, h))} x2={x(ov(base, h))} y1={-4} y2={rows.length * rh} style={{ stroke: HL[h].color }} strokeDasharray="3 3" opacity={0.8} />)}
           <text x={pw + 8} y={-8} fontSize={10.5} fill="var(--muted)">{narrow ? 'true news' : 'true-news error'}</text>
           <text x={w - ml - mr} y={-8} fontSize={10.5} fill="var(--muted)" textAnchor="end">volume</text>
@@ -170,22 +170,23 @@ export default function Safeguards() {
   const facts = shapeOk ? findings(rows, cp, label) : []
   return (
     <div>
-      <PageHead title="Safeguards">Each panel is one population in one market at a fixed amount of agent capital. Every row is a safeguard: the circle is the excess overshoot after a false rumour from an unverified post, the diamond after the same false headline from a verified-looking source. Dashed lines mark the unprotected run. The two columns on the right are costs: how much worse true news gets priced, and how much trading volume is left.</PageHead>
+      <PageHead title="Safeguards">Each chart is one population in one market. Every row is a safeguard: the circle is the crash after a false rumour, the diamond after the same story from a verified-looking source. The columns on the right are what each safeguard costs.</PageHead>
       {sg.state !== 'ok' ? <LoadState l={sg} label="safeguard results" expect="The safeguard sweep has not been exported yet. When results/safeguards.json appears, this page compares excess overshoot with and without each safeguard, and its costs." />
         : !rows.length ? <Empty title="No safeguard rows yet" what="results/safeguards.json is empty" />
         : !shapeOk ? <div className="banner err">results/safeguards.json does not have the expected fields (fake_unv_overshoot, fake_ver_overshoot, true_dislocation, volume_ratio).</div>
         : <>
           <div className="filters">
-            <Seg small label="Agent capital, multiple of book depth" value={cp} options={caps.map(v => ({ v, label: capLabel(v) }))} onChange={setCap} />
-            <div className="legend" style={{ marginBottom: 10 }}>
+            <Seg small label="Agent capital (x book depth)" value={cp} options={caps.map(v => ({ v, label: capLabel(v) }))} onChange={setCap} />
+            <div className="legend" style={{ marginBottom: 6 }}>
               {(['fake_unv', 'fake_ver'] as H[]).map(h => <LegendItem key={h} glyph={<Glyph shape={HL[h].glyph} color={HL[h].color} size={12} />}>{HL[h].label}</LegendItem>)}
-              <LegendItem glyph={<Glyph shape="line" color="var(--muted)" dash="3 3" />}>unprotected run</LegendItem>
-              <span className="note">True-news error: mispricing after a true headline relative to no safeguard (above 1x is slower pricing; mispricing below the twin shows as 0x). Volume: share of unprotected trading volume. Rows marked worse: interval lies wholly above the unprotected run.</span>
+              <LegendItem glyph={<Glyph shape="line" color="var(--muted)" dash="3 3" />}>No safeguard</LegendItem>
+              <Info>True-news error: mispricing after a true headline relative to no safeguard (above 1x is slower pricing; mispricing below the twin shows as 0x). Volume: share of unprotected trading volume kept. Rows marked worse have an interval wholly above the unprotected run.</Info>
             </div>
           </div>
-          {facts.length > 0 && <Panel id="sg-facts" title="What the sweep shows" sub={`capital ${capLabel(cp)}, all populations and markets`}>
+          {facts.length > 0 && <section className="callout" id="sg-facts">
+            <h2>What the sweep shows</h2>
             <ul className="facts">{facts.map((f, i) => <li key={i}>{f}</li>)}</ul>
-          </Panel>}
+          </section>}
           <div className="sg-grid">
             {pops.flatMap(pop => regimes.map(regime => {
               const rs = at.filter(r => r.pop === pop && r.regime === regime).sort((a, b) => sgRank(a.safeguard) - sgRank(b.safeguard))
@@ -208,7 +209,7 @@ export default function Safeguards() {
               <td>{num(r.true_dislocation, 2)}{fin(r.true_dislocation_base) ? ` (none ${num(r.true_dislocation_base, 2)})` : ''}</td><td>{fin(r.volume_ratio) ? pct(r.volume_ratio, 0) : '–'}</td></tr>)}</tbody></table></div>
             <p className="note">Overshoot values are excess over the no-headline twin, with bootstrap intervals. True-news mispricing is the dislocation area after a true headline (sum over minutes of the gap to fundamental value as a fraction).</p></details>
         </>}
-      <div style={{ marginTop: 14 }}><Panel title="Early warning" sub="do the agents' internal states move before the price does?"><EarlyWarning /></Panel></div>
+      <div style={{ marginTop: 24 }}><Panel title="Early warning" sub="Do the agents' internal states move before the price does?"><EarlyWarning /></Panel></div>
     </div>
   )
 }

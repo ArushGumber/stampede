@@ -3,8 +3,8 @@ import { scaleLinear } from 'd3-scale'
 import { line as d3line, area as d3area } from 'd3-shape'
 import type { DoseRecord, DoseSeries, DecideTable } from '../types'
 import { KIND, KIND_ORDER, METRIC, TRAIT, metricLabel, modelLabel } from '../config'
-import { useResult, LoadState, Empty, Panel, PageHead, Seg, Sel, Takeaway, Glyph, GlyphMark, LegendItem } from '../components/ui'
-import { useWidth, TipBox, YGrid, XTicks, AxisTitle, robustDomain, spearman, type Tip } from '../components/chart'
+import { useResult, LoadState, Empty, Panel, PageHead, Seg, Sel, Takeaway, Glyph, GlyphMark, LegendItem, Tile, Info } from '../components/ui'
+import { useWidth, TipBox, YGrid, XTicks, AxisTitle, robustDomain, type Tip } from '../components/chart'
 import { fin, num, uniq } from '../vocab'
 import { on } from '../modes'
 
@@ -13,10 +13,10 @@ const fmtM = (m: string, v: number) => (METRIC[m]?.frac ? `${(v * 100).toFixed(M
 const lc = (t: string) => (/^[A-Z][a-z]/.test(t) ? t[0].toLowerCase() + t.slice(1) : t)
 const sa = (a: number) => (a > 0 ? `+${a}` : a < 0 ? `−${-a}` : '0')
 
-function DoseChart({ series, metric, cursorA }: { series: DoseSeries[]; metric: string; cursorA?: number | null }) {
+function DoseChart({ series, metric, cursorA, height }: { series: DoseSeries[]; metric: string; cursorA?: number | null; height?: number }) {
   const [ref, w] = useWidth<HTMLDivElement>()
   const [tip, setTip] = useState<Tip | null>(null)
-  const H = 210, m = { l: 44, r: 12, t: 12, b: 38 }
+  const H = height ?? 220, m = { l: 44, r: 12, t: 24, b: 38 }
   const iw = Math.max(10, w - m.l - m.r), ih = H - m.t - m.b
   const kinds = KIND_ORDER.filter(k => series.some(s => s.kind === k))
   const by = (k: string) => series.filter(s => s.kind === k).sort((a, b) => a.alpha - b.alpha)
@@ -48,6 +48,7 @@ function DoseChart({ series, metric, cursorA }: { series: DoseSeries[]; metric: 
       {w > 0 && <svg width={w} height={H} role="img" aria-label={`${metricLabel(metric)} against steering strength`}>
         <g transform={`translate(${m.l},${m.t})`}>
           <YGrid y={y} width={iw} ticks={4} fmt={yfmt} zero />
+          <text className="axis-title" x={-m.l + 2} y={-12}>{METRIC[metric]?.short ?? METRIC[metric]?.unit ?? ''}</text>
           <line x1={x(0)} x2={x(0)} y1={0} y2={ih} className="zero-v" stroke="var(--axis)" />
           {capRef !== null && capRef >= ylo && <g><line x1={0} x2={iw} y1={y(capRef)} y2={y(capRef)} stroke="var(--bad)" strokeDasharray="2 3" /><text x={4} y={y(capRef) + 13} fontSize={10.5} fill="var(--bad)">95% of unsteered</text></g>}
           {kinds.includes('random') && <>
@@ -81,7 +82,7 @@ function DoseChart({ series, metric, cursorA }: { series: DoseSeries[]; metric: 
             </g>
           })()}
           <XTicks x={x} height={ih} values={x.ticks(Math.min(9, Math.max(3, Math.floor(iw / 42))))} fmt={sa} />
-          <AxisTitle x={iw / 2} y={ih + 31}>dial strength alpha (mean-difference units)</AxisTitle>
+          <AxisTitle x={iw / 2} y={ih + 31}>dial strength (alpha)</AxisTitle>
           <rect x={0} y={0} width={iw} height={ih} fill="transparent" onPointerMove={onMove} onPointerLeave={() => setTip(null)} />
         </g>
       </svg>}
@@ -96,10 +97,10 @@ function metricTake(metric: string, s: DoseSeries[], trait: string): string {
   if (st.length < 2) return st.length ? `One steered point: ${fmtM(metric, st[0].value)} at alpha ${sa(st[0].alpha)}.` : 'No steered measurements for this metric.'
   const f = (v: number) => fmtM(metric, v)
   const a = st[0], b = st[st.length - 1]
-  const rho = spearman(st.map(d => d.alpha), st.map(d => d.value))
   const rd = robustDomain(s.flatMap(d => [d.value, d.lo, d.hi]).filter(fin))
   const outl = st.filter(d => d.value > rd.hi || d.value < rd.lo)
-  const rnd = s.filter(d => d.kind === 'random').map(d => d.value)
+  // Range over individual random directions (lo and hi are the per-direction extremes at each alpha).
+  const rnd = s.filter(d => d.kind === 'random').flatMap(d => [fin(d.lo) ? d.lo : d.value, fin(d.hi) ? d.hi : d.value]).filter(fin)
   const rtxt = rnd.length ? ` Random directions of the same size give ${f(Math.min(...rnd))} to ${f(Math.max(...rnd))}.` : ''
   if (metric === 'capability') {
     const v = st.map(d => d.value), v0 = st.find(d => d.alpha === 0)?.value
@@ -108,8 +109,9 @@ function metricTake(metric: string, s: DoseSeries[], trait: string): string {
   }
   const pr = s.filter(d => d.kind === 'prompt').sort((p, q) => p.alpha - q.alpha)
   const ptxt = pr.length ? ` Prompt personas: ${pr.map(d => `${d.alpha < 0 ? TRAIT_NEG : TRAIT_POS} ${f(d.value)}`).join(', ')}.` : ''
-  const trend = !fin(rho) ? '' : Math.abs(rho) >= 0.8 ? ', a steady trend' : Math.abs(rho) < 0.4 ? ', with no steady trend' : ', a loose trend'
-  return `Steering moves it from ${f(a.value)} at alpha ${sa(a.alpha)} to ${f(b.value)} at ${sa(b.alpha)}${trend}.${outl.length ? ` Unstable reading at alpha ${outl.map(d => sa(d.alpha)).join(', ')} (${outl.map(d => f(d.value)).join(', ')}).` : ''}${rtxt}${ptxt}`
+  const z = st.find(d => d.alpha === 0)
+  const ends = `${f(b.value)} at alpha ${sa(b.alpha)}, ${f(a.value)} at ${sa(a.alpha)}`
+  return `${z ? `${f(z.value)} unsteered; ${ends}` : `From ${f(a.value)} at alpha ${sa(a.alpha)} to ${f(b.value)} at ${sa(b.alpha)}`}.${outl.length ? ` Noisy reading at alpha ${outl.map(d => sa(d.alpha)).join(', ')} (${outl.map(d => f(d.value)).join(', ')}).` : ''}${rtxt}${ptxt}`
 }
 
 function settingLabel(al: Record<string, number>, own: string): string {
@@ -139,7 +141,7 @@ function TryIt() {
   const norm = (al: Record<string, number>) => JSON.stringify(Object.fromEntries(Object.entries(al ?? {}).filter(([, x]) => x)))
   const rec = recs.find(r => norm(r.alphas) === setting)
   const base = recs.find(r => norm(r.alphas) === '{}')
-  if (dec.state !== 'ok') return <Panel title="Try it: one decision at one dial setting"><LoadState l={dec} label="precomputed decisions" expect="This panel replays decisions precomputed on fixed vignettes (results/decide.json): the model's choice distribution at each dial setting and a short stated reason. Nothing is generated live and there is no free-text input. It appears when the file is exported." /></Panel>
+  if (dec.state !== 'ok') return <Panel title="Try one decision"><LoadState l={dec} label="precomputed decisions" expect="This panel replays decisions precomputed on fixed vignettes (results/decide.json): the model's choice distribution at each dial setting and a short stated reason. Nothing is generated live and there is no free-text input. It appears when the file is exported." /></Panel>
   const letters = v?.letters ?? v?.options.map((_, i) => String.fromCharCode(65 + i)) ?? []
   const top = (p?: number[]) => (p && p.length ? p.indexOf(Math.max(...p)) : -1)
   const ti = top(rec?.probs), bi = top(base?.probs)
@@ -147,7 +149,7 @@ function TryIt() {
     ? (ti === bi ? `At this setting the most likely answer is still ${letters[ti]} (${Math.round(rec.probs[ti] * 100)}%, unsteered ${Math.round(base.probs[bi] * 100)}%).` : `The dial moves the most likely answer from ${letters[bi]} (${Math.round(base.probs[bi] * 100)}% unsteered) to ${letters[ti]} (${Math.round(rec.probs[ti] * 100)}%).`)
     : rec && ti >= 0 ? `Unsteered, the most likely answer is ${letters[ti]} at ${Math.round(rec.probs[ti] * 100)}%.` : 'Pick a setting.'
   return (
-    <Panel title="Try it: one decision at one dial setting" sub={`${modelLabel(model)}, precomputed; fixed vignettes only`}>
+    <Panel title="Try one decision" sub={`${modelLabel(model)} at each dial setting, precomputed on fixed vignettes`}>
       <div className="grid2">
         <div>
           <Sel label="Vignette" value={vid} options={vids.map(id => ({ v: id, label: `${tab!.vignettes[id].title} (${tab!.vignettes[id].trait})` }))} onChange={setVid} />
@@ -159,9 +161,9 @@ function TryIt() {
         </div>
         <div aria-live="polite">
           <Takeaway>{take}</Takeaway>
-          <h3>Choice distribution</h3>
+          <h3>How likely each answer is</h3>
           {rec ? v?.options.map((o, i) => <div className={`prob ${i === ti ? 'top' : ''}`} key={i}><span className="ltr">{letters[i]}</span><div>{o}<div className="bar"><i style={{ width: `${(rec.probs[i] ?? 0) * 100}%` }} /></div></div><span className="mono r">{((rec.probs[i] ?? 0) * 100).toFixed(1)}%</span></div>) : <p className="note">No record for this setting.</p>}
-          {rec && Object.entries(rec.alphas ?? {}).some(([t, a]) => t === 'integrity' && a) ? <p className="note stated">Stated reasons are withheld for integrity-steered settings; only the choice distribution is shown.</p> : rec?.reason && <div className="stated"><div className="k">Stated reason (model output)</div><p style={{ margin: '4px 0 2px' }}>&ldquo;{rec.reason}&rdquo;</p><span className="note">Generated separately after the choice. A stated reason may not reflect how the choice was actually computed.</span></div>}
+          {rec && Object.entries(rec.alphas ?? {}).some(([t, a]) => t === 'integrity' && a) ? <p className="note stated">Stated reasons are withheld for integrity-steered settings; only the choice distribution is shown.</p> : rec?.reason && <div className="stated"><div className="k" style={{ display: 'flex', alignItems: 'center', gap: 5 }}>Stated reason<Info>Generated separately after the choice. A stated reason may not reflect how the choice was actually computed.</Info></div><p style={{ margin: '4px 0 2px' }}>&ldquo;{rec.reason}&rdquo;</p></div>}
           {tab?.note && <p className="note" style={{ marginTop: 8 }}>{tab.note}</p>}
         </div>
       </div>
@@ -194,32 +196,41 @@ export default function Dials() {
     const as = (rec.series.filter(s => s.kind === 'steer').map(s => s.alpha))
     return `Across alpha ${sa(Math.min(...as))} to ${sa(Math.max(...as))}, ${parts.join(' and ')}${cap ? `, while capability stays between ${fmtM('capability', Math.min(...cap.map(c => c.value)))} and ${fmtM('capability', Math.max(...cap.map(c => c.value)))}` : ''}.`
   })()
+  // Headline cards use the dial's working range, alpha 0 to the largest positive alpha, as the paper quotes it.
+  const endOf = (mt: string) => { const st = by(mt).filter(s => s.kind === 'steer' && fin(s.value) && s.alpha >= 0).sort((a, b) => a.alpha - b.alpha); return st.length > 1 ? st : null }
+  const statMetrics = metrics.filter(x => x !== 'capability').slice(0, 2)
+  const capSt = endOf('capability')
+  const capRnd = by('capability').filter(s => s.kind === 'random' && fin(s.value)).flatMap(s => [fin(s.lo) ? s.lo : s.value, fin(s.hi) ? s.hi : s.value]).filter(fin)
+  const feat = statMetrics
+  const rest = metrics.filter(mt => !feat.includes(mt))
+  const card = (mt: string, big?: boolean) => <Panel key={mt} id={`dose-${mt}`} title={METRIC[mt]?.label ?? mt} info={<>{METRIC[mt]?.unit}{METRIC[mt]?.hint ? `. ${METRIC[mt].hint}` : '.'}</>}>
+    <Takeaway>{metricTake(mt, by(mt), trait)}</Takeaway>
+    <DoseChart series={by(mt)} metric={mt} cursorA={cursorA} height={big ? 260 : undefined} />
+  </Panel>
   return (
     <div>
-      <PageHead title="Dials">Each dial adds one direction to the model's internal activations with a continuous strength, alpha. Here every behavioural measurement is plotted against alpha, next to controls that push the model by the same amount in a random or unrelated direction, and next to prompt-written personas where measured.</PageHead>
+      <PageHead title="Dials">A dial adds one direction to the model&rsquo;s internal activations with a strength, alpha. Each chart shows a behaviour against alpha, next to random and unrelated directions of the same size and to written personas.</PageHead>
       {dr.state !== 'ok' ? <LoadState l={dr} label="dose-response results" /> : <>
         <div className="filters">
           <Seg label="Dial" value={trait} options={traits.map(t => ({ v: t, label: `${TRAIT[t].label}${have.includes(t) ? '' : ' (not yet)'}`, disabled: !have.includes(t), title: have.includes(t) ? `${TRAIT[t].neg} to ${TRAIT[t].pos}` : 'Not exported yet' }))} onChange={setTrait} />
           {models.length > 1 && <Sel label="Model" value={mdl} options={models.map(x => ({ v: x, label: modelLabel(x) }))} onChange={setModel} />}
-          {rec && <p className="note" style={{ marginBottom: 10 }}>{modelLabel(rec.model)}, layer {rec.layer ?? '?'}, {rec.method ?? ''} vector{fin(rec.vector_norm) ? `, norm ${num(rec.vector_norm, 1)}` : ''}. Negative alpha is {TRAIT[trait]?.neg}, positive is {TRAIT[trait]?.pos}.</p>}
+          {rec && <p className="meta">{modelLabel(rec.model)}, layer {rec.layer ?? '?'}. Negative alpha is {TRAIT[trait]?.neg}, positive is {TRAIT[trait]?.pos}.<Info align="right">{rec.method ?? ''} vector{fin(rec.vector_norm) ? `, norm ${num(rec.vector_norm, 1)}` : ''}. {summary}</Info></p>}
         </div>
-        {have.length < 3 && <p className="note">Dials not yet exported: {traits.filter(t => !have.includes(t)).map(t => TRAIT[t].label).join(', ')}. They appear here when their runs finish.</p>}
+        {have.length < 3 && <p className="note">Dials not yet exported: {traits.filter(t => !have.includes(t)).map(t => TRAIT[t].label).join(', ')}.</p>}
         {!rec ? <Empty title={`No ${TRAIT[trait]?.label.toLowerCase()} dial results yet`} what="results/dose_response.json has no record for this dial" /> : <>
-          <Takeaway>{summary}</Takeaway>
-          <div className="legend">{kinds.map(k => <LegendItem key={k} glyph={<span className="lg-i">{['steer', 'random', 'unrelated'].includes(k) && <Glyph shape="line" color={KIND[k].color} dash={KIND[k].dash} />}<Glyph shape={KIND[k].glyph} color={KIND[k].color} size={11} /></span>}>{KIND[k].label}</LegendItem>)}
-            {kinds.includes('prompt') ? <span className="note">Prompt personas have no strength; they are drawn at alpha {'\u2212'}1 ({TRAIT[trait]?.neg} prompt) and +1 ({TRAIT[trait]?.pos} prompt).</span> : <span className="note">Prompt personas: not exported for this dial.</span>}</div>
-          <div className="smgrid">
-            {metrics.map(mt => <Panel key={mt} id={`dose-${mt}`} title={METRIC[mt]?.label ?? mt} sub={METRIC[mt]?.unit}>
-              <Takeaway>{metricTake(mt, by(mt), trait)}</Takeaway>
-              <DoseChart series={by(mt)} metric={mt} cursorA={cursorA} />
-              {METRIC[mt]?.hint && <p className="note" style={{ margin: '2px 0 0' }}>{METRIC[mt].hint}</p>}
-            </Panel>)}
+          <div className="statrow">
+            {statMetrics.map(mt => { const st = endOf(mt); return st ? <Tile key={mt} k={METRIC[mt]?.label ?? mt} v={<>{fmtM(mt, st[0].value)}<span className="arrow">&rarr;</span>{fmtM(mt, st[st.length - 1].value)}</>} s={`alpha ${sa(st[0].alpha)} to ${sa(st[st.length - 1].alpha)}`} /> : null })}
+            {capSt && <Tile k="Capability kept" v={`${fmtM('capability', Math.min(...capSt.map(c => c.value))).replace('%', '')} to ${fmtM('capability', Math.max(...capSt.map(c => c.value)))}`} s={capRnd.length ? `random directions: ${fmtM('capability', Math.min(...capRnd))} to ${fmtM('capability', Math.max(...capRnd))}` : 'quiz score across the dial'} tone="accent" />}
           </div>
-          <details><summary>Table view of every measurement</summary><div className="tablewrap"><table className="t"><thead><tr><th>metric</th><th className="l">kind</th><th>alpha</th><th>value</th><th>low</th><th>high</th><th>n</th></tr></thead><tbody>
+          <div className="legend">{kinds.map(k => <LegendItem key={k} glyph={<span className="lg-i">{['steer', 'random', 'unrelated'].includes(k) && <Glyph shape="line" color={KIND[k].color} dash={KIND[k].dash} />}<Glyph shape={KIND[k].glyph} color={KIND[k].color} size={11} /></span>}>{KIND[k].label}</LegendItem>)}
+            {kinds.includes('prompt') ? <Info>Prompt personas have no strength; they are drawn at alpha {'\u2212'}1 ({TRAIT[trait]?.neg} prompt) and +1 ({TRAIT[trait]?.pos} prompt).</Info> : <span className="note">Prompt personas: not exported for this dial.</span>}</div>
+          <div className="featgrid">{feat.map(mt => card(mt, true))}</div>
+          <div className="smgrid">{rest.map(mt => card(mt))}</div>
+          <details><summary>Table of every measurement</summary><div className="tablewrap"><table className="t"><thead><tr><th>metric</th><th className="l">kind</th><th>alpha</th><th>value</th><th>low</th><th>high</th><th>n</th></tr></thead><tbody>
             {[...rec.series].sort((a, b) => METRIC_ORDER.indexOf(a.metric) - METRIC_ORDER.indexOf(b.metric) || KIND_ORDER.indexOf(a.kind) - KIND_ORDER.indexOf(b.kind) || a.alpha - b.alpha).map((s, i) => <tr key={i}><td>{metricLabel(s.metric)}</td><td className="l">{s.kind}</td><td>{sa(s.alpha)}</td><td>{num(s.value, 3)}</td><td>{num(s.lo, 3)}</td><td>{num(s.hi, 3)}</td><td>{s.n ?? ''}</td></tr>)}</tbody></table></div></details>
         </>}
       </>}
-      <div style={{ marginTop: 14 }}><TryIt /></div>
+      <div style={{ marginTop: 24 }}><TryIt /></div>
     </div>
   )
 }

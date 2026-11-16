@@ -32,18 +32,40 @@ export function LoadState<T>({ l, label, expect }: { l: D.Loaded<T>; label: stri
   return null
 }
 
-export function Panel({ title, sub, right, children, takeaway, className, id }: { title?: ReactNode; sub?: ReactNode; right?: ReactNode; children: ReactNode; takeaway?: ReactNode; className?: string; id?: string }) {
+export function Panel({ title, sub, right, children, takeaway, className, id, info }: { title?: ReactNode; sub?: ReactNode; right?: ReactNode; children: ReactNode; takeaway?: ReactNode; className?: string; id?: string; info?: ReactNode }) {
   return (
     <section className={`panel ${className ?? ''}`} id={id}>
-      {(title || right) && <header className="ph"><div className="ph-l">{title && <h2>{title}</h2>}{sub && <span className="ph-sub">{sub}</span>}</div>{right && <div className="ph-r">{right}</div>}</header>}
+      {(title || right) && <header className="ph"><div className="ph-l">{title && <div className="ph-t"><h2>{title}</h2>{info && <Info>{info}</Info>}</div>}{sub && <span className="ph-sub">{sub}</span>}</div>{right && <div className="ph-r">{right}</div>}</header>}
       {takeaway && <Takeaway>{takeaway}</Takeaway>}
       {children}
     </section>
   )
 }
-/** A one-line plain-language reading of the chart, computed from the data. */
-export function Takeaway({ children }: { children: ReactNode }) {
-  return <p className="takeaway"><span className="tk-k">Reading</span>{children}</p>
+
+/** Small circled-i icon that shows its children in a popover on hover or keyboard focus. */
+export function Info({ children, align, label = 'More detail' }: { children: ReactNode; align?: 'left' | 'right'; label?: string }) {
+  return (
+    <span className={`info ${align ?? ''}`} tabIndex={0} role="button" aria-label={label}>
+      <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden><circle cx="8" cy="8" r="6.6" fill="none" stroke="currentColor" strokeWidth="1.3" /><path d="M8 7.2v4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" /><circle cx="8" cy="4.9" r=".9" fill="currentColor" /></svg>
+      <span className="info-pop" role="tooltip">{children}</span>
+    </span>
+  )
+}
+
+const flat = (n: ReactNode): string | null => {
+  if (typeof n === 'string' || typeof n === 'number') return String(n)
+  if (Array.isArray(n)) { let out = ''; for (const x of n) { if (x === null || x === undefined || x === false || x === true) continue; const f = flat(x); if (f === null) return null; out += f } return out }
+  if (n === null || n === undefined || n === false || n === true) return ''
+  return null
+}
+/** A one-line summary under a chart, computed from the data. Longer summaries show their first sentence and keep the
+ *  rest behind an info icon. */
+export function Takeaway({ children, full }: { children: ReactNode; full?: boolean }) {
+  const t = flat(children)
+  if (t === null || full) return <p className="takeaway">{children}</p>
+  const parts = t.trim().split(/(?<=[.])\s+(?=[A-Z])/)
+  if (parts.length < 2) return <p className="takeaway">{t}</p>
+  return <p className="takeaway">{parts[0]} <Info align="left">{parts.slice(1).join(' ')}</Info></p>
 }
 
 export function Seg<T extends string | number>({ value, options, onChange, label, small }: { value: T; options: { v: T; label: ReactNode; title?: string; disabled?: boolean }[]; onChange: (v: T) => void; label?: string; small?: boolean }) {
@@ -83,12 +105,12 @@ export function LegendItem({ children, glyph }: { children: ReactNode; glyph: Re
   return <span className="lg-i">{glyph}<span>{children}</span></span>
 }
 
-export function Tile({ k, v, s, tone }: { k: ReactNode; v: ReactNode; s?: ReactNode; tone?: 'bad' | 'ok' }) {
-  return <div className={`tile ${tone ?? ''}`}><div className="k">{k}</div><div className="v">{v}</div>{s && <div className="s">{s}</div>}</div>
+export function Tile({ k, v, s, tone, info }: { k: ReactNode; v: ReactNode; s?: ReactNode; tone?: 'bad' | 'ok' | 'accent'; info?: ReactNode }) {
+  return <div className={`tile ${tone ?? ''}`}><div className="k">{k}{info && <Info>{info}</Info>}</div><div className="v">{v}</div>{s && <div className="s">{s}</div>}</div>
 }
 
-export function PageHead({ title, children }: { title: string; children?: ReactNode }) {
-  return <div className="pagehead"><h1>{title}</h1>{children && <p>{children}</p>}</div>
+export function PageHead({ title, children, extra }: { title: string; children?: ReactNode; extra?: ReactNode }) {
+  return <div className="pagehead"><h1>{title}</h1>{children && <p>{children}</p>}{extra}</div>
 }
 
 export function SimTag() { return <span className="simtag" title="Generated inside the simulation; not real news">Simulated</span> }

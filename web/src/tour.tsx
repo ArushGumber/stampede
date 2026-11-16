@@ -1,6 +1,6 @@
 import { displayOrigin } from './data'
-// Automatic walkthrough for the demo video (?tour=1), following the paper's evaluation: one caption at a time at the
-// bottom of the screen, about two and a half minutes. Every number in a caption is computed from the loaded results;
+// Automatic walkthrough for the demo video (?tour=1), following the paper's evaluation: one caption at a time in a strip
+// docked under the page, about two and a half minutes. Every number in a caption is computed from the loaded results;
 // a scene whose data is missing falls back to a caption without numbers and is listed in window.__stampede.tourMissing.
 // When it finishes, window.__stampede.tourDone is set to true so a recorder knows when to stop.
 import { useEffect, useState } from 'react'
@@ -23,7 +23,7 @@ async function openArena(id: string | undefined, speed: number) {
   location.hash = `#/arena/${encodeURIComponent(id)}?speed=${speed}`
   await until(() => api.arena?.episodeId === id && !!api.arena?.ready, 8000)
   // Keep the price chart and the metric tiles above the caption.
-  document.querySelector('.replay-banner')?.scrollIntoView({ block: 'start' })
+  document.querySelector('.arena-center')?.scrollIntoView({ block: 'start' })
 }
 const mean = (a: number[]) => (a.length ? a.reduce((x, y) => x + y, 0) / a.length : NaN)
 const short = (a: string) => CLOSED[a]?.label.replace(/^Claude /, '') ?? a
@@ -124,7 +124,7 @@ async function buildSteps(missing: string[]): Promise<Step[]> {
     { id: 'connect-1', ms: 5500, go: async () => { location.hash = '#/connect'; await scrollTo('connect-add', 'start') }, caption: 'Any MCP client can join the market: one command adds it to Claude Code.' },
     { id: 'connect-2', ms: 9000, go: () => scrollTo('connect-runs', 'start'), caption: s6b },
     s6c ? { id: 'connect-3', ms: 5000, caption: s6c } : null,
-    { id: 'close', ms: 7000, go: () => { location.hash = '#/arena'; window.scrollTo(0, 0) }, caption: `${PRODUCT_NAME}: paper, code and live demo at ${displayOrigin()}` },
+    { id: 'close', ms: 7000, go: () => { location.hash = '#/arena'; window.scrollTo(0, 0); document.getElementById('root')?.scrollTo?.(0, 0) }, caption: `${PRODUCT_NAME}: paper, code and live demo at ${displayOrigin()}` },
   ]
   return steps.filter((s): s is Step => !!s)
 }
@@ -157,5 +157,5 @@ export default function Tour() {
     })()
     return () => { dead = true }
   }, [])
-  return <div className={`tour-cap ${shown && cap ? '' : 'hidden'}`} role="status" aria-live="polite">{cap}</div>
+  return <div className={`tour-cap ${shown && cap ? '' : 'hidden'}`} role="status" aria-live="polite"><span>{cap}</span></div>
 }

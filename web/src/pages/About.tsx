@@ -43,8 +43,8 @@ export default function About() {
       <div className="stack">
         <Panel>
           <div className="prose">
-            <h1 style={{ marginBottom: 6 }}>About {PRODUCT_NAME}</h1>
-            <p style={{ fontSize: 14 }}>{PRODUCT_TAGLINE} {PRODUCT_NAME} is a simulated market populated by AI trading agents whose dispositions can be set on a dial or measured from closed models, built to answer that question with numbers.</p>
+            <h1 style={{ marginBottom: 10 }}>About {PRODUCT_NAME}</h1>
+            <p style={{ fontSize: 15, color: 'var(--ink)' }}>{PRODUCT_TAGLINE} {PRODUCT_NAME} is a simulated market populated by AI trading agents whose dispositions can be set on a dial or measured from closed models, built to answer that question with numbers.</p>
             <h2>Method in plain words</h2>
             <ul>
               <li><b>A simulated exchange.</b> A limit order book with price-time priority, leverage, margin calls and forced liquidation, and a background of noise traders, a market maker, value investors and trend followers. Two regimes: equity-like (2x leverage) and crypto-like (10x leverage, where forced sales can cascade). Companies and tickers are fictional so no model can recall their history.</li>
@@ -68,18 +68,18 @@ export default function About() {
             <p>Nothing on this site touches a real exchange, broker or account, and nothing here is investment advice. Agents steered toward manipulation act only inside the simulation, through fixed templates, and the site shows no written reasons from integrity-steered models and accepts no free-text prompts. Positions of named models describe measured behaviour on these tests, not a judgement that any vendor's model is unsafe. Connected agents trade fictional money; their sessions live in the server's memory and expire after three hours.</p>
           </div>
         </Panel>
-        <Panel title="Exchange calibration" sub="results/engine_validation.json"><Calibration /></Panel>
+        <Panel title="Exchange calibration" sub="Background traders only, no AI agents"><Calibration /></Panel>
       </div>
       <div className="stack">
         <Panel title="Authors">
-          <div className="authors" style={{ gridTemplateColumns: '1fr' }}>{AUTHORS.map(a => <div key={a.name}><b>{a.name}</b><span className="note">{a.aff}</span></div>)}</div>
+          <div className="authors">{AUTHORS.map(a => <div key={a.name}><b>{a.name}</b><span className="note">{a.aff}</span></div>)}</div>
         </Panel>
         <Panel title="Links">
-          <ul style={{ margin: 0, paddingLeft: 18 }}>{LINKS.map(l => <li key={l.label} style={{ marginBottom: 4 }}>{l.href ? <a href={l.href}>{l.label}</a> : <>{l.label} <span className="note">(link to come)</span></>}</li>)}</ul>
+          <div className="lead-links" style={{ marginTop: 0 }}>{LINKS.map(l => l.href ? <a key={l.label} className="btn ghost sm" href={l.href} target="_blank" rel="noreferrer">{l.label}</a> : <span key={l.label} className="btn ghost sm" aria-disabled style={{ opacity: .55, cursor: 'default' }}>{l.label} (soon)</span>)}</div>
         </Panel>
         <Panel title="How to read this site">
           <ul style={{ margin: 0, paddingLeft: 18 }}>
-            <li style={{ marginBottom: 4 }}><b>Reading</b> lines above each chart are computed from the data on screen, not written by hand.</li>
+            <li style={{ marginBottom: 4 }}>The short summary under each chart is computed from the data on screen. Hover the info icons for detail.</li>
             <li style={{ marginBottom: 4 }}>Each disposition and each closed model keeps one colour and marker everywhere: circles for the steered open model, diamonds for Anthropic models, squares for OpenAI models.</li>
             <li style={{ marginBottom: 4 }}>Every result chart has a table view, and every empty panel says which file it is waiting for.</li>
           </ul>

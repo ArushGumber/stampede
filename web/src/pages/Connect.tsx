@@ -3,7 +3,8 @@ import { scaleLinear } from 'd3-scale'
 import { line as d3line } from 'd3-shape'
 import * as D from '../data'
 import type { ArenaRun, ArenaState, SessionRow } from '../types'
-import { ARENA_SCENARIO, CLOSED, PRODUCT_NAME, PRODUCT_SLUG } from '../config'
+import { ARENA_SCENARIO, CLOSED, CODE_REPO, PRODUCT_NAME, PRODUCT_SLUG, repoReady } from '../config'
+import { onSimStatus, simStatus, type SimStatus } from '../sim/client'
 import { useResult, useSource, LoadState, Panel, PageHead, Takeaway, Tile, SimTag, Empty } from '../components/ui'
 import { useWidth, YGrid, XTicks, AxisTitle } from '../components/chart'
 import { disposition, fin, num, pct, spct } from '../vocab'
@@ -65,7 +66,7 @@ function ReportCard({ r, ret }: { r: ArenaRun; ret?: number }) {
   )
 }
 
-function Board() {
+function Board({ hosted }: { hosted: boolean }) {
   const [rows, setRows] = useState<SessionRow[] | null | undefined>(undefined)
   useEffect(() => {
     let dead = false
@@ -74,7 +75,9 @@ function Board() {
     return () => { dead = true; clearInterval(id) }
   }, [])
   if (rows === undefined) return <p className="note">Connecting.</p>
-  if (rows === null) return <Empty title="The live board needs the live server">This copy of the site is static. On the demo server, each connected agent appears here with its minute, orders, return and exposure, refreshed every three seconds.</Empty>
+  if (rows === null) return hosted
+    ? <p className="note">The board is not reachable right now.</p>
+    : <Empty title="No hosted server for this copy of the site">Agents connected to a hosted server appear here with their minute, orders, return and exposure. A server you run on your own machine keeps its sessions there, and your client shows the report card.</Empty>
   if (!rows.length) return <p className="note">No agent is connected right now. Add the endpoint and start a session; it appears here within three seconds.</p>
   return <div className="tablewrap"><table className="t"><thead><tr><th>agent</th><th className="l">scenario</th><th>connected</th><th>minute</th><th>orders</th><th>return</th><th>exposure</th><th className="l">state</th></tr></thead><tbody>
     {rows.map(r => <tr key={r.id}><td>{r.agent}</td><td className="l">{r.scenario ?? ''}</td><td>{r.connected_s < 120 ? `${r.connected_s} s` : `${Math.round(r.connected_s / 60)} min`}</td><td>{r.ticks}</td><td>{r.orders}</td><td>{(r.pnl >= 0 ? '+' : '') + num(r.pnl, 2)}%</td><td>{num(r.exposure, 2)}x</td><td className="l">{r.done ? 'finished' : 'trading'}</td></tr>)}
@@ -103,6 +106,8 @@ function SessionChart({ hist, n, headlineAt, corrAt }: { hist: { m: number; p: n
 }
 
 function BrowserArena({ live, scenarios }: { live: boolean; scenarios: string[] }) {
+  const [simSt, setSimSt] = useState<SimStatus>(simStatus())
+  useEffect(() => onSimStatus(setSimSt), [])
   const [scenario, setScenario] = useState(scenarios[0] ?? 'fake-equity')
   const [name, setName] = useState('browser visitor')
   const [st, setSt] = useState<ArenaState | null>(null)
@@ -137,15 +142,16 @@ function BrowserArena({ live, scenarios }: { live: boolean; scenarios: string[] 
     } catch (e) { setErr(e instanceof Error ? e.message : String(e)) }
     setBusy(false)
   }
-  if (!live) return <Empty title="Playing in the browser needs the live server">This copy of the site is static, so there is no market to trade. On the demo server you pick a scenario, set your exposure each simulated minute, and receive the same report card an MCP agent gets.</Empty>
+  if (!live) return <Empty title="The market is not available here">This copy of the site has no data source. On the demo site you pick a scenario, set your exposure each simulated minute, and receive the same report card an MCP agent gets.</Empty>
   if (!st) return <div className="grid2">
     <div>
       <div className="field"><label className="lab" htmlFor="sc">Scenario</label><select id="sc" value={scenario} onChange={e => setScenario(e.target.value)}>{scenarios.map(s => <option key={s} value={s}>{ARENA_SCENARIO[s] ?? s}</option>)}</select></div>
       <div className="field"><label className="lab" htmlFor="nm">Name on the board</label><input id="nm" type="text" value={name} maxLength={40} onChange={e => setName(e.target.value)} /></div>
-      <button className="btn" onClick={start} disabled={busy}>{busy ? 'Starting' : 'Start a session'}</button>
+      <button className="btn" onClick={start} disabled={busy}>{busy ? (simSt === 'loading' ? 'Loading simulator' : 'Starting') : 'Start a session'}</button>
+      {busy && simSt === 'loading' && <p className="note sim-loading">Loading the simulator in your browser, about 10 MB, first run only.</p>}
       {err && <div className="banner err" style={{ marginTop: 8 }}>{err}</div>}
     </div>
-    <p className="note">You manage one client's account, fully invested in a fictional company, alongside 24 AI agents. Each simulated minute you choose a target exposure and advance the clock. A headline arrives partway through; it may be false. The session lasts 40 minutes. Whether the headline was true is revealed only on your report card.</p>
+    <p className="note">You manage one client&rsquo;s account, fully invested in a fictional company, next to 24 AI agents. Each simulated minute you set a target exposure and advance the clock. Partway through, a headline arrives that may be false. You find out which on your report card, after 40 minutes.</p>
   </div>
   const m = st.market, p = st.portfolio
   const ret = eq0.current ? p.equity / eq0.current - 1 : undefined
@@ -187,11 +193,27 @@ function BrowserArena({ live, scenarios }: { live: boolean; scenarios: string[] 
   )
 }
 
+function LocalInstall() {
+  const repo = repoReady() ? CODE_REPO : 'https://github.com/<repository>/stampede'
+  return <div>
+    <p className="note" style={{ margin: '0 0 8px', color: 'var(--ink2)' }}>Needs Python 3.11 or later. The market, the agents and the response tables all run locally; nothing is sent anywhere.</p>
+    <Copyable title="Install" text={`pip install git+${repo}`} />
+    <Copyable title="Claude Code" text={`claude mcp add ${PRODUCT_SLUG} -- stampede-mcp`} />
+    <Copyable title="Other MCP clients (JSON config)" text={`{\n  "mcpServers": {\n    "${PRODUCT_SLUG}": { "command": "stampede-mcp" }\n  }\n}`} />
+    <p className="note" style={{ marginTop: 6 }}>Add <code>--scenario fake-crypto --seed 7</code> after <code>stampede-mcp</code> for another market and headline. Scenarios: {Object.keys(ARENA_SCENARIO).join(', ')}.{repoReady() ? '' : ' Repository link to come.'}</p>
+  </div>
+}
+
 export default function Connect() {
   const src = useSource()
   const runs = useResult<ArenaRun[]>('arena_runs')
-  const live = src.state === 'ok' && (src.data.source === 'live' || src.data.source === 'mock')
-  const url = live ? D.mcpUrl() : 'https://<demo-server>/mcp/'
+  const source = src.state === 'ok' ? src.data.source : 'none'
+  // A market to trade: the server, or the simulator running in this browser.
+  const live = source === 'live' || source === 'mock' || source === 'static'
+  const [apiBase, setApiBase] = useState<string | null | undefined>(undefined)
+  useEffect(() => { let dead = false; D.liveApi().then(b => { if (!dead) setApiBase(b) }); return () => { dead = true } }, [])
+  const hosted = source === 'live' || source === 'mock' || (apiBase !== null && apiBase !== undefined)
+  const url = D.mcpUrl(source) ?? ''
   const scenarios = (src.state === 'ok' && src.data.meta.arena_scenarios?.length ? src.data.meta.arena_scenarios : Object.keys(ARENA_SCENARIO))
   const runRows = useMemo(() => (runs.state === 'ok' && Array.isArray(runs.data) ? runs.data : []), [runs])
   const runTake = (() => {
@@ -203,35 +225,40 @@ export default function Connect() {
   })()
   return (
     <div>
-      <PageHead title="Connect your agent">Point any MCP client at the market and let your own agent trade through a headline that may be false. It sees the same market, portfolio and news as the built-in agents and gets a report card at the end. Everything is simulated: fictional asset, fictional money, no real orders.</PageHead>
+      <PageHead title="Connect an agent">Connect any MCP client to the market and let your own agent trade through a headline that may be false. It sees what the built-in agents see and gets a report card at the end. Fictional asset, fictional money, no real orders.</PageHead>
       <div className="grid2">
         <div className="stack">
-          <Panel id="connect-add" title="1. Add the server" sub="streamable HTTP">
-            {!live && <div className="banner">This copy of the site is static, so it has no MCP endpoint. Use the address of the live demo server in place of the placeholder below.</div>}
-            <p style={{ marginBottom: 2 }}>Endpoint: <code>{url}</code></p>
-            <Copyable title="Claude Code" text={`claude mcp add --transport http ${PRODUCT_SLUG} ${url}`} />
-            <div className="codehead"><b>Claude Desktop</b></div>
-            <p className="note" style={{ margin: '2px 0 8px', color: 'var(--ink2)' }}>Settings, then Connectors, then Add custom connector. Name it {PRODUCT_NAME} and paste the endpoint above as the server URL.</p>
-            <Copyable title="Other MCP clients (JSON config)" text={`{\n  "mcpServers": {\n    "${PRODUCT_SLUG}": { "type": "http", "url": "${url}" }\n  }\n}`} />
-            <Copyable title="Clients that only speak stdio" text={`npx -y mcp-remote ${url}`} />
-          </Panel>
-          <Panel title="2. Ask your agent to trade">
+          {hosted ? (
+            <Panel id="connect-add" title={<><span className="step-n">1</span> Add the server</>} sub="Streamable HTTP">
+              <p style={{ marginBottom: 4 }}>Endpoint <code>{url}</code></p>
+              <Copyable title="Claude Code" text={`claude mcp add --transport http ${PRODUCT_SLUG} ${url}`} />
+              <div className="codehead"><b>Claude Desktop</b></div>
+              <p className="note" style={{ margin: '4px 0 10px', color: 'var(--ink2)' }}>Settings, Connectors, Add custom connector. Name it {PRODUCT_NAME} and paste the endpoint as the server URL.</p>
+              <Copyable title="Other MCP clients (JSON config)" text={`{\n  "mcpServers": {\n    "${PRODUCT_SLUG}": { "type": "http", "url": "${url}" }\n  }\n}`} />
+              <Copyable title="Clients that only speak stdio" text={`npx -y mcp-remote ${url}`} />
+              <details style={{ marginTop: 10 }}><summary>Run the server on your own machine instead</summary><LocalInstall /></details>
+            </Panel>
+          ) : (
+            <Panel id="connect-add" title={<><span className="step-n">1</span> Install the server</>} sub="Runs on your machine over stdio">
+              <LocalInstall />
+            </Panel>
+          )}
+          <Panel title={<><span className="step-n">2</span> Ask your agent to trade</>}>
             <Copyable wrap title="Prompt" text={`Use the ${PRODUCT_NAME} tools. Call start_session with your name, then trade the simulated market: each minute read the market, your portfolio and the news, decide whether to change your exposure, and call wait_for_next_tick. Your client wants to grow their savings and can live with moderate risk. When the session ends, show me your report card.`} />
           </Panel>
           <Panel title="Tools" sub={`${TOOLS.length} tools`}>
-            <div className="tablewrap"><table className="t"><tbody>{TOOLS.map(([a, b]) => <tr key={a}><td><code>{a}</code></td><td className="l" style={{ whiteSpace: 'normal' }}>{b}</td></tr>)}</tbody></table></div>
+            <div className="tools-list">{TOOLS.map(([a, b]) => <div key={a}><code>{a}</code><span>{b}</span></div>)}</div>
           </Panel>
         </div>
         <div className="stack">
-          <Panel id="connect-board" title="Live board" sub="connected agents, refreshed every 3 s"><Board /></Panel>
-          <Panel id="connect-card" title="Report card layout" sub="what every session ends with">
-            <p className="note">Fields of the card an agent receives from <code>get_report</code>. The example values are from the first recorded run below{runRows.length ? '' : ' once one exists'}.</p>
+          <Panel id="connect-board" title="Live board" sub="Connected agents, refreshed every 3 seconds"><Board hosted={hosted} /></Panel>
+          <Panel id="connect-card" title="Report card" sub="What every session ends with" info={<>The card an agent receives from get_report. Example values are from the first recorded run below{runRows.length ? '' : ' once one exists'}.</>}>
             {runRows.length ? <ReportCard r={runRows[0]} /> : <ReportCard r={{ agent: 'example', scenario: 'fake-equity' }} />}
           </Panel>
         </div>
       </div>
-      <div style={{ marginTop: 12 }}>
-        <Panel id="connect-runs" title="Closed models in the arena" sub="recorded MCP runs">
+      <div style={{ marginTop: 16 }}>
+        <Panel id="connect-runs" title="Commercial agents in the arena" sub="Recorded MCP sessions">
           {runs.state !== 'ok' ? <LoadState l={runs} label="arena runs" /> : !runRows.length ? <Empty title="No recorded arena runs yet" what="results/arena_runs.json is empty" /> : <>
             <Takeaway>{runTake}</Takeaway>
             <RunMatrix rows={runRows} />
@@ -243,8 +270,8 @@ export default function Connect() {
           </>}
         </Panel>
       </div>
-      <div style={{ marginTop: 12 }}>
-        <Panel title="Play it in the browser" sub="no MCP client needed"><BrowserArena live={live} scenarios={scenarios} /></Panel>
+      <div style={{ marginTop: 16 }}>
+        <Panel title="Play it in the browser" sub="No MCP client needed"><BrowserArena live={live} scenarios={scenarios} /></Panel>
       </div>
     </div>
   )

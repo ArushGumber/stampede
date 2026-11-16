@@ -8,8 +8,10 @@ and calibrated in economic units (CRRA risk aversion, Kelly fraction). Six comme
 Opus, Fable; GPT-6 Luna, Sol) are placed on the same scales. One headline arrives: true or false, from a verified
 wire or an unverified post. Any MCP client can join the market live and receive a report card.
 
-Demo paper: WWW 2027 Demo Track. Everything is simulated: fictional assets, fictional headlines,
-no real orders.
+Demo paper: WWW 2027 Demo Track. Everything is simulated: fictional assets, fictional headlines, no real orders.
+
+- Project page: https://stampede-agents.vercel.app
+- Live demo: https://arushthegarlic-stampede.static.hf.space (markets run in your browser; no server needed)
 
 ## What is in the box
 
@@ -24,23 +26,30 @@ no real orders.
 | Data | `data/` | Batteries (validated), fictional headline bank, 11 verified real fake-headline incidents, minute-bar calibration data. |
 | Results | `results/` | All experiment outputs; `results/site/` is the exported site data. |
 
+## Connect your own agent
+
+```bash
+pip install "git+https://github.com/ArushGumber/stampede"
+claude mcp add stampede -- stampede-mcp
+# then ask: "Use the stampede tools: start a session, trade every simulated minute, and show me your report card."
+```
+
+Any MCP client can launch `stampede-mcp` over stdio (`--scenario` and `--seed` pick the session). The full server
+below also exposes the same tools over streamable HTTP at `/mcp/`.
+
 ## Quick start
 
 ```bash
-python -m venv .venv && .venv/bin/pip install -r requirements.txt
-.venv/bin/python -m pytest -q tests/                        # exchange, metrics, episode runner
-(cd web && npm install && npm run build)                     # front end -> web/dist
-.venv/bin/python scripts/export_site.py                      # results -> results/site
+python -m venv .venv && .venv/bin/pip install -e ".[server]"   # add ".[server,lab]" for the GPU steering lab
+.venv/bin/python -m pytest -q tests/                          # exchange, metrics, episode runner, live runs
+(cd web && npm install && npm run build)                       # front end -> web/dist
+.venv/bin/python scripts/export_site.py                        # results -> results/site
 .venv/bin/python -m uvicorn stampede.server.app:app --port 8765
 # open http://127.0.0.1:8765  ;  ?tour=1 plays the guided tour, ?shot=1 is the screenshot layout
 ```
 
-Connect your own agent (the market is simulated):
-
-```bash
-claude mcp add --transport http stampede http://127.0.0.1:8765/mcp/
-# then ask: "Use the stampede tools: start a session, trade every simulated minute, and show me your report card."
-```
+`POST /api/simulate` runs any market live on the CPU from the response tables. `cd web && npm run build:static`
+builds a static copy in `web/dist-static/` that runs markets in the browser with Pyodide, for any static host.
 
 ## Reproducing the paper
 
@@ -68,8 +77,4 @@ withheld for the ethics dilemmas. See the paper's ethics section.
 ## Authors
 
 Arush Gumber (IIIT-Delhi; StarkVision Research), Arnesh Batra (IIIT-Delhi; StarkVision Research),
-Pranav Viksar Garg (University of Manchester), Sidhant Gumber (Independent Researcher).
-
-## License
-
-MIT (see `LICENSE`).
+Sidhant Gumber (StarkVision Research).

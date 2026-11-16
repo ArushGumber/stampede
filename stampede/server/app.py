@@ -2,9 +2,10 @@
 
     STAMPEDE_SITE_DATA=results/site uvicorn stampede.server.app:app --port 8765
 
-Endpoints follow docs/CONTRACTS.md section 5. The public deployment is replay-only: /api/run returns the
-nearest recorded episode and /api/decide serves precomputed decisions, so no GPU and no free-text model
-calls are exposed. The arena (/mcp and /api/arena/*) runs on CPU with response-table agents.
+Endpoints follow docs/CONTRACTS.md section 5. No GPU and no free-text model calls are exposed:
+/api/simulate runs a headline episode and its no-headline twin from response tables on CPU, /api/run returns
+the nearest recorded episode, and /api/decide serves precomputed decisions. The arena (/mcp and /api/arena/*)
+also runs on CPU with response-table agents.
 """
 from __future__ import annotations
 
@@ -64,6 +65,8 @@ class Store:
 
     def episode(self, eid: str) -> Optional[dict]:
         safe = "".join(c for c in eid if c.isalnum() or c in "_-")
+        if safe.startswith("live_"):
+            return SIM_CACHE.episode(safe)
         for d in EPISODE_DIRS:
             for name in (safe + ".json", safe + ".json.gz"):
                 p = os.path.join(d, name)
@@ -96,6 +99,71 @@ class RateLimiter:
 
 
 LIMIT = RateLimiter(int(os.environ.get("STAMPEDE_RATE_PER_MIN", "240")))
+SIM_LIMIT = RateLimiter(int(os.environ.get("STAMPEDE_SIM_PER_MIN", "40")))
+
+
+# ------------------------------------------------------------------------------------------ live simulation
+from collections import OrderedDict  # noqa: E402
+from concurrent.futures import ProcessPoolExecutor  # noqa: E402
+import multiprocessing  # noqa: E402
+
+from stampede.sim import live as LIVE  # noqa: E402
+
+
+class SimCache:
+    """Small LRU of finished runs, keyed by normalised parameters; runs are also reachable by episode id."""
+
+    def __init__(self, size: int = 256):
+        self.size, self.by_key, self.by_id = size, OrderedDict(), {}
+
+    def get(self, key: str) -> Optional[dict]:
+        r = self.by_key.get(key)
+        if r is not None:
+            self.by_key.move_to_end(key)
+        return r
+
+    def put(self, key: str, r: dict):
+        self.by_key[key] = r
+        self.by_id[r["episode"]["id"]] = key
+        self.by_key.move_to_end(key)
+        while len(self.by_key) > self.size:
+            _, old = self.by_key.popitem(last=False)
+            self.by_id.pop(old["episode"]["id"], None)
+
+    def episode(self, eid: str) -> Optional[dict]:
+        key = self.by_id.get(eid)
+        r = self.by_key.get(key) if key else None
+        return r["episode"] if r else None
+
+
+SIM_CACHE = SimCache(int(os.environ.get("STAMPEDE_SIM_CACHE", "256")))
+SIM_WORKERS = max(1, int(os.environ.get("STAMPEDE_SIM_WORKERS", "2")))
+SIM_MAX_WAITING = int(os.environ.get("STAMPEDE_SIM_MAX_WAITING", "8"))
+_sim_pool: Optional[ProcessPoolExecutor] = None
+_sim_sem: Optional[asyncio.Semaphore] = None
+_sim_waiting = 0
+
+
+def _pool() -> ProcessPoolExecutor:
+    global _sim_pool
+    if _sim_pool is None:
+        _sim_pool = ProcessPoolExecutor(max_workers=SIM_WORKERS, mp_context=multiprocessing.get_context("spawn"))
+    return _sim_pool
+
+
+async def _run_sim(params: dict) -> dict:
+    """Run in a worker process; if the pool cannot start or has died, reset it and run in a thread."""
+    global _sim_pool
+    from concurrent.futures.process import BrokenProcessPool
+
+    loop = asyncio.get_running_loop()
+    try:
+        return await loop.run_in_executor(_pool(), LIVE.simulate, params)
+    except (BrokenProcessPool, OSError):
+        with contextlib.suppress(Exception):
+            _sim_pool.shutdown(wait=False, cancel_futures=True)
+        _sim_pool = None
+        return await asyncio.to_thread(LIVE.simulate, params)
 
 
 def _client(req: Request) -> str:
@@ -117,6 +185,8 @@ async def lifespan(app: FastAPI):
         if sm is not None and hasattr(sm, "run"):
             await stack.enter_async_context(sm.run())
         yield
+    if _sim_pool is not None:
+        _sim_pool.shutdown(wait=True, cancel_futures=True)
 
 
 app = FastAPI(title="Stampede", lifespan=lifespan, docs_url="/api/docs", openapi_url="/api/openapi.json")
@@ -135,6 +205,9 @@ def meta():
     m.setdefault("safeguards", [])
     m.setdefault("headlines", [])
     m["live"] = False
+    m["simulate"] = {"path": "/api/simulate", "populations": list(LIVE.POP_SPECS), "safeguards": list(LIVE.SAFEGUARDS),
+                     "hcodes": list(LIVE.HKINDS), "regimes": list(LIVE.SYM), "capital_range": list(LIVE.CAPITAL_RANGE),
+                     "resilience": list(LIVE.RESILIENCE), "n_agents": LIVE.N_AGENTS}
     m["arena_scenarios"] = list(SCENARIOS)
     m["mcp_path"] = "/mcp"
     return m
@@ -223,6 +296,49 @@ async def run(req: Request):
     if best is None:
         raise HTTPException(503, "no recorded episodes yet")
     return {"episode_id": best["id"], "mode": "replay", "matched_config": best.get("config")}
+
+
+@app.post("/api/simulate")
+async def simulate(req: Request):
+    """Run a headline episode and its same-seed no-headline twin from response tables, on CPU."""
+    global _sim_sem, _sim_waiting
+    LIMIT.check(_client(req))
+    try:
+        body = await req.json()
+    except ValueError:
+        raise HTTPException(400, "body must be JSON")
+    if not isinstance(body, dict):
+        raise HTTPException(400, "body must be a JSON object")
+    try:
+        params = LIVE.normalise(body)
+    except LIVE.BadRequest as e:
+        raise HTTPException(400, str(e))
+    key = json.dumps(params, sort_keys=True)
+    t0 = time.perf_counter()
+    hit = SIM_CACHE.get(key)
+    if hit is None:
+        SIM_LIMIT.check(_client(req))
+        if _sim_sem is None:
+            _sim_sem = asyncio.Semaphore(SIM_WORKERS)
+        if _sim_waiting >= SIM_MAX_WAITING:
+            raise HTTPException(429, "the simulator is busy; try again in a few seconds")
+        _sim_waiting += 1
+        try:
+            async with _sim_sem:
+                hit = SIM_CACHE.get(key)
+                if hit is None:
+                    hit = await _run_sim(params)
+                    SIM_CACHE.put(key, hit)
+        finally:
+            _sim_waiting -= 1
+        cached = False
+    else:
+        cached = True
+    out = dict(hit)
+    out["params"] = params
+    out["cached"] = cached
+    out["elapsed_ms"] = int(round((time.perf_counter() - t0) * 1000))
+    return JSONResponse(out)
 
 
 @app.websocket("/ws/episodes/{eid}")

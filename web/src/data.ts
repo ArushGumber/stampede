@@ -1,7 +1,9 @@
 // Data layer. Source order: live API on the same origin, then static files under data/ (results/site copied into
 // dist/data), then nothing. The in-browser mock is used only when forced with ?mock=1. There is no silent fallback
 // to mock data: a missing file is reported as missing and the page shows an empty state.
-import type { Meta, Episode, EpisodeSummary, SessionRow, ArenaState } from './types'
+import type { Meta, Episode, EpisodeSummary, SessionRow, ArenaState, Metrics } from './types'
+import { LIVE_ORIGIN } from './config'
+import { BrowserSimError, arenaActInBrowser, arenaStartInBrowser, simulateInBrowser } from './sim/client'
 
 export type Source = 'live' | 'static' | 'mock' | 'none'
 export interface SourceInfo { source: Source; meta: Meta }
@@ -95,32 +97,112 @@ export function describeError(e: unknown): Loaded<never> {
   return { state: 'error', error: e instanceof Error ? e.message : String(e) }
 }
 
-// ------------------------------------------------------------------ live-only endpoints
+// ------------------------------------------------------------------ live endpoints
+// Markets, the browser arena and the session board need a running simulator. In order of preference: the server
+// this page came from, the hosted server in LIVE_ORIGIN (static copies of the site), and, for markets and the
+// browser arena, the same Python running inside the visitor's browser.
+
+let apiP: Promise<string | null> | null = null
+/** Base URL of a reachable live server ('' for the same origin), or null when there is none. */
+export function liveApi(): Promise<string | null> {
+  return (apiP ??= (async () => {
+    const i = await init()
+    if (i.source === 'live') return ''
+    if (i.source !== 'static' || !LIVE_ORIGIN) return null
+    const base = LIVE_ORIGIN.replace(/\/+$/, '')
+    try { const h = await getJSON<{ ok?: boolean }>(`${base}/api/health`, 3500); return h?.ok ? base : null } catch { return null }
+  })())
+}
+
 export async function sessions(): Promise<SessionRow[] | null> {
   const i = await init()
   if (i.source === 'mock') return (await mock()).mockSessions()
-  if (i.source !== 'live') return null
-  try { const d = await getJSON<SessionRow[]>('/api/sessions', 4000); return Array.isArray(d) ? d : [] } catch { return null }
+  const base = await liveApi()
+  if (base === null) return null
+  try { const d = await getJSON<SessionRow[]>(`${base}/api/sessions`, 4000); return Array.isArray(d) ? d : [] } catch { return null }
 }
 
-async function post<T>(url: string, body: unknown): Promise<T> {
-  const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
-  if (!r.ok) {
-    let msg = `HTTP ${r.status}`
-    try { const j = await r.json(); if (j?.detail) msg = String(j.detail) } catch { /* ignore */ }
-    throw new Error(msg)
-  }
-  return r.json() as Promise<T>
+/** The server could not be reached or failed; the caller may use the in-browser simulator instead. */
+class ServerDown extends Error {}
+async function post<T>(url: string, body: unknown, ms = 30000): Promise<T> {
+  const ctl = new AbortController(); const to = setTimeout(() => ctl.abort(), ms)
+  let r: Response
+  try {
+    r = await fetch(url, { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(body) })
+  } catch (e) { clearTimeout(to); throw new ServerDown(e instanceof Error ? e.message : String(e)) }
+  try {
+    if (r.status === 404 || r.status === 405 || r.status >= 500) throw new ServerDown(`HTTP ${r.status}`)
+    const txt = await r.text()
+    const parse = () => { try { return JSON.parse(txt) } catch { return JSON.parse(txt.replace(/(?<=[:,\[]\s*)(?:-?Infinity|NaN)(?=\s*[,\]}])/g, 'null')) } }
+    if (!r.ok) {
+      let msg = r.status === 429 ? 'Too many runs at once. Try again in a few seconds.' : `The request was rejected (HTTP ${r.status}).`
+      try { const j = parse(); if (j?.detail && r.status !== 429) msg = String(j.detail) } catch { /* keep the generic message */ }
+      throw new Error(msg)
+    }
+    try { return parse() as T } catch { throw new ServerDown('bad JSON') }
+  } finally { clearTimeout(to) }
 }
+
+const browserSessions = new Set<string>()
+const browserFailed = (e: unknown) => new Error(e instanceof BrowserSimError && e.status ? e.message : 'The market could not start in this browser. Try reloading the page.')
+
 export async function arenaStart(scenario: string, agent_name: string): Promise<ArenaState> {
   const i = await init()
   if (i.source === 'mock') return (await mock()).mockArenaStart(scenario)
-  return post<ArenaState>('/api/arena/start', { scenario, agent_name })
+  const base = await liveApi()
+  if (base !== null) {
+    try { return await post<ArenaState>(`${base}/api/arena/start`, { scenario, agent_name }) } catch (e) { if (!(e instanceof ServerDown)) throw e }
+  }
+  try {
+    const s = await arenaStartInBrowser<ArenaState>({ scenario, agent_name })
+    if (s.session_id) browserSessions.add(s.session_id)
+    return s
+  } catch (e) { throw browserFailed(e) }
 }
 export async function arenaAct(id: string, target: number | null): Promise<ArenaState> {
   const i = await init()
   if (i.source === 'mock') return (await mock()).mockArenaAct(id, target)
-  return post<ArenaState>(`/api/arena/${encodeURIComponent(id)}/act`, target === null ? { advance: true } : { target_exposure_x: target, advance: true })
+  const body = target === null ? { advance: true } : { target_exposure_x: target, advance: true }
+  if (browserSessions.has(id)) {
+    try { return await arenaActInBrowser<ArenaState>(id, body) } catch (e) { throw browserFailed(e) }
+  }
+  const base = await liveApi()
+  try { return await post<ArenaState>(`${base ?? ''}/api/arena/${encodeURIComponent(id)}/act`, body) } catch (e) {
+    if (e instanceof ServerDown) throw new Error('Lost the connection to the server. Start a new session.')
+    throw e
+  }
+}
+
+/** Run one market live (a headline episode and its no-headline twin, table-driven agents). */
+export interface SimParams { regime: string; pop: string; capital: number; hcode: string; safeguard: string; seed?: number; resilience?: string }
+export interface SimResult { episode: Episode; twin?: { metrics?: Metrics }; metrics?: Metrics; elapsed_ms?: number; where?: 'server' | 'browser' }
+/** No simulator is available; callers fall back to recorded runs without telling the visitor. */
+export class SimUnavailable extends Error {}
+const okEpisode = (d: SimResult | null | undefined) => !!d && !!d.episode && Array.isArray(d.episode.frames) && d.episode.frames.length > 0
+
+/** True when this copy of the site can run markets (a server, or the in-browser simulator). */
+export async function canSimulate(): Promise<boolean> {
+  const i = await init()
+  return i.source === 'live' || i.source === 'static'
+}
+
+export async function simulate(p: SimParams, ms = 45000): Promise<SimResult> {
+  const i = await init()
+  if (i.source !== 'live' && i.source !== 'static') throw new SimUnavailable(i.source)
+  const base = await liveApi()
+  if (base !== null) {
+    try {
+      const d = await post<SimResult>(`${base}/api/simulate`, p, ms)
+      if (okEpisode(d)) return { ...d, where: 'server' }
+    } catch (e) { if (!(e instanceof ServerDown)) throw e }
+  }
+  let d: SimResult
+  try { d = await simulateInBrowser<SimResult>(p as unknown as Record<string, unknown>) } catch (e) {
+    if (e instanceof BrowserSimError && e.status === 400) throw new Error(e.message)
+    throw new SimUnavailable(e instanceof Error ? e.message : String(e))
+  }
+  if (!okEpisode(d)) throw new SimUnavailable('empty episode')
+  return { ...d, where: 'browser' }
 }
 
 /** Public origin shown to people (copy-paste commands, tour captions). `?origin=https://...` overrides it for
@@ -132,4 +214,6 @@ export const displayOrigin = (): string => {
   } catch { /* ignore */ }
   return location.origin
 }
-export const mcpUrl = () => `${displayOrigin()}/mcp/`
+/** The MCP endpoint people should add: this server, or the hosted one named in LIVE_ORIGIN; null when neither exists. */
+export const mcpUrl = (source: Source = 'live'): string | null =>
+  source === 'live' || source === 'mock' ? `${displayOrigin()}/mcp/` : LIVE_ORIGIN ? `${LIVE_ORIGIN.replace(/\/+$/, '')}/mcp/` : null
