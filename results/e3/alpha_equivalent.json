@@ -1,0 +1,290 @@
+[
+ {
+  "agent": "claude-fable",
+  "trait": "risk",
+  "metric": "kelly_fraction",
+  "value": 1.0256980956382507,
+  "alpha_equivalent": 0.6853134823831845,
+  "censored": null,
+  "lo": null,
+  "hi": null,
+  "curve_range": [
+   0.12485221672301115,
+   2.264185086751106
+  ],
+  "harness": "claude -p",
+  "date": "2026-11-15"
+ },
+ {
+  "agent": "claude-fable",
+  "trait": "risk",
+  "metric": "mean_exposure",
+  "value": 0.4178459119496855,
+  "alpha_equivalent": null,
+  "censored": "below",
+  "lo": null,
+  "hi": null,
+  "curve_range": [
+   0.45035588790929965,
+   0.9999990219054524
+  ],
+  "harness": "claude -p",
+  "date": "2026-11-15"
+ },
+ {
+  "agent": "claude-fable",
+  "trait": "risk",
+  "metric": "crra_gamma",
+  "value": 0.06809324865438483,
+  "alpha_equivalent": 0.38980331617491204,
+  "censored": null,
+  "lo": null,
+  "hi": null,
+  "curve_range": [
+   -1.293933468913719,
+   0.4630989821734761
+  ],
+  "harness": "claude -p",
+  "date": "2026-11-15"
+ },
+ {
+  "agent": "claude-haiku",
+  "trait": "risk",
+  "metric": "kelly_fraction",
+  "value": 1.0267842992234137,
+  "alpha_equivalent": 0.6857681889652066,
+  "censored": null,
+  "lo": 0.6550410540601707,
+  "hi": 0.7225371649504019,
+  "curve_range": [
+   0.12485221672301115,
+   2.264185086751106
+  ],
+  "harness": "claude -p",
+  "date": "2026-11-15"
+ },
+ {
+  "agent": "claude-haiku",
+  "trait": "risk",
+  "metric": "mean_exposure",
+  "value": 0.414745145631068,
+  "alpha_equivalent": null,
+  "censored": "below",
+  "lo": null,
+  "hi": null,
+  "curve_range": [
+   0.45035588790929965,
+   0.9999990219054524
+  ],
+  "harness": "claude -p",
+  "date": "2026-11-15"
+ },
+ {
+  "agent": "claude-haiku",
+  "trait": "risk",
+  "metric": "crra_gamma",
+  "value": -0.038781825052111175,
+  "alpha_equivalent": 0.5278688427657683,
+  "censored": null,
+  "lo": null,
+  "hi": null,
+  "curve_range": [
+   -1.293933468913719,
+   0.4630989821734761
+  ],
+  "harness": "claude -p",
+  "date": "2026-11-15"
+ },
+ {
+  "agent": "claude-opus",
+  "trait": "risk",
+  "metric": "kelly_fraction",
+  "value": 1.0256980956382507,
+  "alpha_equivalent": 0.6853134823831845,
+  "censored": null,
+  "lo": 0.6534353717232296,
+  "hi": 0.7245201563817573,
+  "curve_range": [
+   0.12485221672301115,
+   2.264185086751106
+  ],
+  "harness": "claude -p",
+  "date": "2026-11-15"
+ },
+ {
+  "agent": "claude-opus",
+  "trait": "risk",
+  "metric": "mean_exposure",
+  "value": 0.4768081761006289,
+  "alpha_equivalent": 0.2506975169634795,
+  "censored": null,
+  "lo": null,
+  "hi": null,
+  "curve_range": [
+   0.45035588790929965,
+   0.9999990219054524
+  ],
+  "harness": "claude -p",
+  "date": "2026-11-15"
+ },
+ {
+  "agent": "claude-opus",
+  "trait": "risk",
+  "metric": "crra_gamma",
+  "value": 0.14900343140774508,
+  "alpha_equivalent": 0.2805363642474758,
+  "censored": null,
+  "lo": null,
+  "hi": null,
+  "curve_range": [
+   -1.293933468913719,
+   0.4630989821734761
+  ],
+  "harness": "claude -p",
+  "date": "2026-11-15"
+ },
+ {
+  "agent": "claude-sonnet",
+  "trait": "risk",
+  "metric": "kelly_fraction",
+  "value": 0.8542095902231143,
+  "alpha_equivalent": 0.6135249583730219,
+  "censored": null,
+  "lo": 0.5914228012024976,
+  "hi": 0.6391402847880314,
+  "curve_range": [
+   0.12485221672301115,
+   2.264185086751106
+  ],
+  "harness": "claude -p",
+  "date": "2026-11-15"
+ },
+ {
+  "agent": "claude-sonnet",
+  "trait": "risk",
+  "metric": "mean_exposure",
+  "value": 0.4526699029126213,
+  "alpha_equivalent": 0.022078761314815308,
+  "censored": null,
+  "lo": null,
+  "hi": null,
+  "curve_range": [
+   0.45035588790929965,
+   0.9999990219054524
+  ],
+  "harness": "claude -p",
+  "date": "2026-11-15"
+ },
+ {
+  "agent": "claude-sonnet",
+  "trait": "risk",
+  "metric": "crra_gamma",
+  "value": 0.03234451839746223,
+  "alpha_equivalent": 0.43808098231685166,
+  "censored": null,
+  "lo": null,
+  "hi": null,
+  "curve_range": [
+   -1.293933468913719,
+   0.4630989821734761
+  ],
+  "harness": "claude -p",
+  "date": "2026-11-15"
+ },
+ {
+  "agent": "gpt-6-luna",
+  "trait": "risk",
+  "metric": "kelly_fraction",
+  "value": 0.7415077394474087,
+  "alpha_equivalent": 0.5663457057413912,
+  "censored": null,
+  "lo": 0.530580239337777,
+  "hi": 0.5958788390118269,
+  "curve_range": [
+   0.12485221672301115,
+   2.264185086751106
+  ],
+  "harness": "codex exec",
+  "date": "2026-11-15"
+ },
+ {
+  "agent": "gpt-6-luna",
+  "trait": "risk",
+  "metric": "mean_exposure",
+  "value": 0.31361245954692557,
+  "alpha_equivalent": null,
+  "censored": "below",
+  "lo": null,
+  "hi": null,
+  "curve_range": [
+   0.45035588790929965,
+   0.9999990219054524
+  ],
+  "harness": "codex exec",
+  "date": "2026-11-15"
+ },
+ {
+  "agent": "gpt-6-luna",
+  "trait": "risk",
+  "metric": "crra_gamma",
+  "value": 0.5279024427329824,
+  "alpha_equivalent": null,
+  "censored": "above",
+  "lo": null,
+  "hi": null,
+  "curve_range": [
+   -1.293933468913719,
+   0.4630989821734761
+  ],
+  "harness": "codex exec",
+  "date": "2026-11-15"
+ },
+ {
+  "agent": "gpt-6-sol",
+  "trait": "risk",
+  "metric": "kelly_fraction",
+  "value": 1.0086644485072844,
+  "alpha_equivalent": 0.6781828564378372,
+  "censored": null,
+  "lo": 0.649516286893175,
+  "hi": 0.7124271734796258,
+  "curve_range": [
+   0.12485221672301115,
+   2.264185086751106
+  ],
+  "harness": "codex exec",
+  "date": "2026-11-15"
+ },
+ {
+  "agent": "gpt-6-sol",
+  "trait": "risk",
+  "metric": "mean_exposure",
+  "value": 0.24587264150943397,
+  "alpha_equivalent": null,
+  "censored": "below",
+  "lo": null,
+  "hi": null,
+  "curve_range": [
+   0.45035588790929965,
+   0.9999990219054524
+  ],
+  "harness": "codex exec",
+  "date": "2026-11-15"
+ },
+ {
+  "agent": "gpt-6-sol",
+  "trait": "risk",
+  "metric": "crra_gamma",
+  "value": 0.006451712864821854,
+  "alpha_equivalent": 0.4730484961837508,
+  "censored": null,
+  "lo": null,
+  "hi": null,
+  "curve_range": [
+   -1.293933468913719,
+   0.4630989821734761
+  ],
+  "harness": "codex exec",
+  "date": "2026-11-15"
+ }
+]

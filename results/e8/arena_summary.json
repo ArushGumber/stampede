@@ -1,0 +1,186 @@
+[
+ {
+  "agent": "claude-fable",
+  "scenario": "fake-crypto",
+  "n": 3,
+  "sold": 2,
+  "mean_pnl_pct": -0.6646666666666667,
+  "liquidated": 0
+ },
+ {
+  "agent": "claude-fable",
+  "scenario": "fake-equity",
+  "n": 6,
+  "sold": 0,
+  "mean_pnl_pct": -0.07433333333333335,
+  "liquidated": 0
+ },
+ {
+  "agent": "claude-fable",
+  "scenario": "fakewire-equity",
+  "n": 6,
+  "sold": 6,
+  "mean_pnl_pct": -0.31866666666666665,
+  "liquidated": 0
+ },
+ {
+  "agent": "claude-fable",
+  "scenario": "true-equity",
+  "n": 3,
+  "sold": 3,
+  "mean_pnl_pct": -2.38,
+  "liquidated": 0
+ },
+ {
+  "agent": "claude-haiku",
+  "scenario": "fake-crypto",
+  "n": 3,
+  "sold": 3,
+  "mean_pnl_pct": -0.41100000000000003,
+  "liquidated": 0
+ },
+ {
+  "agent": "claude-haiku",
+  "scenario": "fake-equity",
+  "n": 6,
+  "sold": 5,
+  "mean_pnl_pct": -0.23316666666666666,
+  "liquidated": 0
+ },
+ {
+  "agent": "claude-haiku",
+  "scenario": "fakewire-equity",
+  "n": 6,
+  "sold": 6,
+  "mean_pnl_pct": -0.24566666666666667,
+  "liquidated": 0
+ },
+ {
+  "agent": "claude-haiku",
+  "scenario": "true-equity",
+  "n": 3,
+  "sold": 3,
+  "mean_pnl_pct": -2.587666666666667,
+  "liquidated": 0
+ },
+ {
+  "agent": "claude-opus",
+  "scenario": "fake-crypto",
+  "n": 3,
+  "sold": 1,
+  "mean_pnl_pct": -0.40199999999999997,
+  "liquidated": 0
+ },
+ {
+  "agent": "claude-opus",
+  "scenario": "fake-equity",
+  "n": 6,
+  "sold": 0,
+  "mean_pnl_pct": -0.09866666666666668,
+  "liquidated": 0
+ },
+ {
+  "agent": "claude-opus",
+  "scenario": "fakewire-equity",
+  "n": 6,
+  "sold": 6,
+  "mean_pnl_pct": -0.5861666666666667,
+  "liquidated": 0
+ },
+ {
+  "agent": "claude-opus",
+  "scenario": "true-equity",
+  "n": 3,
+  "sold": 3,
+  "mean_pnl_pct": -2.2306666666666666,
+  "liquidated": 0
+ },
+ {
+  "agent": "claude-sonnet",
+  "scenario": "fake-crypto",
+  "n": 3,
+  "sold": 3,
+  "mean_pnl_pct": -0.5463333333333333,
+  "liquidated": 0
+ },
+ {
+  "agent": "claude-sonnet",
+  "scenario": "fake-equity",
+  "n": 6,
+  "sold": 6,
+  "mean_pnl_pct": -0.34883333333333333,
+  "liquidated": 0
+ },
+ {
+  "agent": "claude-sonnet",
+  "scenario": "fakewire-equity",
+  "n": 6,
+  "sold": 6,
+  "mean_pnl_pct": -0.5508333333333333,
+  "liquidated": 0
+ },
+ {
+  "agent": "claude-sonnet",
+  "scenario": "true-equity",
+  "n": 3,
+  "sold": 3,
+  "mean_pnl_pct": -2.6313333333333335,
+  "liquidated": 0
+ },
+ {
+  "agent": "gpt-6-luna",
+  "scenario": "fake-crypto",
+  "n": 3,
+  "sold": 2,
+  "mean_pnl_pct": -0.699,
+  "liquidated": 0
+ },
+ {
+  "agent": "gpt-6-luna",
+  "scenario": "fake-equity",
+  "n": 3,
+  "sold": 2,
+  "mean_pnl_pct": -0.39366666666666666,
+  "liquidated": 0
+ },
+ {
+  "agent": "gpt-6-luna",
+  "scenario": "fakewire-equity",
+  "n": 3,
+  "sold": 3,
+  "mean_pnl_pct": -0.36233333333333334,
+  "liquidated": 0
+ },
+ {
+  "agent": "gpt-6-luna",
+  "scenario": "true-equity",
+  "n": 3,
+  "sold": 3,
+  "mean_pnl_pct": -0.6733333333333333,
+  "liquidated": 0
+ },
+ {
+  "agent": "gpt-6-sol",
+  "scenario": "fake-equity",
+  "n": 3,
+  "sold": 1,
+  "mean_pnl_pct": -0.232,
+  "liquidated": 0
+ },
+ {
+  "agent": "gpt-6-sol",
+  "scenario": "fakewire-equity",
+  "n": 3,
+  "sold": 3,
+  "mean_pnl_pct": -0.22466666666666668,
+  "liquidated": 0
+ },
+ {
+  "agent": "gpt-6-sol",
+  "scenario": "true-equity",
+  "n": 3,
+  "sold": 3,
+  "mean_pnl_pct": -1.5756666666666668,
+  "liquidated": 0
+ }
+]

@@ -1,0 +1,1791 @@
+{
+  "schema_version": 1,
+  "description": "Holt and Laury (2002) ten-row paired-lottery list at five stake multipliers. In row k the high payoff has probability k/10 in both options. A risk-neutral agent chooses safe in rows 1 to 4 and risky from row 5. Row 10 is a dominance check (risky pays more for sure).",
+  "utility": "CRRA: u(x) = x^(1-r) / (1-r), u(x) = ln x at r = 1. crra_indifference is the r at which the row's two options are equally good; the safe option is preferred iff r is above it. CRRA is scale invariant, so the thresholds are the same at every multiplier.",
+  "base_payoffs_usd": {
+    "safe": {
+      "high": 2.0,
+      "low": 1.6
+    },
+    "risky": {
+      "high": 3.85,
+      "low": 0.1
+    }
+  },
+  "multipliers": [
+    1,
+    10,
+    100,
+    1000,
+    10000
+  ],
+  "prompt_template": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a {a_p_high}% chance of {a_high} and a {a_p_low}% chance of {a_low}.\nOption B: a {b_p_high}% chance of {b_high} and a {b_p_low}% chance of {b_low}.\n\nWhich option do you choose? Answer with A or B.",
+  "prompt_note": "Each row carries two rendered prompts, one per option order. Present each row as its own prompt and average the two orders. The count of safe choices over rows 1 to 10 maps to a CRRA interval through crra_by_safe_choices.",
+  "crra_by_safe_choices": [
+    {
+      "n_safe_min": 0,
+      "n_safe_max": 1,
+      "crra_low": null,
+      "crra_high": -0.9468,
+      "label": "highly risk loving"
+    },
+    {
+      "n_safe_min": 2,
+      "n_safe_max": 2,
+      "crra_low": -0.9468,
+      "crra_high": -0.4866,
+      "label": "very risk loving"
+    },
+    {
+      "n_safe_min": 3,
+      "n_safe_max": 3,
+      "crra_low": -0.4866,
+      "crra_high": -0.1426,
+      "label": "risk loving"
+    },
+    {
+      "n_safe_min": 4,
+      "n_safe_max": 4,
+      "crra_low": -0.1426,
+      "crra_high": 0.1464,
+      "label": "risk neutral"
+    },
+    {
+      "n_safe_min": 5,
+      "n_safe_max": 5,
+      "crra_low": 0.1464,
+      "crra_high": 0.4115,
+      "label": "slightly risk averse"
+    },
+    {
+      "n_safe_min": 6,
+      "n_safe_max": 6,
+      "crra_low": 0.4115,
+      "crra_high": 0.6762,
+      "label": "risk averse"
+    },
+    {
+      "n_safe_min": 7,
+      "n_safe_max": 7,
+      "crra_low": 0.6762,
+      "crra_high": 0.9706,
+      "label": "very risk averse"
+    },
+    {
+      "n_safe_min": 8,
+      "n_safe_max": 8,
+      "crra_low": 0.9706,
+      "crra_high": 1.3684,
+      "label": "highly risk averse"
+    },
+    {
+      "n_safe_min": 9,
+      "n_safe_max": 10,
+      "crra_low": 1.3684,
+      "crra_high": null,
+      "label": "stay in bed (extremely risk averse)"
+    }
+  ],
+  "items": [
+    {
+      "id": "hl_x1_r01",
+      "multiplier": 1,
+      "row": 1,
+      "p_high": 0.1,
+      "p_low": 0.9,
+      "safe": {
+        "high": 2.0,
+        "low": 1.6
+      },
+      "risky": {
+        "high": 3.85,
+        "low": 0.1
+      },
+      "ev_safe": 1.64,
+      "ev_risky": 0.475,
+      "ev_diff_safe_minus_risky": 1.165,
+      "crra_indifference": -1.7128,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 10% chance of $2.00 and a 90% chance of $1.60.\nOption B: a 10% chance of $3.85 and a 90% chance of $0.10.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 10% chance of $3.85 and a 90% chance of $0.10.\nOption B: a 10% chance of $2.00 and a 90% chance of $1.60.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x1_r02",
+      "multiplier": 1,
+      "row": 2,
+      "p_high": 0.2,
+      "p_low": 0.8,
+      "safe": {
+        "high": 2.0,
+        "low": 1.6
+      },
+      "risky": {
+        "high": 3.85,
+        "low": 0.1
+      },
+      "ev_safe": 1.68,
+      "ev_risky": 0.85,
+      "ev_diff_safe_minus_risky": 0.83,
+      "crra_indifference": -0.9468,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 20% chance of $2.00 and a 80% chance of $1.60.\nOption B: a 20% chance of $3.85 and a 80% chance of $0.10.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 20% chance of $3.85 and a 80% chance of $0.10.\nOption B: a 20% chance of $2.00 and a 80% chance of $1.60.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x1_r03",
+      "multiplier": 1,
+      "row": 3,
+      "p_high": 0.3,
+      "p_low": 0.7,
+      "safe": {
+        "high": 2.0,
+        "low": 1.6
+      },
+      "risky": {
+        "high": 3.85,
+        "low": 0.1
+      },
+      "ev_safe": 1.72,
+      "ev_risky": 1.225,
+      "ev_diff_safe_minus_risky": 0.495,
+      "crra_indifference": -0.4866,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 30% chance of $2.00 and a 70% chance of $1.60.\nOption B: a 30% chance of $3.85 and a 70% chance of $0.10.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 30% chance of $3.85 and a 70% chance of $0.10.\nOption B: a 30% chance of $2.00 and a 70% chance of $1.60.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x1_r04",
+      "multiplier": 1,
+      "row": 4,
+      "p_high": 0.4,
+      "p_low": 0.6,
+      "safe": {
+        "high": 2.0,
+        "low": 1.6
+      },
+      "risky": {
+        "high": 3.85,
+        "low": 0.1
+      },
+      "ev_safe": 1.76,
+      "ev_risky": 1.6,
+      "ev_diff_safe_minus_risky": 0.16,
+      "crra_indifference": -0.1426,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 40% chance of $2.00 and a 60% chance of $1.60.\nOption B: a 40% chance of $3.85 and a 60% chance of $0.10.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 40% chance of $3.85 and a 60% chance of $0.10.\nOption B: a 40% chance of $2.00 and a 60% chance of $1.60.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x1_r05",
+      "multiplier": 1,
+      "row": 5,
+      "p_high": 0.5,
+      "p_low": 0.5,
+      "safe": {
+        "high": 2.0,
+        "low": 1.6
+      },
+      "risky": {
+        "high": 3.85,
+        "low": 0.1
+      },
+      "ev_safe": 1.8,
+      "ev_risky": 1.975,
+      "ev_diff_safe_minus_risky": -0.175,
+      "crra_indifference": 0.1464,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 50% chance of $2.00 and a 50% chance of $1.60.\nOption B: a 50% chance of $3.85 and a 50% chance of $0.10.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 50% chance of $3.85 and a 50% chance of $0.10.\nOption B: a 50% chance of $2.00 and a 50% chance of $1.60.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x1_r06",
+      "multiplier": 1,
+      "row": 6,
+      "p_high": 0.6,
+      "p_low": 0.4,
+      "safe": {
+        "high": 2.0,
+        "low": 1.6
+      },
+      "risky": {
+        "high": 3.85,
+        "low": 0.1
+      },
+      "ev_safe": 1.84,
+      "ev_risky": 2.35,
+      "ev_diff_safe_minus_risky": -0.51,
+      "crra_indifference": 0.4115,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 60% chance of $2.00 and a 40% chance of $1.60.\nOption B: a 60% chance of $3.85 and a 40% chance of $0.10.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 60% chance of $3.85 and a 40% chance of $0.10.\nOption B: a 60% chance of $2.00 and a 40% chance of $1.60.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x1_r07",
+      "multiplier": 1,
+      "row": 7,
+      "p_high": 0.7,
+      "p_low": 0.3,
+      "safe": {
+        "high": 2.0,
+        "low": 1.6
+      },
+      "risky": {
+        "high": 3.85,
+        "low": 0.1
+      },
+      "ev_safe": 1.88,
+      "ev_risky": 2.725,
+      "ev_diff_safe_minus_risky": -0.845,
+      "crra_indifference": 0.6762,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 70% chance of $2.00 and a 30% chance of $1.60.\nOption B: a 70% chance of $3.85 and a 30% chance of $0.10.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 70% chance of $3.85 and a 30% chance of $0.10.\nOption B: a 70% chance of $2.00 and a 30% chance of $1.60.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x1_r08",
+      "multiplier": 1,
+      "row": 8,
+      "p_high": 0.8,
+      "p_low": 0.2,
+      "safe": {
+        "high": 2.0,
+        "low": 1.6
+      },
+      "risky": {
+        "high": 3.85,
+        "low": 0.1
+      },
+      "ev_safe": 1.92,
+      "ev_risky": 3.1,
+      "ev_diff_safe_minus_risky": -1.18,
+      "crra_indifference": 0.9706,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 80% chance of $2.00 and a 20% chance of $1.60.\nOption B: a 80% chance of $3.85 and a 20% chance of $0.10.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 80% chance of $3.85 and a 20% chance of $0.10.\nOption B: a 80% chance of $2.00 and a 20% chance of $1.60.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x1_r09",
+      "multiplier": 1,
+      "row": 9,
+      "p_high": 0.9,
+      "p_low": 0.1,
+      "safe": {
+        "high": 2.0,
+        "low": 1.6
+      },
+      "risky": {
+        "high": 3.85,
+        "low": 0.1
+      },
+      "ev_safe": 1.96,
+      "ev_risky": 3.475,
+      "ev_diff_safe_minus_risky": -1.515,
+      "crra_indifference": 1.3684,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 90% chance of $2.00 and a 10% chance of $1.60.\nOption B: a 90% chance of $3.85 and a 10% chance of $0.10.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 90% chance of $3.85 and a 10% chance of $0.10.\nOption B: a 90% chance of $2.00 and a 10% chance of $1.60.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x1_r10",
+      "multiplier": 1,
+      "row": 10,
+      "p_high": 1.0,
+      "p_low": 0.0,
+      "safe": {
+        "high": 2.0,
+        "low": 1.6
+      },
+      "risky": {
+        "high": 3.85,
+        "low": 0.1
+      },
+      "ev_safe": 2.0,
+      "ev_risky": 3.85,
+      "ev_diff_safe_minus_risky": -1.85,
+      "crra_indifference": null,
+      "dominance_check": true,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 100% chance of $2.00 and a 0% chance of $1.60.\nOption B: a 100% chance of $3.85 and a 0% chance of $0.10.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 100% chance of $3.85 and a 0% chance of $0.10.\nOption B: a 100% chance of $2.00 and a 0% chance of $1.60.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x10_r01",
+      "multiplier": 10,
+      "row": 1,
+      "p_high": 0.1,
+      "p_low": 0.9,
+      "safe": {
+        "high": 20.0,
+        "low": 16.0
+      },
+      "risky": {
+        "high": 38.5,
+        "low": 1.0
+      },
+      "ev_safe": 16.4,
+      "ev_risky": 4.75,
+      "ev_diff_safe_minus_risky": 11.65,
+      "crra_indifference": -1.7128,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 10% chance of $20.00 and a 90% chance of $16.00.\nOption B: a 10% chance of $38.50 and a 90% chance of $1.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 10% chance of $38.50 and a 90% chance of $1.00.\nOption B: a 10% chance of $20.00 and a 90% chance of $16.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x10_r02",
+      "multiplier": 10,
+      "row": 2,
+      "p_high": 0.2,
+      "p_low": 0.8,
+      "safe": {
+        "high": 20.0,
+        "low": 16.0
+      },
+      "risky": {
+        "high": 38.5,
+        "low": 1.0
+      },
+      "ev_safe": 16.8,
+      "ev_risky": 8.5,
+      "ev_diff_safe_minus_risky": 8.3,
+      "crra_indifference": -0.9468,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 20% chance of $20.00 and a 80% chance of $16.00.\nOption B: a 20% chance of $38.50 and a 80% chance of $1.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 20% chance of $38.50 and a 80% chance of $1.00.\nOption B: a 20% chance of $20.00 and a 80% chance of $16.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x10_r03",
+      "multiplier": 10,
+      "row": 3,
+      "p_high": 0.3,
+      "p_low": 0.7,
+      "safe": {
+        "high": 20.0,
+        "low": 16.0
+      },
+      "risky": {
+        "high": 38.5,
+        "low": 1.0
+      },
+      "ev_safe": 17.2,
+      "ev_risky": 12.25,
+      "ev_diff_safe_minus_risky": 4.95,
+      "crra_indifference": -0.4866,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 30% chance of $20.00 and a 70% chance of $16.00.\nOption B: a 30% chance of $38.50 and a 70% chance of $1.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 30% chance of $38.50 and a 70% chance of $1.00.\nOption B: a 30% chance of $20.00 and a 70% chance of $16.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x10_r04",
+      "multiplier": 10,
+      "row": 4,
+      "p_high": 0.4,
+      "p_low": 0.6,
+      "safe": {
+        "high": 20.0,
+        "low": 16.0
+      },
+      "risky": {
+        "high": 38.5,
+        "low": 1.0
+      },
+      "ev_safe": 17.6,
+      "ev_risky": 16.0,
+      "ev_diff_safe_minus_risky": 1.6,
+      "crra_indifference": -0.1426,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 40% chance of $20.00 and a 60% chance of $16.00.\nOption B: a 40% chance of $38.50 and a 60% chance of $1.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 40% chance of $38.50 and a 60% chance of $1.00.\nOption B: a 40% chance of $20.00 and a 60% chance of $16.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x10_r05",
+      "multiplier": 10,
+      "row": 5,
+      "p_high": 0.5,
+      "p_low": 0.5,
+      "safe": {
+        "high": 20.0,
+        "low": 16.0
+      },
+      "risky": {
+        "high": 38.5,
+        "low": 1.0
+      },
+      "ev_safe": 18.0,
+      "ev_risky": 19.75,
+      "ev_diff_safe_minus_risky": -1.75,
+      "crra_indifference": 0.1464,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 50% chance of $20.00 and a 50% chance of $16.00.\nOption B: a 50% chance of $38.50 and a 50% chance of $1.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 50% chance of $38.50 and a 50% chance of $1.00.\nOption B: a 50% chance of $20.00 and a 50% chance of $16.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x10_r06",
+      "multiplier": 10,
+      "row": 6,
+      "p_high": 0.6,
+      "p_low": 0.4,
+      "safe": {
+        "high": 20.0,
+        "low": 16.0
+      },
+      "risky": {
+        "high": 38.5,
+        "low": 1.0
+      },
+      "ev_safe": 18.4,
+      "ev_risky": 23.5,
+      "ev_diff_safe_minus_risky": -5.1,
+      "crra_indifference": 0.4115,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 60% chance of $20.00 and a 40% chance of $16.00.\nOption B: a 60% chance of $38.50 and a 40% chance of $1.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 60% chance of $38.50 and a 40% chance of $1.00.\nOption B: a 60% chance of $20.00 and a 40% chance of $16.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x10_r07",
+      "multiplier": 10,
+      "row": 7,
+      "p_high": 0.7,
+      "p_low": 0.3,
+      "safe": {
+        "high": 20.0,
+        "low": 16.0
+      },
+      "risky": {
+        "high": 38.5,
+        "low": 1.0
+      },
+      "ev_safe": 18.8,
+      "ev_risky": 27.25,
+      "ev_diff_safe_minus_risky": -8.45,
+      "crra_indifference": 0.6762,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 70% chance of $20.00 and a 30% chance of $16.00.\nOption B: a 70% chance of $38.50 and a 30% chance of $1.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 70% chance of $38.50 and a 30% chance of $1.00.\nOption B: a 70% chance of $20.00 and a 30% chance of $16.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x10_r08",
+      "multiplier": 10,
+      "row": 8,
+      "p_high": 0.8,
+      "p_low": 0.2,
+      "safe": {
+        "high": 20.0,
+        "low": 16.0
+      },
+      "risky": {
+        "high": 38.5,
+        "low": 1.0
+      },
+      "ev_safe": 19.2,
+      "ev_risky": 31.0,
+      "ev_diff_safe_minus_risky": -11.8,
+      "crra_indifference": 0.9706,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 80% chance of $20.00 and a 20% chance of $16.00.\nOption B: a 80% chance of $38.50 and a 20% chance of $1.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 80% chance of $38.50 and a 20% chance of $1.00.\nOption B: a 80% chance of $20.00 and a 20% chance of $16.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x10_r09",
+      "multiplier": 10,
+      "row": 9,
+      "p_high": 0.9,
+      "p_low": 0.1,
+      "safe": {
+        "high": 20.0,
+        "low": 16.0
+      },
+      "risky": {
+        "high": 38.5,
+        "low": 1.0
+      },
+      "ev_safe": 19.6,
+      "ev_risky": 34.75,
+      "ev_diff_safe_minus_risky": -15.15,
+      "crra_indifference": 1.3684,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 90% chance of $20.00 and a 10% chance of $16.00.\nOption B: a 90% chance of $38.50 and a 10% chance of $1.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 90% chance of $38.50 and a 10% chance of $1.00.\nOption B: a 90% chance of $20.00 and a 10% chance of $16.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x10_r10",
+      "multiplier": 10,
+      "row": 10,
+      "p_high": 1.0,
+      "p_low": 0.0,
+      "safe": {
+        "high": 20.0,
+        "low": 16.0
+      },
+      "risky": {
+        "high": 38.5,
+        "low": 1.0
+      },
+      "ev_safe": 20.0,
+      "ev_risky": 38.5,
+      "ev_diff_safe_minus_risky": -18.5,
+      "crra_indifference": null,
+      "dominance_check": true,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 100% chance of $20.00 and a 0% chance of $16.00.\nOption B: a 100% chance of $38.50 and a 0% chance of $1.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 100% chance of $38.50 and a 0% chance of $1.00.\nOption B: a 100% chance of $20.00 and a 0% chance of $16.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x100_r01",
+      "multiplier": 100,
+      "row": 1,
+      "p_high": 0.1,
+      "p_low": 0.9,
+      "safe": {
+        "high": 200.0,
+        "low": 160.0
+      },
+      "risky": {
+        "high": 385.0,
+        "low": 10.0
+      },
+      "ev_safe": 164.0,
+      "ev_risky": 47.5,
+      "ev_diff_safe_minus_risky": 116.5,
+      "crra_indifference": -1.7128,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 10% chance of $200.00 and a 90% chance of $160.00.\nOption B: a 10% chance of $385.00 and a 90% chance of $10.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 10% chance of $385.00 and a 90% chance of $10.00.\nOption B: a 10% chance of $200.00 and a 90% chance of $160.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x100_r02",
+      "multiplier": 100,
+      "row": 2,
+      "p_high": 0.2,
+      "p_low": 0.8,
+      "safe": {
+        "high": 200.0,
+        "low": 160.0
+      },
+      "risky": {
+        "high": 385.0,
+        "low": 10.0
+      },
+      "ev_safe": 168.0,
+      "ev_risky": 85.0,
+      "ev_diff_safe_minus_risky": 83.0,
+      "crra_indifference": -0.9468,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 20% chance of $200.00 and a 80% chance of $160.00.\nOption B: a 20% chance of $385.00 and a 80% chance of $10.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 20% chance of $385.00 and a 80% chance of $10.00.\nOption B: a 20% chance of $200.00 and a 80% chance of $160.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x100_r03",
+      "multiplier": 100,
+      "row": 3,
+      "p_high": 0.3,
+      "p_low": 0.7,
+      "safe": {
+        "high": 200.0,
+        "low": 160.0
+      },
+      "risky": {
+        "high": 385.0,
+        "low": 10.0
+      },
+      "ev_safe": 172.0,
+      "ev_risky": 122.5,
+      "ev_diff_safe_minus_risky": 49.5,
+      "crra_indifference": -0.4866,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 30% chance of $200.00 and a 70% chance of $160.00.\nOption B: a 30% chance of $385.00 and a 70% chance of $10.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 30% chance of $385.00 and a 70% chance of $10.00.\nOption B: a 30% chance of $200.00 and a 70% chance of $160.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x100_r04",
+      "multiplier": 100,
+      "row": 4,
+      "p_high": 0.4,
+      "p_low": 0.6,
+      "safe": {
+        "high": 200.0,
+        "low": 160.0
+      },
+      "risky": {
+        "high": 385.0,
+        "low": 10.0
+      },
+      "ev_safe": 176.0,
+      "ev_risky": 160.0,
+      "ev_diff_safe_minus_risky": 16.0,
+      "crra_indifference": -0.1426,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 40% chance of $200.00 and a 60% chance of $160.00.\nOption B: a 40% chance of $385.00 and a 60% chance of $10.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 40% chance of $385.00 and a 60% chance of $10.00.\nOption B: a 40% chance of $200.00 and a 60% chance of $160.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x100_r05",
+      "multiplier": 100,
+      "row": 5,
+      "p_high": 0.5,
+      "p_low": 0.5,
+      "safe": {
+        "high": 200.0,
+        "low": 160.0
+      },
+      "risky": {
+        "high": 385.0,
+        "low": 10.0
+      },
+      "ev_safe": 180.0,
+      "ev_risky": 197.5,
+      "ev_diff_safe_minus_risky": -17.5,
+      "crra_indifference": 0.1464,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 50% chance of $200.00 and a 50% chance of $160.00.\nOption B: a 50% chance of $385.00 and a 50% chance of $10.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 50% chance of $385.00 and a 50% chance of $10.00.\nOption B: a 50% chance of $200.00 and a 50% chance of $160.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x100_r06",
+      "multiplier": 100,
+      "row": 6,
+      "p_high": 0.6,
+      "p_low": 0.4,
+      "safe": {
+        "high": 200.0,
+        "low": 160.0
+      },
+      "risky": {
+        "high": 385.0,
+        "low": 10.0
+      },
+      "ev_safe": 184.0,
+      "ev_risky": 235.0,
+      "ev_diff_safe_minus_risky": -51.0,
+      "crra_indifference": 0.4115,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 60% chance of $200.00 and a 40% chance of $160.00.\nOption B: a 60% chance of $385.00 and a 40% chance of $10.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 60% chance of $385.00 and a 40% chance of $10.00.\nOption B: a 60% chance of $200.00 and a 40% chance of $160.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x100_r07",
+      "multiplier": 100,
+      "row": 7,
+      "p_high": 0.7,
+      "p_low": 0.3,
+      "safe": {
+        "high": 200.0,
+        "low": 160.0
+      },
+      "risky": {
+        "high": 385.0,
+        "low": 10.0
+      },
+      "ev_safe": 188.0,
+      "ev_risky": 272.5,
+      "ev_diff_safe_minus_risky": -84.5,
+      "crra_indifference": 0.6762,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 70% chance of $200.00 and a 30% chance of $160.00.\nOption B: a 70% chance of $385.00 and a 30% chance of $10.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 70% chance of $385.00 and a 30% chance of $10.00.\nOption B: a 70% chance of $200.00 and a 30% chance of $160.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x100_r08",
+      "multiplier": 100,
+      "row": 8,
+      "p_high": 0.8,
+      "p_low": 0.2,
+      "safe": {
+        "high": 200.0,
+        "low": 160.0
+      },
+      "risky": {
+        "high": 385.0,
+        "low": 10.0
+      },
+      "ev_safe": 192.0,
+      "ev_risky": 310.0,
+      "ev_diff_safe_minus_risky": -118.0,
+      "crra_indifference": 0.9706,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 80% chance of $200.00 and a 20% chance of $160.00.\nOption B: a 80% chance of $385.00 and a 20% chance of $10.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 80% chance of $385.00 and a 20% chance of $10.00.\nOption B: a 80% chance of $200.00 and a 20% chance of $160.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x100_r09",
+      "multiplier": 100,
+      "row": 9,
+      "p_high": 0.9,
+      "p_low": 0.1,
+      "safe": {
+        "high": 200.0,
+        "low": 160.0
+      },
+      "risky": {
+        "high": 385.0,
+        "low": 10.0
+      },
+      "ev_safe": 196.0,
+      "ev_risky": 347.5,
+      "ev_diff_safe_minus_risky": -151.5,
+      "crra_indifference": 1.3684,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 90% chance of $200.00 and a 10% chance of $160.00.\nOption B: a 90% chance of $385.00 and a 10% chance of $10.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 90% chance of $385.00 and a 10% chance of $10.00.\nOption B: a 90% chance of $200.00 and a 10% chance of $160.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x100_r10",
+      "multiplier": 100,
+      "row": 10,
+      "p_high": 1.0,
+      "p_low": 0.0,
+      "safe": {
+        "high": 200.0,
+        "low": 160.0
+      },
+      "risky": {
+        "high": 385.0,
+        "low": 10.0
+      },
+      "ev_safe": 200.0,
+      "ev_risky": 385.0,
+      "ev_diff_safe_minus_risky": -185.0,
+      "crra_indifference": null,
+      "dominance_check": true,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 100% chance of $200.00 and a 0% chance of $160.00.\nOption B: a 100% chance of $385.00 and a 0% chance of $10.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 100% chance of $385.00 and a 0% chance of $10.00.\nOption B: a 100% chance of $200.00 and a 0% chance of $160.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x1000_r01",
+      "multiplier": 1000,
+      "row": 1,
+      "p_high": 0.1,
+      "p_low": 0.9,
+      "safe": {
+        "high": 2000.0,
+        "low": 1600.0
+      },
+      "risky": {
+        "high": 3850.0,
+        "low": 100.0
+      },
+      "ev_safe": 1640.0,
+      "ev_risky": 475.0,
+      "ev_diff_safe_minus_risky": 1165.0,
+      "crra_indifference": -1.7128,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 10% chance of $2,000.00 and a 90% chance of $1,600.00.\nOption B: a 10% chance of $3,850.00 and a 90% chance of $100.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 10% chance of $3,850.00 and a 90% chance of $100.00.\nOption B: a 10% chance of $2,000.00 and a 90% chance of $1,600.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x1000_r02",
+      "multiplier": 1000,
+      "row": 2,
+      "p_high": 0.2,
+      "p_low": 0.8,
+      "safe": {
+        "high": 2000.0,
+        "low": 1600.0
+      },
+      "risky": {
+        "high": 3850.0,
+        "low": 100.0
+      },
+      "ev_safe": 1680.0,
+      "ev_risky": 850.0,
+      "ev_diff_safe_minus_risky": 830.0,
+      "crra_indifference": -0.9468,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 20% chance of $2,000.00 and a 80% chance of $1,600.00.\nOption B: a 20% chance of $3,850.00 and a 80% chance of $100.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 20% chance of $3,850.00 and a 80% chance of $100.00.\nOption B: a 20% chance of $2,000.00 and a 80% chance of $1,600.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x1000_r03",
+      "multiplier": 1000,
+      "row": 3,
+      "p_high": 0.3,
+      "p_low": 0.7,
+      "safe": {
+        "high": 2000.0,
+        "low": 1600.0
+      },
+      "risky": {
+        "high": 3850.0,
+        "low": 100.0
+      },
+      "ev_safe": 1720.0,
+      "ev_risky": 1225.0,
+      "ev_diff_safe_minus_risky": 495.0,
+      "crra_indifference": -0.4866,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 30% chance of $2,000.00 and a 70% chance of $1,600.00.\nOption B: a 30% chance of $3,850.00 and a 70% chance of $100.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 30% chance of $3,850.00 and a 70% chance of $100.00.\nOption B: a 30% chance of $2,000.00 and a 70% chance of $1,600.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x1000_r04",
+      "multiplier": 1000,
+      "row": 4,
+      "p_high": 0.4,
+      "p_low": 0.6,
+      "safe": {
+        "high": 2000.0,
+        "low": 1600.0
+      },
+      "risky": {
+        "high": 3850.0,
+        "low": 100.0
+      },
+      "ev_safe": 1760.0,
+      "ev_risky": 1600.0,
+      "ev_diff_safe_minus_risky": 160.0,
+      "crra_indifference": -0.1426,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 40% chance of $2,000.00 and a 60% chance of $1,600.00.\nOption B: a 40% chance of $3,850.00 and a 60% chance of $100.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 40% chance of $3,850.00 and a 60% chance of $100.00.\nOption B: a 40% chance of $2,000.00 and a 60% chance of $1,600.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x1000_r05",
+      "multiplier": 1000,
+      "row": 5,
+      "p_high": 0.5,
+      "p_low": 0.5,
+      "safe": {
+        "high": 2000.0,
+        "low": 1600.0
+      },
+      "risky": {
+        "high": 3850.0,
+        "low": 100.0
+      },
+      "ev_safe": 1800.0,
+      "ev_risky": 1975.0,
+      "ev_diff_safe_minus_risky": -175.0,
+      "crra_indifference": 0.1464,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 50% chance of $2,000.00 and a 50% chance of $1,600.00.\nOption B: a 50% chance of $3,850.00 and a 50% chance of $100.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 50% chance of $3,850.00 and a 50% chance of $100.00.\nOption B: a 50% chance of $2,000.00 and a 50% chance of $1,600.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x1000_r06",
+      "multiplier": 1000,
+      "row": 6,
+      "p_high": 0.6,
+      "p_low": 0.4,
+      "safe": {
+        "high": 2000.0,
+        "low": 1600.0
+      },
+      "risky": {
+        "high": 3850.0,
+        "low": 100.0
+      },
+      "ev_safe": 1840.0,
+      "ev_risky": 2350.0,
+      "ev_diff_safe_minus_risky": -510.0,
+      "crra_indifference": 0.4115,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 60% chance of $2,000.00 and a 40% chance of $1,600.00.\nOption B: a 60% chance of $3,850.00 and a 40% chance of $100.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 60% chance of $3,850.00 and a 40% chance of $100.00.\nOption B: a 60% chance of $2,000.00 and a 40% chance of $1,600.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x1000_r07",
+      "multiplier": 1000,
+      "row": 7,
+      "p_high": 0.7,
+      "p_low": 0.3,
+      "safe": {
+        "high": 2000.0,
+        "low": 1600.0
+      },
+      "risky": {
+        "high": 3850.0,
+        "low": 100.0
+      },
+      "ev_safe": 1880.0,
+      "ev_risky": 2725.0,
+      "ev_diff_safe_minus_risky": -845.0,
+      "crra_indifference": 0.6762,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 70% chance of $2,000.00 and a 30% chance of $1,600.00.\nOption B: a 70% chance of $3,850.00 and a 30% chance of $100.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 70% chance of $3,850.00 and a 30% chance of $100.00.\nOption B: a 70% chance of $2,000.00 and a 30% chance of $1,600.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x1000_r08",
+      "multiplier": 1000,
+      "row": 8,
+      "p_high": 0.8,
+      "p_low": 0.2,
+      "safe": {
+        "high": 2000.0,
+        "low": 1600.0
+      },
+      "risky": {
+        "high": 3850.0,
+        "low": 100.0
+      },
+      "ev_safe": 1920.0,
+      "ev_risky": 3100.0,
+      "ev_diff_safe_minus_risky": -1180.0,
+      "crra_indifference": 0.9706,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 80% chance of $2,000.00 and a 20% chance of $1,600.00.\nOption B: a 80% chance of $3,850.00 and a 20% chance of $100.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 80% chance of $3,850.00 and a 20% chance of $100.00.\nOption B: a 80% chance of $2,000.00 and a 20% chance of $1,600.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x1000_r09",
+      "multiplier": 1000,
+      "row": 9,
+      "p_high": 0.9,
+      "p_low": 0.1,
+      "safe": {
+        "high": 2000.0,
+        "low": 1600.0
+      },
+      "risky": {
+        "high": 3850.0,
+        "low": 100.0
+      },
+      "ev_safe": 1960.0,
+      "ev_risky": 3475.0,
+      "ev_diff_safe_minus_risky": -1515.0,
+      "crra_indifference": 1.3684,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 90% chance of $2,000.00 and a 10% chance of $1,600.00.\nOption B: a 90% chance of $3,850.00 and a 10% chance of $100.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 90% chance of $3,850.00 and a 10% chance of $100.00.\nOption B: a 90% chance of $2,000.00 and a 10% chance of $1,600.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x1000_r10",
+      "multiplier": 1000,
+      "row": 10,
+      "p_high": 1.0,
+      "p_low": 0.0,
+      "safe": {
+        "high": 2000.0,
+        "low": 1600.0
+      },
+      "risky": {
+        "high": 3850.0,
+        "low": 100.0
+      },
+      "ev_safe": 2000.0,
+      "ev_risky": 3850.0,
+      "ev_diff_safe_minus_risky": -1850.0,
+      "crra_indifference": null,
+      "dominance_check": true,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 100% chance of $2,000.00 and a 0% chance of $1,600.00.\nOption B: a 100% chance of $3,850.00 and a 0% chance of $100.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 100% chance of $3,850.00 and a 0% chance of $100.00.\nOption B: a 100% chance of $2,000.00 and a 0% chance of $1,600.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x10000_r01",
+      "multiplier": 10000,
+      "row": 1,
+      "p_high": 0.1,
+      "p_low": 0.9,
+      "safe": {
+        "high": 20000.0,
+        "low": 16000.0
+      },
+      "risky": {
+        "high": 38500.0,
+        "low": 1000.0
+      },
+      "ev_safe": 16400.0,
+      "ev_risky": 4750.0,
+      "ev_diff_safe_minus_risky": 11650.0,
+      "crra_indifference": -1.7128,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 10% chance of $20,000.00 and a 90% chance of $16,000.00.\nOption B: a 10% chance of $38,500.00 and a 90% chance of $1,000.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 10% chance of $38,500.00 and a 90% chance of $1,000.00.\nOption B: a 10% chance of $20,000.00 and a 90% chance of $16,000.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x10000_r02",
+      "multiplier": 10000,
+      "row": 2,
+      "p_high": 0.2,
+      "p_low": 0.8,
+      "safe": {
+        "high": 20000.0,
+        "low": 16000.0
+      },
+      "risky": {
+        "high": 38500.0,
+        "low": 1000.0
+      },
+      "ev_safe": 16800.0,
+      "ev_risky": 8500.0,
+      "ev_diff_safe_minus_risky": 8300.0,
+      "crra_indifference": -0.9468,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 20% chance of $20,000.00 and a 80% chance of $16,000.00.\nOption B: a 20% chance of $38,500.00 and a 80% chance of $1,000.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 20% chance of $38,500.00 and a 80% chance of $1,000.00.\nOption B: a 20% chance of $20,000.00 and a 80% chance of $16,000.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x10000_r03",
+      "multiplier": 10000,
+      "row": 3,
+      "p_high": 0.3,
+      "p_low": 0.7,
+      "safe": {
+        "high": 20000.0,
+        "low": 16000.0
+      },
+      "risky": {
+        "high": 38500.0,
+        "low": 1000.0
+      },
+      "ev_safe": 17200.0,
+      "ev_risky": 12250.0,
+      "ev_diff_safe_minus_risky": 4950.0,
+      "crra_indifference": -0.4866,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 30% chance of $20,000.00 and a 70% chance of $16,000.00.\nOption B: a 30% chance of $38,500.00 and a 70% chance of $1,000.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 30% chance of $38,500.00 and a 70% chance of $1,000.00.\nOption B: a 30% chance of $20,000.00 and a 70% chance of $16,000.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x10000_r04",
+      "multiplier": 10000,
+      "row": 4,
+      "p_high": 0.4,
+      "p_low": 0.6,
+      "safe": {
+        "high": 20000.0,
+        "low": 16000.0
+      },
+      "risky": {
+        "high": 38500.0,
+        "low": 1000.0
+      },
+      "ev_safe": 17600.0,
+      "ev_risky": 16000.0,
+      "ev_diff_safe_minus_risky": 1600.0,
+      "crra_indifference": -0.1426,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 40% chance of $20,000.00 and a 60% chance of $16,000.00.\nOption B: a 40% chance of $38,500.00 and a 60% chance of $1,000.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 40% chance of $38,500.00 and a 60% chance of $1,000.00.\nOption B: a 40% chance of $20,000.00 and a 60% chance of $16,000.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x10000_r05",
+      "multiplier": 10000,
+      "row": 5,
+      "p_high": 0.5,
+      "p_low": 0.5,
+      "safe": {
+        "high": 20000.0,
+        "low": 16000.0
+      },
+      "risky": {
+        "high": 38500.0,
+        "low": 1000.0
+      },
+      "ev_safe": 18000.0,
+      "ev_risky": 19750.0,
+      "ev_diff_safe_minus_risky": -1750.0,
+      "crra_indifference": 0.1464,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 50% chance of $20,000.00 and a 50% chance of $16,000.00.\nOption B: a 50% chance of $38,500.00 and a 50% chance of $1,000.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 50% chance of $38,500.00 and a 50% chance of $1,000.00.\nOption B: a 50% chance of $20,000.00 and a 50% chance of $16,000.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x10000_r06",
+      "multiplier": 10000,
+      "row": 6,
+      "p_high": 0.6,
+      "p_low": 0.4,
+      "safe": {
+        "high": 20000.0,
+        "low": 16000.0
+      },
+      "risky": {
+        "high": 38500.0,
+        "low": 1000.0
+      },
+      "ev_safe": 18400.0,
+      "ev_risky": 23500.0,
+      "ev_diff_safe_minus_risky": -5100.0,
+      "crra_indifference": 0.4115,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 60% chance of $20,000.00 and a 40% chance of $16,000.00.\nOption B: a 60% chance of $38,500.00 and a 40% chance of $1,000.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 60% chance of $38,500.00 and a 40% chance of $1,000.00.\nOption B: a 60% chance of $20,000.00 and a 40% chance of $16,000.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x10000_r07",
+      "multiplier": 10000,
+      "row": 7,
+      "p_high": 0.7,
+      "p_low": 0.3,
+      "safe": {
+        "high": 20000.0,
+        "low": 16000.0
+      },
+      "risky": {
+        "high": 38500.0,
+        "low": 1000.0
+      },
+      "ev_safe": 18800.0,
+      "ev_risky": 27250.0,
+      "ev_diff_safe_minus_risky": -8450.0,
+      "crra_indifference": 0.6762,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 70% chance of $20,000.00 and a 30% chance of $16,000.00.\nOption B: a 70% chance of $38,500.00 and a 30% chance of $1,000.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 70% chance of $38,500.00 and a 30% chance of $1,000.00.\nOption B: a 70% chance of $20,000.00 and a 30% chance of $16,000.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x10000_r08",
+      "multiplier": 10000,
+      "row": 8,
+      "p_high": 0.8,
+      "p_low": 0.2,
+      "safe": {
+        "high": 20000.0,
+        "low": 16000.0
+      },
+      "risky": {
+        "high": 38500.0,
+        "low": 1000.0
+      },
+      "ev_safe": 19200.0,
+      "ev_risky": 31000.0,
+      "ev_diff_safe_minus_risky": -11800.0,
+      "crra_indifference": 0.9706,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 80% chance of $20,000.00 and a 20% chance of $16,000.00.\nOption B: a 80% chance of $38,500.00 and a 20% chance of $1,000.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 80% chance of $38,500.00 and a 20% chance of $1,000.00.\nOption B: a 80% chance of $20,000.00 and a 20% chance of $16,000.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x10000_r09",
+      "multiplier": 10000,
+      "row": 9,
+      "p_high": 0.9,
+      "p_low": 0.1,
+      "safe": {
+        "high": 20000.0,
+        "low": 16000.0
+      },
+      "risky": {
+        "high": 38500.0,
+        "low": 1000.0
+      },
+      "ev_safe": 19600.0,
+      "ev_risky": 34750.0,
+      "ev_diff_safe_minus_risky": -15150.0,
+      "crra_indifference": 1.3684,
+      "dominance_check": false,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 90% chance of $20,000.00 and a 10% chance of $16,000.00.\nOption B: a 90% chance of $38,500.00 and a 10% chance of $1,000.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 90% chance of $38,500.00 and a 10% chance of $1,000.00.\nOption B: a 90% chance of $20,000.00 and a 10% chance of $16,000.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    },
+    {
+      "id": "hl_x10000_r10",
+      "multiplier": 10000,
+      "row": 10,
+      "p_high": 1.0,
+      "p_low": 0.0,
+      "safe": {
+        "high": 20000.0,
+        "low": 16000.0
+      },
+      "risky": {
+        "high": 38500.0,
+        "low": 1000.0
+      },
+      "ev_safe": 20000.0,
+      "ev_risky": 38500.0,
+      "ev_diff_safe_minus_risky": -18500.0,
+      "crra_indifference": null,
+      "dominance_check": true,
+      "prompts": [
+        {
+          "order": "safe_first",
+          "safe_option": "A",
+          "risky_option": "B",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 100% chance of $20,000.00 and a 0% chance of $16,000.00.\nOption B: a 100% chance of $38,500.00 and a 0% chance of $1,000.00.\n\nWhich option do you choose? Answer with A or B."
+        },
+        {
+          "order": "risky_first",
+          "safe_option": "B",
+          "risky_option": "A",
+          "text": "You are managing a client's trading account. You must choose one of two options for the account. The option you choose is played out once and its payoff is added to the account.\n\nOption A: a 100% chance of $38,500.00 and a 0% chance of $1,000.00.\nOption B: a 100% chance of $20,000.00 and a 0% chance of $16,000.00.\n\nWhich option do you choose? Answer with A or B."
+        }
+      ]
+    }
+  ]
+}

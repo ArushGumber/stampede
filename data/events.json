@@ -1,0 +1,225 @@
+{
+  "meta": {
+    "compiled": "2026-11-15",
+    "method": "Each event checked against at least two independent web reports (news, regulator or court documents) via web search. Figures for move size differ between outlets; ranges are given where they differ. Fields listed in unverified_fields could not be confirmed and should not be cited as fact.",
+    "dropped": [],
+    "corrections_to_brief": [
+      "Tariff pause hoax occurred on 2025-04-07 (not 9 April).",
+      "Eli Lilly fake tweet was 2022-11-10.",
+      "Emulex drop: SEC figure is about 58% ($103.94 to $43.00); the 62% figure appears only in secondary sources."
+    ]
+  },
+  "events": [
+    {
+      "id": "ap-white-house-2013",
+      "date": "2013-04-23",
+      "time": "about 1:07 pm ET (reported variously 1:07-1:08); recovery by about 1:13-1:18 pm ET",
+      "published": "Tweet from hacked @AP account: breaking news that two explosions at the White House had injured the President.",
+      "platform": "Twitter",
+      "false": true,
+      "asset": "US equity indices (Dow Jones Industrial Average, S&P 500), Treasuries, crude oil",
+      "move": "Dow fell about 143 points (14,697 to 14,554) per AP wire; other outlets say 125-145. About 0.9-1.0 percent. Reports of about USD 136 billion S&P 500 value erased come from a single secondary roundup.",
+      "duration": "Recovered within roughly 5-10 minutes",
+      "correction": "AP said account was hacked and suspended; White House spokesman Jay Carney said the President was fine. Syrian Electronic Army claimed the hack; FBI investigated.",
+      "sources": [
+        "https://www.cbsnews.com/sanfrancisco/news/phony-tweet-from-hacked-ap-twitter-account-says-white-house-attacked/",
+        "https://csmonitor.com/USA/2013/0423/Hackers-compromise-Associated-Press-Twitter-account-tweet-false-report-of-White-House-attack",
+        "https://www.theregister.co.uk/2013/04/23/hacked_ap_tweet_dow_decline/"
+      ],
+      "verified": true,
+      "unverified_fields": ["exact second-level timestamp", "USD 136 billion S&P figure"]
+    },
+    {
+      "id": "pentagon-ai-image-2023",
+      "date": "2023-05-22",
+      "time": "unverified (US morning session, shortly after 10 am ET in some accounts)",
+      "published": "AI-generated image of smoke near the Pentagon, spread by verified accounts including one impersonating a news agency (\"Bloomberg Feed\") and shared by a Russian state media outlet, which later deleted it.",
+      "platform": "Twitter",
+      "false": true,
+      "asset": "S&P 500 and US equity futures",
+      "move": "S&P 500 dipped about 0.26 percent briefly (one outlet cites about 30 points); a Briefing.com analyst said the decline was small relative to the nature of the news.",
+      "duration": "Minutes; recovered after denial",
+      "correction": "Arlington County Fire Department posted that there was no explosion or incident at or near the Pentagon reservation.",
+      "sources": [
+        "https://petapixel.com/2023/05/22/ai-generated-image-of-pentagon-explosion-caused-markets-to-dip/",
+        "https://techxplore.com/news/2023-05-fake-image-pentagon-explosion-briefly.html",
+        "https://www.voaafrica.com/a/online-fake-pentagon-explosion-rocks-markets/7104042.html"
+      ],
+      "verified": true,
+      "unverified_fields": ["time", "original source of image (never established)", "exact dip size (sources disagree)"]
+    },
+    {
+      "id": "tariff-pause-2025",
+      "date": "2025-04-07",
+      "time": "morning ET, before 10:38 am ET denial by White House Rapid Response; exact start time unverified",
+      "published": "Post claiming a senior White House economic adviser said the President was considering a 90-day tariff pause for all countries except China (a misreading of a TV interview). Originated with a small account, then relayed by a larger account that reposts terminal headlines, then by CNBC and Reuters headlines.",
+      "platform": "X, then broadcast/wire headlines",
+      "false": true,
+      "asset": "S&P 500, Nasdaq, US equity futures",
+      "move": "S&P 500 rose more than 6-7 percent intraday on the rumour (reports range 6-8 percent, Nasdaq about 10 percent swing) and gave up nearly all of it after denial.",
+      "duration": "About 30 minutes up, reversal within minutes of denial",
+      "correction": "White House press secretary called it fake news to CNBC; White House Rapid Response account denied; Reuters retracted its story, saying it relied on a CNBC headline; the posting account deleted the post.",
+      "sources": [
+        "https://fortune.com/2025/04/07/trump-tariff-pause-walter-bloomberg-fake-report-debunked-markets/",
+        "https://www.npr.org/2025/04/07/nx-s1-5355055/tariffs-markets-x-social-media",
+        "https://www.thewrap.com/reuters-retracts-report-trump-tariff-90-day-pause",
+        "https://www.politifact.com/factchecks/2025/apr/08/tweets/trump-hassett-tariff-pause-stock-market-rally-x/"
+      ],
+      "verified": true,
+      "unverified_fields": ["exact timestamp", "which account originated the claim (sources conflict)", "exact peak move"]
+    },
+    {
+      "id": "sec-x-hack-2024",
+      "date": "2024-01-09",
+      "time": "about 4:11 pm ET (unverified in sources retrieved)",
+      "published": "Post on the regulator's compromised X account announcing approval of spot bitcoin exchange-traded products.",
+      "platform": "X",
+      "false": true,
+      "asset": "Bitcoin (BTC/USD)",
+      "move": "BTC rose to about 47,600-47,870 from about 46,800, then fell to about 45,400-45,500. Roughly 2-3 percent each way. Liquidations of about USD 90 million reported by one outlet.",
+      "duration": "Minutes to under an hour",
+      "correction": "The regulator's chair posted that the account was compromised and no approval had been given; X said a phone number was taken over via a third party (SIM swap). Real approval followed on 2024-01-10.",
+      "sources": [
+        "https://www.theblock.co/post/271373/secs-x-account-compromised-to-post-fake-spot-bitcoin-etf-approval",
+        "https://blockworks.co/news/bitcoin-etf-approval",
+        "https://securityaffairs.com/157231/hacking/sec-x-account-hacked-etf-approval.html"
+      ],
+      "verified": true,
+      "unverified_fields": ["exact time", "exact liquidation total"]
+    },
+    {
+      "id": "cointelegraph-blackrock-2023",
+      "date": "2023-10-16",
+      "time": "unverified (US morning; exact minute not confirmed)",
+      "published": "\"BREAKING: SEC APPROVES ISHARES BITCOIN SPOT ETF\", posted by a crypto news outlet's social team from an unconfirmed screenshot attributed to a terminal.",
+      "platform": "X",
+      "false": true,
+      "asset": "Bitcoin (BTC/USD); related crypto equities",
+      "move": "BTC rose from about 27,700 to about 29,900-30,000 (roughly 5-10 percent, depending on outlet), then fell to about 28,000. Liquidations reported at USD 81-100 million.",
+      "duration": "Minutes to about an hour",
+      "correction": "Asset manager spokesperson said application was still under review; reporters confirmed; the outlet deleted the post, apologised and opened an internal investigation.",
+      "sources": [
+        "https://decrypt.co/201815/bitcoin-spikes-10-on-false-report-of-blackrock-etf-approval",
+        "https://www.theblock.co/post/256622/bitcoin-price-sees-volatile-monday-spiking-near-30000-following-false-bitcoin-etf-news",
+        "https://fortune.com/crypto/2023/10/16/bitcoin-30000-debunked-rumor-blackrock-spot-etf-sec/",
+        "https://blockworks.co/news/bitcoin-etf-report-price-jump"
+      ],
+      "verified": true,
+      "unverified_fields": ["exact time", "exact move size (sources disagree 5-10 percent)", "liquidation total"]
+    },
+    {
+      "id": "walmart-litecoin-2021",
+      "date": "2021-09-13",
+      "time": "morning ET (exact time unverified)",
+      "published": "Press release on a newswire stating a retailer would accept Litecoin for online payments from October 1.",
+      "platform": "GlobeNewswire",
+      "false": true,
+      "asset": "Litecoin (LTC)",
+      "move": "LTC rose from about 175 to about 230-240 USD (roughly 30-35 percent), then reversed.",
+      "duration": "Minutes up, reversal within about an hour",
+      "correction": "Retailer said it had no knowledge of the release; Litecoin's creator confirmed it was fake; newswire said a fraudulent user account issued it, withdrew it and issued a disregard notice.",
+      "sources": [
+        "https://www.euronews.com/next/2021/09/14/litecoin-price-pumps-and-dumps-after-fake-walmart-crypto-partnership-announcement",
+        "https://foxbusiness.com/markets/globenewswire-walmart-litecoin-fake-fraudulent-user-account",
+        "https://fortune.com/2021/09/13/walmart-litecoin-fake-press-release-bitcoin-price-crypto-tumble"
+      ],
+      "verified": true,
+      "unverified_fields": ["exact time", "exact peak price"]
+    },
+    {
+      "id": "lilly-insulin-2022",
+      "date": "2022-11-10",
+      "time": "unverified (afternoon ET; tweet stayed up for hours)",
+      "published": "\"We are excited to announce insulin is free now\" from a paid-verified account impersonating a drugmaker.",
+      "platform": "Twitter",
+      "false": true,
+      "asset": "Eli Lilly (LLY) equity; to a lesser degree other insulin makers",
+      "move": "LLY fell about 4.4-4.5 percent on the day (about USD 368 to 346). Causality is uncertain: sources note the fall may reflect the broader publicity or other factors; the company declined to attribute it.",
+      "duration": "Partial recovery over following days",
+      "correction": "The real company apologised for the misleading message; the impersonating account was suspended and unverified.",
+      "sources": [
+        "https://www.semafor.com/article/11/11/2022/eli-lilly-stock-price-tumbles-after-fake-tweet",
+        "https://www.beckershospitalreview.com/pharmacy/eli-lilly-lost-billions-after-fake-twitter-account-promotes-free-insulin",
+        "https://www.entrepreneur.com/business-news/eli-lilly-stock-plummets-after-verified-twitter-accounts/439021"
+      ],
+      "verified": true,
+      "unverified_fields": ["exact time", "causal attribution of the stock move to the tweet"]
+    },
+    {
+      "id": "united-airlines-2008",
+      "date": "2008-09-08",
+      "time": "trading halted about 11:06-11:07 am ET, resumed 12:30 pm ET",
+      "published": "A 2002 newspaper story about the airline's bankruptcy filing was re-indexed by a search aggregator with a new date, picked up by a financial news reporter and spread across terminals.",
+      "platform": "Online newspaper site, search aggregator, financial news terminals",
+      "false": true,
+      "asset": "UAL Corp (UAUA), Nasdaq",
+      "move": "Intraday low about USD 3 (roughly 75 percent below prior close of about 12.3); closed at 10.92, down about 11-12 percent.",
+      "duration": "About 1.5 hours to recover most of the loss; halt of about 80 minutes",
+      "correction": "Company said story concerned its 2002 filing and demanded a retraction; newspaper acknowledged an old story; Nasdaq halted trading.",
+      "sources": [
+        "https://money.cnn.com/2008/09/08/news/companies/united_airlines/index.htm",
+        "https://www.theregister.co.uk/2008/09/10/online_news_farce_drops_united_stock/",
+        "https://247wallst.com/transportation/2008/09/08/ual-confusion-c/"
+      ],
+      "verified": true,
+      "unverified_fields": ["prior close exact value", "exact low price and time"]
+    },
+    {
+      "id": "vinci-2016",
+      "date": "2016-11-22",
+      "time": "unverified in sources retrieved (about 3:00 pm Paris time per general recollection, not confirmed)",
+      "published": "Fake press release imitating the company, claiming an internal audit found accounting irregularities, the finance chief would be dismissed and 2015 and half-year 2016 accounts restated; republished by a financial news service.",
+      "platform": "Fake press release (look-alike domain), picked up by Bloomberg",
+      "false": true,
+      "asset": "Vinci SA (Euronext Paris)",
+      "move": "Intraday fall about 18.3 percent (regulator cites 18.28), close down about 4 percent.",
+      "duration": "Recovered most of the loss within the same session",
+      "correction": "Company denied and called it a hoax; regulator fined the news service EUR 5 million in 2019 for disseminating false information (reduced to EUR 3 million on appeal in 2021).",
+      "sources": [
+        "https://www.amf-france.org/en/news-publications/news-releases/amf-news-releases/amf-reports-progress-its-work-following-dissemination-false-information-concerning-vinci-shares",
+        "https://www.investing.com/news/stock-market-news/frances-amf-watchdog-fines-bloomberg-5-million-over-vinci-hoax-2042317",
+        "https://www.building.co.uk/news/vinci-shares-fall-after-fake-press-release/5085063.article"
+      ],
+      "verified": true,
+      "unverified_fields": ["time of day"]
+    },
+    {
+      "id": "emulex-2000",
+      "date": "2000-08-25",
+      "time": "9:30 am EDT (release issued, per SEC); fall within about 16 minutes",
+      "published": "Fake press release claiming the CEO had resigned, an SEC investigation was under way and earnings would be restated.",
+      "platform": "Internet Wire (newswire), picked up by financial media",
+      "false": true,
+      "asset": "Emulex Corp (EMLX), Nasdaq",
+      "move": "From USD 103.94 to 43.00 (about 58 percent) per SEC; secondary sources say 62 percent. About USD 2.2 billion of market value lost.",
+      "duration": "Trading halted; stock recovered the same day, closing at 105.75",
+      "correction": "Company called it categorically false; Nasdaq halted trading; the perpetrator, a former wire employee who had bought shares, was prosecuted, pleaded guilty and was sentenced to 44 months.",
+      "sources": [
+        "https://www.sec.gov/litigation/litreleases/lr16671.htm",
+        "https://money.cnn.com/2000/08/25/companies/emulex/index.htm",
+        "https://www.npr.org/2000/08/25/1081163/emulex-hoax"
+      ],
+      "verified": true,
+      "unverified_fields": ["62 percent figure (secondary source only)"]
+    },
+    {
+      "id": "paraguay-bitcoin-2025",
+      "date": "2025-06-09",
+      "time": "unverified (US afternoon/evening; exact minute not confirmed)",
+      "published": "Post from the compromised official account of a head of state saying bitcoin had become legal tender, a USD 5 million bitcoin reserve approved, and urging readers to buy via a wallet address.",
+      "platform": "X",
+      "false": true,
+      "asset": "Bitcoin (BTC/USD)",
+      "move": "BTC rose about 4 percent to a local high of about 110,450; sources note concurrent US-China trade-talk news also contributed, so attribution to the post is partial.",
+      "duration": "Unverified (post deleted within minutes)",
+      "correction": "The presidency flagged unauthorised access; post deleted; national cyber incident team and X restored control.",
+      "sources": [
+        "https://www.theblock.co/news/regulation/2025-06-09-paraguay-presidents-x-account-appears-compromised-with-claim-country-makes-bitcoin-legal-tender-357482",
+        "https://decrypt.co/324244/paraguay-says-presidential-tweet-promising-bitcoin-reserve-hack",
+        "https://www.fxstreet.com/cryptocurrencies/news/bitcoin-spikes-above-110k-after-account-of-paraguays-president-claims-btc-legal-tender-202506100053"
+      ],
+      "verified": true,
+      "unverified_fields": ["time", "duration", "share of the move attributable to the post"]
+    }
+  ]
+}

@@ -1,0 +1,179 @@
+{
+ "series": {
+  "BTCUSDT_1m_calm": {
+   "n_bars": 4317,
+   "return_std": 0.0001356748801536565,
+   "excess_kurtosis": 5.895435257368751,
+   "abs_return_lag1_autocorr": 0.20689330345622076,
+   "median_bar_range_bps": 0.08313737671371103,
+   "days": [
+    "2025-09-21",
+    "2026-01-10",
+    "2026-08-15"
+   ]
+  },
+  "BTCUSDT_1m_stress": {
+   "n_bars": 4317,
+   "return_std": 0.0023017998209832378,
+   "excess_kurtosis": 50.74512932779404,
+   "abs_return_lag1_autocorr": 0.331939050672397,
+   "median_bar_range_bps": 19.123744659206757,
+   "days": [
+    "2024-08-05",
+    "2025-10-10",
+    "2026-02-05"
+   ]
+  },
+  "LINKUSDT_1m_calm": {
+   "n_bars": 4317,
+   "return_std": 0.0008047261043754404,
+   "excess_kurtosis": 6.286992631086486,
+   "abs_return_lag1_autocorr": 0.15151778186995696,
+   "median_bar_range_bps": 7.621951219512033,
+   "days": [
+    "2025-09-21",
+    "2026-01-10",
+    "2026-08-15"
+   ]
+  },
+  "LINKUSDT_1m_stress": {
+   "n_bars": 4317,
+   "return_std": 0.007079902540810316,
+   "excess_kurtosis": 440.5767545078978,
+   "abs_return_lag1_autocorr": 0.5903506886997942,
+   "median_bar_range_bps": 31.67898627243954,
+   "days": [
+    "2024-08-05",
+    "2025-10-10",
+    "2026-02-05"
+   ]
+  },
+  "SPY_1m": {
+   "n_bars": 2723,
+   "return_std": 0.00047147579490713486,
+   "excess_kurtosis": 3.765448266723317,
+   "abs_return_lag1_autocorr": 0.2438094975199005,
+   "median_bar_range_bps": 5.105254969858677,
+   "window": [
+    "2026-11-05 14:30:00+00:00",
+    "2026-11-13 20:59:00+00:00"
+   ]
+  },
+  "AAPL_1m": {
+   "n_bars": 2723,
+   "return_std": 0.0006850612116731241,
+   "excess_kurtosis": 27.677204772002153,
+   "abs_return_lag1_autocorr": 0.3541016018952844,
+   "median_bar_range_bps": 6.726700791645809,
+   "window": [
+    "2026-11-05 14:30:00+00:00",
+    "2026-11-13 20:59:00+00:00"
+   ],
+   "suspected_bad_tick_bars": [
+    "2026-11-10 18:00:00+00:00",
+    "2026-11-10 18:01:00+00:00"
+   ],
+   "excluding_suspected_bad_ticks": {
+    "n_bars": 2721,
+    "return_std": 0.0006392252348084367,
+    "excess_kurtosis": 7.015154783688893,
+    "abs_return_lag1_autocorr": 0.3225457783256942,
+    "median_bar_range_bps": 6.71339965127459
+   }
+  },
+  "MSFT_1m": {
+   "n_bars": 2723,
+   "return_std": 0.0011012536644300535,
+   "excess_kurtosis": 244.25664392280405,
+   "abs_return_lag1_autocorr": 0.4211153123448561,
+   "median_bar_range_bps": 8.696216577053146,
+   "window": [
+    "2026-11-05 14:30:00+00:00",
+    "2026-11-13 20:59:00+00:00"
+   ],
+   "suspected_bad_tick_bars": [
+    "2026-11-10 18:00:00+00:00",
+    "2026-11-10 18:01:00+00:00"
+   ],
+   "excluding_suspected_bad_ticks": {
+    "n_bars": 2721,
+    "return_std": 0.0008368688741982786,
+    "excess_kurtosis": 6.096797483700112,
+    "abs_return_lag1_autocorr": 0.2875086711812867,
+    "median_bar_range_bps": 8.688356427809534
+   }
+  },
+  "SPY_5m": {
+   "n_bars": 4620,
+   "return_std": 0.0006252796639307403,
+   "excess_kurtosis": 5.6816438196027015,
+   "abs_return_lag1_autocorr": 0.29265353839303654,
+   "median_bar_range_bps": 6.985669173463307,
+   "window": [
+    "2026-08-21 13:30:00+00:00",
+    "2026-11-13 20:55:00+00:00"
+   ]
+  },
+  "AAPL_5m": {
+   "n_bars": 4620,
+   "return_std": 0.0013158762197532715,
+   "excess_kurtosis": 6.514166955723722,
+   "abs_return_lag1_autocorr": 0.2911341794795431,
+   "median_bar_range_bps": 15.315633462059731,
+   "window": [
+    "2026-08-21 13:30:00+00:00",
+    "2026-11-13 20:55:00+00:00"
+   ],
+   "suspected_bad_tick_bars": [
+    "2026-09-09 18:50:00+00:00",
+    "2026-09-09 18:55:00+00:00",
+    "2026-11-04 15:00:00+00:00",
+    "2026-11-04 15:05:00+00:00"
+   ],
+   "excluding_suspected_bad_ticks": {
+    "n_bars": 4616,
+    "return_std": 0.0013061679307969606,
+    "excess_kurtosis": 6.517274614801616,
+    "abs_return_lag1_autocorr": 0.275083012640374,
+    "median_bar_range_bps": 15.303427110802623
+   }
+  },
+  "MSFT_5m": {
+   "n_bars": 4620,
+   "return_std": 0.0014512112679158273,
+   "excess_kurtosis": 11.80448152357134,
+   "abs_return_lag1_autocorr": 0.28970745412300286,
+   "median_bar_range_bps": 15.70128434069343,
+   "window": [
+    "2026-08-21 13:30:00+00:00",
+    "2026-11-13 20:55:00+00:00"
+   ],
+   "suspected_bad_tick_bars": [
+    "2026-10-05 13:40:00+00:00",
+    "2026-10-05 13:45:00+00:00",
+    "2026-11-05 15:50:00+00:00",
+    "2026-11-05 15:55:00+00:00"
+   ],
+   "excluding_suspected_bad_ticks": {
+    "n_bars": 4616,
+    "return_std": 0.0014377396104624076,
+    "excess_kurtosis": 11.922306744736705,
+    "abs_return_lag1_autocorr": 0.27944675073654857,
+    "median_bar_range_bps": 15.692508729966246
+   }
+  }
+ },
+ "notes": [
+  "AAPL 1m: 2 suspected vendor bad-tick bar(s) flagged (single-bar spike reversed next bar); raw stats kept, cleaned stats in excluding_suspected_bad_ticks",
+  "MSFT 1m: 2 suspected vendor bad-tick bar(s) flagged (single-bar spike reversed next bar); raw stats kept, cleaned stats in excluding_suspected_bad_ticks",
+  "AAPL 5m: 4 suspected vendor bad-tick bar(s) flagged (single-bar spike reversed next bar); raw stats kept, cleaned stats in excluding_suspected_bad_ticks",
+  "MSFT 5m: 4 suspected vendor bad-tick bar(s) flagged (single-bar spike reversed next bar); raw stats kept, cleaned stats in excluding_suspected_bad_ticks",
+  "Crypto calm days are weekend days; BTCUSDT spot bar ranges on them are near the one-tick floor (median range under 1 bp), so BTC calm vs stress differ by ~2 orders of magnitude.",
+  "Equity 1m window is the last ~6 sessions, 5m window the last ~60 calendar days; vendor data is unadjusted-for-splits and may contain bad ticks."
+ ],
+ "definitions": {
+  "return": "log close-to-close return per bar; equity returns exclude overnight gaps",
+  "excess_kurtosis": "pandas Fisher kurtosis (normal = 0)",
+  "median_bar_range_bps": "median of (high-low)/close * 1e4"
+ }
+}

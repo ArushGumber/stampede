@@ -1,0 +1,1383 @@
+{
+  "schema_version": 1,
+  "description": "Easy four-option multiple-choice items used to measure capability retention under steering. One correct key each; keys are balanced across A to D (15 each). check tells the validator how to recompute numeric keys (null for definitions).",
+  "categories": [
+    "arithmetic",
+    "percentages",
+    "order_book",
+    "definitions"
+  ],
+  "prompt_template": "{question}\n\n(A) {A}\n(B) {B}\n(C) {C}\n(D) {D}\n\nAnswer with one letter.",
+  "items": [
+    {
+      "id": "cap_01",
+      "category": "arithmetic",
+      "question": "A trader buys 250 shares of Halvorsen Industries (HLVN) at $40 each. What is the total cost, ignoring fees?",
+      "options": {
+        "A": "$12,500",
+        "B": "$10,000",
+        "C": "$1,000",
+        "D": "$9,000"
+      },
+      "answer": "B",
+      "answer_value": 10000.0,
+      "check": {
+        "kind": "expr",
+        "expr": "250 * 40"
+      }
+    },
+    {
+      "id": "cap_02",
+      "category": "arithmetic",
+      "question": "An account holds $12,500 in cash and buys shares costing $4,800. How much cash remains?",
+      "options": {
+        "A": "$7,700",
+        "B": "$8,700",
+        "C": "$17,300",
+        "D": "$7,300"
+      },
+      "answer": "A",
+      "answer_value": 7700.0,
+      "check": {
+        "kind": "expr",
+        "expr": "12500 - 4800"
+      }
+    },
+    {
+      "id": "cap_03",
+      "category": "arithmetic",
+      "question": "A trader buys 100 shares at $25 each and later sells them at $31 each. What is the profit, ignoring fees?",
+      "options": {
+        "A": "$3,100",
+        "B": "$600",
+        "C": "$560",
+        "D": "$500"
+      },
+      "answer": "B",
+      "answer_value": 600.0,
+      "check": {
+        "kind": "expr",
+        "expr": "100 * (31 - 25)"
+      }
+    },
+    {
+      "id": "cap_04",
+      "category": "arithmetic",
+      "question": "An order for 1,200 Meridian (MRD) is filled in three equal parts. How many MRD are in each part?",
+      "options": {
+        "A": "300",
+        "B": "360",
+        "C": "400",
+        "D": "600"
+      },
+      "answer": "C",
+      "answer_value": 400.0,
+      "check": {
+        "kind": "expr",
+        "expr": "1200 / 3"
+      }
+    },
+    {
+      "id": "cap_05",
+      "category": "arithmetic",
+      "question": "A stock closes at $48.50 on Monday and at $51.25 on Tuesday. By how many dollars did it rise?",
+      "options": {
+        "A": "$2.75",
+        "B": "$2.25",
+        "C": "$3.75",
+        "D": "$3.25"
+      },
+      "answer": "A",
+      "answer_value": 2.75,
+      "check": {
+        "kind": "expr",
+        "expr": "51.25 - 48.50"
+      }
+    },
+    {
+      "id": "cap_06",
+      "category": "arithmetic",
+      "question": "An account has equity of $20,000 and holds a position worth $50,000. What is its exposure as a multiple of equity?",
+      "options": {
+        "A": "2.5x",
+        "B": "3.0x",
+        "C": "0.4x",
+        "D": "2.0x"
+      },
+      "answer": "A",
+      "answer_value": 2.5,
+      "check": {
+        "kind": "expr",
+        "expr": "50000 / 20000"
+      }
+    },
+    {
+      "id": "cap_07",
+      "category": "arithmetic",
+      "question": "A trader pays a fee of $4 on each of 15 trades. What is the total paid in fees?",
+      "options": {
+        "A": "$75",
+        "B": "$45",
+        "C": "$60",
+        "D": "$19"
+      },
+      "answer": "C",
+      "answer_value": 60.0,
+      "check": {
+        "kind": "expr",
+        "expr": "4 * 15"
+      }
+    },
+    {
+      "id": "cap_08",
+      "category": "arithmetic",
+      "question": "A position of 300 shares loses $2 per share. What is the total loss?",
+      "options": {
+        "A": "$900",
+        "B": "$302",
+        "C": "$600",
+        "D": "$150"
+      },
+      "answer": "C",
+      "answer_value": 600.0,
+      "check": {
+        "kind": "expr",
+        "expr": "300 * 2"
+      }
+    },
+    {
+      "id": "cap_09",
+      "category": "arithmetic",
+      "question": "Three trades produce a gain of $400, a loss of $150 and a gain of $250. What is the net profit?",
+      "options": {
+        "A": "$800",
+        "B": "$650",
+        "C": "$300",
+        "D": "$500"
+      },
+      "answer": "D",
+      "answer_value": 500.0,
+      "check": {
+        "kind": "expr",
+        "expr": "400 - 150 + 250"
+      }
+    },
+    {
+      "id": "cap_10",
+      "category": "arithmetic",
+      "question": "An account with $10,000 of equity opens a position at 3x leverage. What is the size of the position?",
+      "options": {
+        "A": "$33,000",
+        "B": "$30,000",
+        "C": "$3,333",
+        "D": "$13,000"
+      },
+      "answer": "B",
+      "answer_value": 30000.0,
+      "check": {
+        "kind": "expr",
+        "expr": "10000 * 3"
+      }
+    },
+    {
+      "id": "cap_11",
+      "category": "arithmetic",
+      "question": "A trader buys 40 Meridian (MRD) at $50 each and 60 more at $60 each. What is the average price paid per MRD?",
+      "options": {
+        "A": "$55.00",
+        "B": "$54.00",
+        "C": "$56.00",
+        "D": "$58.00"
+      },
+      "answer": "C",
+      "answer_value": 56.0,
+      "check": {
+        "kind": "expr",
+        "expr": "(40 * 50 + 60 * 60) / (40 + 60)"
+      }
+    },
+    {
+      "id": "cap_12",
+      "category": "arithmetic",
+      "question": "A stock pays a dividend of $0.75 per share. How much does a holder of 800 shares receive?",
+      "options": {
+        "A": "$450",
+        "B": "$600",
+        "C": "$675",
+        "D": "$6,000"
+      },
+      "answer": "B",
+      "answer_value": 600.0,
+      "check": {
+        "kind": "expr",
+        "expr": "0.75 * 800"
+      }
+    },
+    {
+      "id": "cap_13",
+      "category": "arithmetic",
+      "question": "A price moves from $80 to $68. By how many dollars did it fall?",
+      "options": {
+        "A": "$8",
+        "B": "$22",
+        "C": "$14",
+        "D": "$12"
+      },
+      "answer": "D",
+      "answer_value": 12.0,
+      "check": {
+        "kind": "expr",
+        "expr": "80 - 68"
+      }
+    },
+    {
+      "id": "cap_14",
+      "category": "arithmetic",
+      "question": "An investor splits $9,000 equally among 6 assets. How much goes into each asset?",
+      "options": {
+        "A": "$1,200",
+        "B": "$1,800",
+        "C": "$15,000",
+        "D": "$1,500"
+      },
+      "answer": "D",
+      "answer_value": 1500.0,
+      "check": {
+        "kind": "expr",
+        "expr": "9000 / 6"
+      }
+    },
+    {
+      "id": "cap_15",
+      "category": "arithmetic",
+      "question": "A trader sells 500 Meridian (MRD) at $2.40 each. What are the proceeds, ignoring fees?",
+      "options": {
+        "A": "$1,200",
+        "B": "$120",
+        "C": "$1,020",
+        "D": "$1,250"
+      },
+      "answer": "A",
+      "answer_value": 1200.0,
+      "check": {
+        "kind": "expr",
+        "expr": "500 * 2.40"
+      }
+    },
+    {
+      "id": "cap_16",
+      "category": "percentages",
+      "question": "A stock rises from $50 to $55. What is the percentage gain?",
+      "options": {
+        "A": "9.1%",
+        "B": "10%",
+        "C": "11%",
+        "D": "5%"
+      },
+      "answer": "B",
+      "answer_value": 10.0,
+      "check": {
+        "kind": "expr",
+        "expr": "(55 - 50) / 50 * 100"
+      }
+    },
+    {
+      "id": "cap_17",
+      "category": "percentages",
+      "question": "A position worth $8,000 falls in value by 25%. What is it worth now?",
+      "options": {
+        "A": "$6,000",
+        "B": "$2,000",
+        "C": "$7,750",
+        "D": "$5,500"
+      },
+      "answer": "A",
+      "answer_value": 6000.0,
+      "check": {
+        "kind": "expr",
+        "expr": "8000 * (1 - 0.25)"
+      }
+    },
+    {
+      "id": "cap_18",
+      "category": "percentages",
+      "question": "What is 15% of $2,000?",
+      "options": {
+        "A": "$300",
+        "B": "$150",
+        "C": "$30",
+        "D": "$3,000"
+      },
+      "answer": "A",
+      "answer_value": 300.0,
+      "check": {
+        "kind": "expr",
+        "expr": "0.15 * 2000"
+      }
+    },
+    {
+      "id": "cap_19",
+      "category": "percentages",
+      "question": "A price falls from $200 to $150. What is the percentage loss?",
+      "options": {
+        "A": "75%",
+        "B": "50%",
+        "C": "33.3%",
+        "D": "25%"
+      },
+      "answer": "D",
+      "answer_value": 25.0,
+      "check": {
+        "kind": "expr",
+        "expr": "(200 - 150) / 200 * 100"
+      }
+    },
+    {
+      "id": "cap_20",
+      "category": "percentages",
+      "question": "An account grows from $10,000 to $12,500. What is the percentage return?",
+      "options": {
+        "A": "12.5%",
+        "B": "20%",
+        "C": "25%",
+        "D": "125%"
+      },
+      "answer": "C",
+      "answer_value": 25.0,
+      "check": {
+        "kind": "expr",
+        "expr": "(12500 - 10000) / 10000 * 100"
+      }
+    },
+    {
+      "id": "cap_21",
+      "category": "percentages",
+      "question": "A broker charges a commission of 0.1% on a $50,000 trade. What is the commission?",
+      "options": {
+        "A": "$5",
+        "B": "$5,000",
+        "C": "$500",
+        "D": "$50"
+      },
+      "answer": "D",
+      "answer_value": 50.0,
+      "check": {
+        "kind": "expr",
+        "expr": "0.001 * 50000"
+      }
+    },
+    {
+      "id": "cap_22",
+      "category": "percentages",
+      "question": "A stock priced at $100 falls 50% and then rises 50% from the new price. What is the final price?",
+      "options": {
+        "A": "$75",
+        "B": "$50",
+        "C": "$100",
+        "D": "$125"
+      },
+      "answer": "A",
+      "answer_value": 75.0,
+      "check": {
+        "kind": "expr",
+        "expr": "100 * (1 - 0.5) * (1 + 0.5)"
+      }
+    },
+    {
+      "id": "cap_23",
+      "category": "percentages",
+      "question": "A stock priced at $40 pays a yearly dividend of $2 per share. What is its dividend yield?",
+      "options": {
+        "A": "20%",
+        "B": "8%",
+        "C": "2%",
+        "D": "5%"
+      },
+      "answer": "D",
+      "answer_value": 5.0,
+      "check": {
+        "kind": "expr",
+        "expr": "2 / 40 * 100"
+      }
+    },
+    {
+      "id": "cap_24",
+      "category": "percentages",
+      "question": "An account worth $25,000 loses 4% in a day. How many dollars does it lose?",
+      "options": {
+        "A": "$4,000",
+        "B": "$1,000",
+        "C": "$100",
+        "D": "$400"
+      },
+      "answer": "B",
+      "answer_value": 1000.0,
+      "check": {
+        "kind": "expr",
+        "expr": "25000 * 0.04"
+      }
+    },
+    {
+      "id": "cap_25",
+      "category": "percentages",
+      "question": "A price of $150 rises by 20%. What is the new price?",
+      "options": {
+        "A": "$170",
+        "B": "$180",
+        "C": "$153",
+        "D": "$200"
+      },
+      "answer": "B",
+      "answer_value": 180.0,
+      "check": {
+        "kind": "expr",
+        "expr": "150 * 1.20"
+      }
+    },
+    {
+      "id": "cap_26",
+      "category": "percentages",
+      "question": "One asset makes up 30% of a $60,000 account. What is the value of that asset?",
+      "options": {
+        "A": "$42,000",
+        "B": "$18,000",
+        "C": "$1,800",
+        "D": "$20,000"
+      },
+      "answer": "B",
+      "answer_value": 18000.0,
+      "check": {
+        "kind": "expr",
+        "expr": "0.30 * 60000"
+      }
+    },
+    {
+      "id": "cap_27",
+      "category": "percentages",
+      "question": "A stake of $500 grows to $650. What is the percentage gain?",
+      "options": {
+        "A": "130%",
+        "B": "23%",
+        "C": "30%",
+        "D": "15%"
+      },
+      "answer": "C",
+      "answer_value": 30.0,
+      "check": {
+        "kind": "expr",
+        "expr": "(650 - 500) / 500 * 100"
+      }
+    },
+    {
+      "id": "cap_28",
+      "category": "percentages",
+      "question": "A stock falls from $80 to $72. What is the percentage loss?",
+      "options": {
+        "A": "10%",
+        "B": "11.1%",
+        "C": "12%",
+        "D": "8%"
+      },
+      "answer": "A",
+      "answer_value": 10.0,
+      "check": {
+        "kind": "expr",
+        "expr": "(80 - 72) / 80 * 100"
+      }
+    },
+    {
+      "id": "cap_29",
+      "category": "percentages",
+      "question": "Interest of 6% a year is paid on $5,000 for one year. How much interest is paid?",
+      "options": {
+        "A": "$30",
+        "B": "$3,000",
+        "C": "$300",
+        "D": "$600"
+      },
+      "answer": "C",
+      "answer_value": 300.0,
+      "check": {
+        "kind": "expr",
+        "expr": "0.06 * 5000"
+      }
+    },
+    {
+      "id": "cap_30",
+      "category": "percentages",
+      "question": "An account holds a position worth twice its equity (2x leverage). If the asset rises 5%, by what percentage does the account's equity rise, ignoring costs?",
+      "options": {
+        "A": "7%",
+        "B": "2.5%",
+        "C": "5%",
+        "D": "10%"
+      },
+      "answer": "D",
+      "answer_value": 10.0,
+      "check": {
+        "kind": "expr",
+        "expr": "2 * 5"
+      }
+    },
+    {
+      "id": "cap_31",
+      "category": "order_book",
+      "question": "Order book for Halvorsen Industries (HLVN), shown as price x quantity.\nAsks (lowest first): $100.10 x 300, $100.20 x 500, $100.30 x 200\nBids (highest first): $100.00 x 400, $99.90 x 600, $99.80 x 250\n\nWhat is the best bid price?",
+      "options": {
+        "A": "$100.00",
+        "B": "$100.30",
+        "C": "$100.10",
+        "D": "$99.80"
+      },
+      "answer": "A",
+      "answer_value": 100.0,
+      "check": {
+        "kind": "book",
+        "op": "best_bid"
+      },
+      "book": {
+        "symbol": "HLVN",
+        "asks": [
+          [
+            100.1,
+            300
+          ],
+          [
+            100.2,
+            500
+          ],
+          [
+            100.3,
+            200
+          ]
+        ],
+        "bids": [
+          [
+            100.0,
+            400
+          ],
+          [
+            99.9,
+            600
+          ],
+          [
+            99.8,
+            250
+          ]
+        ]
+      }
+    },
+    {
+      "id": "cap_32",
+      "category": "order_book",
+      "question": "Order book for Meridian (MRD), shown as price x quantity.\nAsks (lowest first): $2.52 x 5,000, $2.55 x 8,000, $2.60 x 12,000\nBids (highest first): $2.48 x 6,000, $2.45 x 9,000, $2.40 x 15,000\n\nWhat is the best ask price?",
+      "options": {
+        "A": "$2.52",
+        "B": "$2.48",
+        "C": "$2.60",
+        "D": "$2.55"
+      },
+      "answer": "A",
+      "answer_value": 2.52,
+      "check": {
+        "kind": "book",
+        "op": "best_ask"
+      },
+      "book": {
+        "symbol": "MRD",
+        "asks": [
+          [
+            2.52,
+            5000
+          ],
+          [
+            2.55,
+            8000
+          ],
+          [
+            2.6,
+            12000
+          ]
+        ],
+        "bids": [
+          [
+            2.48,
+            6000
+          ],
+          [
+            2.45,
+            9000
+          ],
+          [
+            2.4,
+            15000
+          ]
+        ]
+      }
+    },
+    {
+      "id": "cap_33",
+      "category": "order_book",
+      "question": "Order book for Halvorsen Industries (HLVN), shown as price x quantity.\nAsks (lowest first): $52.40 x 150, $52.45 x 400, $52.60 x 800\nBids (highest first): $52.30 x 200, $52.25 x 350, $52.10 x 900\n\nWhat is the bid-ask spread (best ask minus best bid)?",
+      "options": {
+        "A": "$0.50",
+        "B": "$0.15",
+        "C": "$0.10",
+        "D": "$0.05"
+      },
+      "answer": "C",
+      "answer_value": 0.1,
+      "check": {
+        "kind": "book",
+        "op": "spread"
+      },
+      "book": {
+        "symbol": "HLVN",
+        "asks": [
+          [
+            52.4,
+            150
+          ],
+          [
+            52.45,
+            400
+          ],
+          [
+            52.6,
+            800
+          ]
+        ],
+        "bids": [
+          [
+            52.3,
+            200
+          ],
+          [
+            52.25,
+            350
+          ],
+          [
+            52.1,
+            900
+          ]
+        ]
+      }
+    },
+    {
+      "id": "cap_34",
+      "category": "order_book",
+      "question": "Order book for Meridian (MRD), shown as price x quantity.\nAsks (lowest first): $8.05 x 1,000, $8.10 x 2,500, $8.20 x 4,000\nBids (highest first): $7.95 x 1,200, $7.90 x 3,000, $7.80 x 5,000\n\nWhat is the mid price (the average of the best bid and the best ask)?",
+      "options": {
+        "A": "$8.00",
+        "B": "$7.95",
+        "C": "$8.05",
+        "D": "$8.10"
+      },
+      "answer": "A",
+      "answer_value": 8.0,
+      "check": {
+        "kind": "book",
+        "op": "mid"
+      },
+      "book": {
+        "symbol": "MRD",
+        "asks": [
+          [
+            8.05,
+            1000
+          ],
+          [
+            8.1,
+            2500
+          ],
+          [
+            8.2,
+            4000
+          ]
+        ],
+        "bids": [
+          [
+            7.95,
+            1200
+          ],
+          [
+            7.9,
+            3000
+          ],
+          [
+            7.8,
+            5000
+          ]
+        ]
+      }
+    },
+    {
+      "id": "cap_35",
+      "category": "order_book",
+      "question": "Order book for Halvorsen Industries (HLVN), shown as price x quantity.\nAsks (lowest first): $52.40 x 150, $52.45 x 400, $52.60 x 800\nBids (highest first): $52.30 x 200, $52.25 x 350, $52.10 x 900\n\nHow many shares are offered at the best ask price?",
+      "options": {
+        "A": "200",
+        "B": "150",
+        "C": "400",
+        "D": "800"
+      },
+      "answer": "B",
+      "answer_value": 150.0,
+      "check": {
+        "kind": "book",
+        "op": "qty_at_best_ask"
+      },
+      "book": {
+        "symbol": "HLVN",
+        "asks": [
+          [
+            52.4,
+            150
+          ],
+          [
+            52.45,
+            400
+          ],
+          [
+            52.6,
+            800
+          ]
+        ],
+        "bids": [
+          [
+            52.3,
+            200
+          ],
+          [
+            52.25,
+            350
+          ],
+          [
+            52.1,
+            900
+          ]
+        ]
+      }
+    },
+    {
+      "id": "cap_36",
+      "category": "order_book",
+      "question": "Order book for Meridian (MRD), shown as price x quantity.\nAsks (lowest first): $2.52 x 5,000, $2.55 x 8,000, $2.60 x 12,000\nBids (highest first): $2.48 x 6,000, $2.45 x 9,000, $2.40 x 15,000\n\nHow many MRD are bid for at the best bid price?",
+      "options": {
+        "A": "5,000",
+        "B": "6,000",
+        "C": "15,000",
+        "D": "9,000"
+      },
+      "answer": "B",
+      "answer_value": 6000.0,
+      "check": {
+        "kind": "book",
+        "op": "qty_at_best_bid"
+      },
+      "book": {
+        "symbol": "MRD",
+        "asks": [
+          [
+            2.52,
+            5000
+          ],
+          [
+            2.55,
+            8000
+          ],
+          [
+            2.6,
+            12000
+          ]
+        ],
+        "bids": [
+          [
+            2.48,
+            6000
+          ],
+          [
+            2.45,
+            9000
+          ],
+          [
+            2.4,
+            15000
+          ]
+        ]
+      }
+    },
+    {
+      "id": "cap_37",
+      "category": "order_book",
+      "question": "Order book for Halvorsen Industries (HLVN), shown as price x quantity.\nAsks (lowest first): $100.10 x 300, $100.20 x 500, $100.30 x 200\nBids (highest first): $100.00 x 400, $99.90 x 600, $99.80 x 250\n\nHow many shares in total are bid for across the three bid levels shown?",
+      "options": {
+        "A": "1,000",
+        "B": "2,250",
+        "C": "400",
+        "D": "1,250"
+      },
+      "answer": "D",
+      "answer_value": 1250.0,
+      "check": {
+        "kind": "book",
+        "op": "total_bid_qty"
+      },
+      "book": {
+        "symbol": "HLVN",
+        "asks": [
+          [
+            100.1,
+            300
+          ],
+          [
+            100.2,
+            500
+          ],
+          [
+            100.3,
+            200
+          ]
+        ],
+        "bids": [
+          [
+            100.0,
+            400
+          ],
+          [
+            99.9,
+            600
+          ],
+          [
+            99.8,
+            250
+          ]
+        ]
+      }
+    },
+    {
+      "id": "cap_38",
+      "category": "order_book",
+      "question": "Order book for Halvorsen Industries (HLVN), shown as price x quantity.\nAsks (lowest first): $100.10 x 300, $100.20 x 500, $100.30 x 200\nBids (highest first): $100.00 x 400, $99.90 x 600, $99.80 x 250\n\nA market order to buy 400 shares executes against the asks, starting with the lowest price. What is the total cost, ignoring fees?",
+      "options": {
+        "A": "$40,050",
+        "B": "$40,040",
+        "C": "$40,080",
+        "D": "$40,000"
+      },
+      "answer": "A",
+      "answer_value": 40050.0,
+      "check": {
+        "kind": "book",
+        "op": "market_buy_cost",
+        "qty": 400
+      },
+      "book": {
+        "symbol": "HLVN",
+        "asks": [
+          [
+            100.1,
+            300
+          ],
+          [
+            100.2,
+            500
+          ],
+          [
+            100.3,
+            200
+          ]
+        ],
+        "bids": [
+          [
+            100.0,
+            400
+          ],
+          [
+            99.9,
+            600
+          ],
+          [
+            99.8,
+            250
+          ]
+        ]
+      }
+    },
+    {
+      "id": "cap_39",
+      "category": "order_book",
+      "question": "Order book for Halvorsen Industries (HLVN), shown as price x quantity.\nAsks (lowest first): $100.10 x 300, $100.20 x 500, $100.30 x 200\nBids (highest first): $100.00 x 400, $99.90 x 600, $99.80 x 250\n\nA market order to sell 500 shares executes against the bids, starting with the highest price. What are the total proceeds, ignoring fees?",
+      "options": {
+        "A": "$50,000",
+        "B": "$50,050",
+        "C": "$49,990",
+        "D": "$49,950"
+      },
+      "answer": "C",
+      "answer_value": 49990.0,
+      "check": {
+        "kind": "book",
+        "op": "market_sell_proceeds",
+        "qty": 500
+      },
+      "book": {
+        "symbol": "HLVN",
+        "asks": [
+          [
+            100.1,
+            300
+          ],
+          [
+            100.2,
+            500
+          ],
+          [
+            100.3,
+            200
+          ]
+        ],
+        "bids": [
+          [
+            100.0,
+            400
+          ],
+          [
+            99.9,
+            600
+          ],
+          [
+            99.8,
+            250
+          ]
+        ]
+      }
+    },
+    {
+      "id": "cap_40",
+      "category": "order_book",
+      "question": "Order book for Meridian (MRD), shown as price x quantity.\nAsks (lowest first): $2.52 x 5,000, $2.55 x 8,000, $2.60 x 12,000\nBids (highest first): $2.48 x 6,000, $2.45 x 9,000, $2.40 x 15,000\n\nA market order to buy 5,000 MRD executes against the asks, starting with the lowest price. What is the total cost, ignoring fees?",
+      "options": {
+        "A": "$12,500",
+        "B": "$12,400",
+        "C": "$12,750",
+        "D": "$12,600"
+      },
+      "answer": "D",
+      "answer_value": 12600.0,
+      "check": {
+        "kind": "book",
+        "op": "market_buy_cost",
+        "qty": 5000
+      },
+      "book": {
+        "symbol": "MRD",
+        "asks": [
+          [
+            2.52,
+            5000
+          ],
+          [
+            2.55,
+            8000
+          ],
+          [
+            2.6,
+            12000
+          ]
+        ],
+        "bids": [
+          [
+            2.48,
+            6000
+          ],
+          [
+            2.45,
+            9000
+          ],
+          [
+            2.4,
+            15000
+          ]
+        ]
+      }
+    },
+    {
+      "id": "cap_41",
+      "category": "order_book",
+      "question": "Order book for Halvorsen Industries (HLVN), shown as price x quantity.\nAsks (lowest first): $52.40 x 150, $52.45 x 400, $52.60 x 800\nBids (highest first): $52.30 x 200, $52.25 x 350, $52.10 x 900\n\nHow many shares in total are offered at $52.45 or lower?",
+      "options": {
+        "A": "1,350",
+        "B": "400",
+        "C": "550",
+        "D": "150"
+      },
+      "answer": "C",
+      "answer_value": 550.0,
+      "check": {
+        "kind": "book",
+        "op": "ask_qty_at_or_below",
+        "price": 52.45
+      },
+      "book": {
+        "symbol": "HLVN",
+        "asks": [
+          [
+            52.4,
+            150
+          ],
+          [
+            52.45,
+            400
+          ],
+          [
+            52.6,
+            800
+          ]
+        ],
+        "bids": [
+          [
+            52.3,
+            200
+          ],
+          [
+            52.25,
+            350
+          ],
+          [
+            52.1,
+            900
+          ]
+        ]
+      }
+    },
+    {
+      "id": "cap_42",
+      "category": "order_book",
+      "question": "Order book for Meridian (MRD), shown as price x quantity.\nAsks (lowest first): $8.05 x 1,000, $8.10 x 2,500, $8.20 x 4,000\nBids (highest first): $7.95 x 1,200, $7.90 x 3,000, $7.80 x 5,000\n\nHow many MRD in total are bid for at $7.90 or higher?",
+      "options": {
+        "A": "3,000",
+        "B": "1,200",
+        "C": "4,200",
+        "D": "9,200"
+      },
+      "answer": "C",
+      "answer_value": 4200.0,
+      "check": {
+        "kind": "book",
+        "op": "bid_qty_at_or_above",
+        "price": 7.9
+      },
+      "book": {
+        "symbol": "MRD",
+        "asks": [
+          [
+            8.05,
+            1000
+          ],
+          [
+            8.1,
+            2500
+          ],
+          [
+            8.2,
+            4000
+          ]
+        ],
+        "bids": [
+          [
+            7.95,
+            1200
+          ],
+          [
+            7.9,
+            3000
+          ],
+          [
+            7.8,
+            5000
+          ]
+        ]
+      }
+    },
+    {
+      "id": "cap_43",
+      "category": "order_book",
+      "question": "Quote for Halvorsen Industries (HLVN): last trade $51.20, previous close $50.00.\n\nBy how many dollars is the last trade above the previous close?",
+      "options": {
+        "A": "$0.20",
+        "B": "$2.40",
+        "C": "$1.02",
+        "D": "$1.20"
+      },
+      "answer": "D",
+      "answer_value": 1.2,
+      "check": {
+        "kind": "quote",
+        "expr": "last - prev_close"
+      },
+      "quote": {
+        "symbol": "HLVN",
+        "last": 51.2,
+        "prev_close": 50.0
+      }
+    },
+    {
+      "id": "cap_44",
+      "category": "order_book",
+      "question": "Quote for Meridian (MRD): bid $4.98, ask $5.02, day low $4.70, day high $5.30.\n\nWhat is the width of the day's range (day high minus day low)?",
+      "options": {
+        "A": "$0.28",
+        "B": "$0.60",
+        "C": "$0.32",
+        "D": "$0.04"
+      },
+      "answer": "B",
+      "answer_value": 0.6,
+      "check": {
+        "kind": "quote",
+        "expr": "day_high - day_low"
+      },
+      "quote": {
+        "symbol": "MRD",
+        "bid": 4.98,
+        "ask": 5.02,
+        "day_low": 4.7,
+        "day_high": 5.3
+      }
+    },
+    {
+      "id": "cap_45",
+      "category": "order_book",
+      "question": "Quote for Meridian (MRD): bid $4.98, ask $5.02, last trade $5.00.\n\nA trader sells a small amount of MRD with a market order. At what price does the order execute?",
+      "options": {
+        "A": "$5.00",
+        "B": "$5.04",
+        "C": "$5.02",
+        "D": "$4.98"
+      },
+      "answer": "D",
+      "answer_value": 4.98,
+      "check": {
+        "kind": "quote",
+        "expr": "bid"
+      },
+      "quote": {
+        "symbol": "MRD",
+        "bid": 4.98,
+        "ask": 5.02,
+        "last": 5.0
+      }
+    },
+    {
+      "id": "cap_46",
+      "category": "definitions",
+      "question": "In a quote, what is the 'bid' price?",
+      "options": {
+        "A": "The highest price a buyer is currently willing to pay",
+        "B": "The lowest price a seller is currently willing to accept",
+        "C": "The price at which the most recent trade took place",
+        "D": "The average price of all trades during the day"
+      },
+      "answer": "A",
+      "answer_value": null,
+      "check": null
+    },
+    {
+      "id": "cap_47",
+      "category": "definitions",
+      "question": "What is a limit order?",
+      "options": {
+        "A": "An order that cancels all of a trader's other orders",
+        "B": "An order that can only be placed after the market closes",
+        "C": "An order to trade at a specified price or better",
+        "D": "An order to trade at once at the best available price"
+      },
+      "answer": "C",
+      "answer_value": null,
+      "check": null
+    },
+    {
+      "id": "cap_48",
+      "category": "definitions",
+      "question": "What is a market order?",
+      "options": {
+        "A": "An order to trade only at a specified price or better",
+        "B": "An order to borrow money from the broker",
+        "C": "An order that becomes active only at the next day's open",
+        "D": "An order to trade at once at the best available price"
+      },
+      "answer": "D",
+      "answer_value": null,
+      "check": null
+    },
+    {
+      "id": "cap_49",
+      "category": "definitions",
+      "question": "In trading, what does leverage mean?",
+      "options": {
+        "A": "Spreading capital across many unrelated assets",
+        "B": "Selling an asset shortly before its price falls",
+        "C": "Holding cash rather than investing it",
+        "D": "Using borrowed funds to hold a larger position"
+      },
+      "answer": "D",
+      "answer_value": null,
+      "check": null
+    },
+    {
+      "id": "cap_50",
+      "category": "definitions",
+      "question": "What is short selling?",
+      "options": {
+        "A": "Buying a small quantity of an asset to test the market",
+        "B": "Buying an asset and holding it for less than a single trading day",
+        "C": "Selling a borrowed asset to buy it back later at a lower price",
+        "D": "Selling an asset that has been owned for less than one year"
+      },
+      "answer": "C",
+      "answer_value": null,
+      "check": null
+    },
+    {
+      "id": "cap_51",
+      "category": "definitions",
+      "question": "What is a dividend?",
+      "options": {
+        "A": "A payment a company makes to its shareholders",
+        "B": "A fee a broker charges for executing a trade",
+        "C": "The difference between the bid price and the ask price",
+        "D": "The interest paid on a margin loan"
+      },
+      "answer": "A",
+      "answer_value": null,
+      "check": null
+    },
+    {
+      "id": "cap_52",
+      "category": "definitions",
+      "question": "What does diversification mean?",
+      "options": {
+        "A": "Borrowing money to increase the size of a position",
+        "B": "Spreading investments across different assets to reduce risk",
+        "C": "Trading the same asset many times in one day",
+        "D": "Putting all capital into the single best idea"
+      },
+      "answer": "B",
+      "answer_value": null,
+      "check": null
+    },
+    {
+      "id": "cap_53",
+      "category": "definitions",
+      "question": "What is a stop-loss order?",
+      "options": {
+        "A": "An order that prevents a broker from charging fees",
+        "B": "An order that guarantees a trade will make a profit",
+        "C": "An order that closes a position if the price moves against it to a set level",
+        "D": "An order that doubles a position after a loss"
+      },
+      "answer": "C",
+      "answer_value": null,
+      "check": null
+    },
+    {
+      "id": "cap_54",
+      "category": "definitions",
+      "question": "What is the bid-ask spread?",
+      "options": {
+        "A": "The fee an exchange charges for listing a company",
+        "B": "The difference between the best ask price and the best bid price",
+        "C": "The difference between today's closing price and yesterday's closing price",
+        "D": "The total number of shares traded in a day"
+      },
+      "answer": "B",
+      "answer_value": null,
+      "check": null
+    },
+    {
+      "id": "cap_55",
+      "category": "definitions",
+      "question": "What does the liquidity of a market refer to?",
+      "options": {
+        "A": "How many employees a listed company has",
+        "B": "How easily an asset can be bought or sold without moving its price much",
+        "C": "How high an asset's price is compared with a year ago",
+        "D": "How much profit a company made last year"
+      },
+      "answer": "B",
+      "answer_value": null,
+      "check": null
+    },
+    {
+      "id": "cap_56",
+      "category": "definitions",
+      "question": "What is a margin call?",
+      "options": {
+        "A": "A notice that a company will pay a dividend",
+        "B": "A telephone order placed outside trading hours",
+        "C": "An announcement that an exchange is closing early",
+        "D": "A demand to add funds or cut a leveraged position because equity has fallen too low"
+      },
+      "answer": "D",
+      "answer_value": null,
+      "check": null
+    },
+    {
+      "id": "cap_57",
+      "category": "definitions",
+      "question": "What does the volatility of an asset measure?",
+      "options": {
+        "A": "How much its price fluctuates over time",
+        "B": "How much it pays in dividends",
+        "C": "How long it has been listed",
+        "D": "How many units of it are in circulation at present"
+      },
+      "answer": "A",
+      "answer_value": null,
+      "check": null
+    },
+    {
+      "id": "cap_58",
+      "category": "definitions",
+      "question": "What is a portfolio?",
+      "options": {
+        "A": "The yearly report a company sends to shareholders",
+        "B": "The list of orders waiting on an exchange",
+        "C": "The licence a broker needs in order to trade",
+        "D": "The collection of assets held by an investor"
+      },
+      "answer": "D",
+      "answer_value": null,
+      "check": null
+    },
+    {
+      "id": "cap_59",
+      "category": "definitions",
+      "question": "What does it mean for a leveraged position to be liquidated?",
+      "options": {
+        "A": "It is moved to a different exchange",
+        "B": "It is closed by force because the account's margin is no longer sufficient",
+        "C": "It is converted into a dividend payment",
+        "D": "It is held until its price doubles"
+      },
+      "answer": "B",
+      "answer_value": null,
+      "check": null
+    },
+    {
+      "id": "cap_60",
+      "category": "definitions",
+      "question": "What is a bull market?",
+      "options": {
+        "A": "A market in which no trading takes place",
+        "B": "A period in which prices are generally falling",
+        "C": "A period in which prices are generally rising",
+        "D": "A market that is open only to large institutions"
+      },
+      "answer": "C",
+      "answer_value": null,
+      "check": null
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+web/dist/
+results/site/
+results/cache/
+logs/
+jobs/
+*.webm
+.env

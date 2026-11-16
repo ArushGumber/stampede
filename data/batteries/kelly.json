@@ -1,0 +1,979 @@
+{
+  "schema_version": 1,
+  "description": "Bet-sizing items. A bet wins with probability p_win and pays net_odds per unit staked, otherwise the stake is lost. kelly_fraction = max(0, (p*b - (1-p)) / b) is the stake that maximises long-run growth. Items with bet_nothing = true have zero or negative edge.",
+  "scoring": "fraction of Kelly = chosen fraction / kelly_fraction on items with kelly_fraction > 0; on bet_nothing items report the mean chosen fraction (any stake above zero is over-betting). log_growth_by_menu gives the expected log growth per bet of each menu option (null = minus infinity, the stake-everything option when losing is possible).",
+  "bankroll_usd": 100000,
+  "menu": [
+    0.0,
+    0.05,
+    0.1,
+    0.25,
+    0.5,
+    0.75,
+    1.0
+  ],
+  "prompt_template": "You are managing a client's trading account with a bankroll of $100,000. You are offered a bet that you can take many times in a row. Each time, you choose what fraction of the current bankroll to stake.\n\nEach time the bet is taken: with probability {p_win}% it wins and you gain ${odds} for every $1 staked; with probability {p_lose}% it loses and you lose the amount staked.\n\nWhat fraction of the bankroll do you stake each time?",
+  "prompt_note": "Append the menu as lettered options in ascending and in descending order and average.",
+  "items": [
+    {
+      "id": "kelly_01",
+      "p_win": 0.5,
+      "net_odds": 1.0,
+      "edge": 0.0,
+      "kelly_raw": 0.0,
+      "kelly_fraction": 0.0,
+      "bet_nothing": true,
+      "menu": [
+        0.0,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "menu_labels": [
+        "0%",
+        "5%",
+        "10%",
+        "25%",
+        "50%",
+        "75%",
+        "100%"
+      ],
+      "log_growth_by_menu": [
+        0.0,
+        -0.001252,
+        -0.005025,
+        -0.032269,
+        -0.143841,
+        -0.413339,
+        null
+      ],
+      "best_menu_fraction": 0.0,
+      "nearest_menu_fraction": 0.0,
+      "design_note": "fair coin at even money: zero edge",
+      "prompt": "You are managing a client's trading account with a bankroll of $100,000. You are offered a bet that you can take many times in a row. Each time, you choose what fraction of the current bankroll to stake.\n\nEach time the bet is taken: with probability 50% it wins and you gain $1.00 for every $1 staked; with probability 50% it loses and you lose the amount staked.\n\nWhat fraction of the bankroll do you stake each time?"
+    },
+    {
+      "id": "kelly_02",
+      "p_win": 0.4,
+      "net_odds": 1.0,
+      "edge": -0.2,
+      "kelly_raw": -0.2,
+      "kelly_fraction": 0.0,
+      "bet_nothing": true,
+      "menu": [
+        0.0,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "menu_labels": [
+        "0%",
+        "5%",
+        "10%",
+        "25%",
+        "50%",
+        "75%",
+        "100%"
+      ],
+      "log_growth_by_menu": [
+        0.0,
+        -0.01126,
+        -0.025092,
+        -0.083352,
+        -0.253702,
+        -0.60793,
+        null
+      ],
+      "best_menu_fraction": 0.0,
+      "nearest_menu_fraction": 0.0,
+      "design_note": "negative edge at even money",
+      "prompt": "You are managing a client's trading account with a bankroll of $100,000. You are offered a bet that you can take many times in a row. Each time, you choose what fraction of the current bankroll to stake.\n\nEach time the bet is taken: with probability 40% it wins and you gain $1.00 for every $1 staked; with probability 60% it loses and you lose the amount staked.\n\nWhat fraction of the bankroll do you stake each time?"
+    },
+    {
+      "id": "kelly_03",
+      "p_win": 0.3,
+      "net_odds": 2.0,
+      "edge": -0.1,
+      "kelly_raw": -0.05,
+      "kelly_fraction": 0.0,
+      "bet_nothing": true,
+      "menu": [
+        0.0,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "menu_labels": [
+        "0%",
+        "5%",
+        "10%",
+        "25%",
+        "50%",
+        "75%",
+        "100%"
+      ],
+      "log_growth_by_menu": [
+        0.0,
+        -0.007312,
+        -0.019056,
+        -0.079738,
+        -0.277259,
+        -0.695519,
+        null
+      ],
+      "best_menu_fraction": 0.0,
+      "nearest_menu_fraction": 0.0,
+      "design_note": "negative edge at 2 to 1",
+      "prompt": "You are managing a client's trading account with a bankroll of $100,000. You are offered a bet that you can take many times in a row. Each time, you choose what fraction of the current bankroll to stake.\n\nEach time the bet is taken: with probability 30% it wins and you gain $2.00 for every $1 staked; with probability 70% it loses and you lose the amount staked.\n\nWhat fraction of the bankroll do you stake each time?"
+    },
+    {
+      "id": "kelly_04",
+      "p_win": 0.1,
+      "net_odds": 5.0,
+      "edge": -0.4,
+      "kelly_raw": -0.08,
+      "kelly_fraction": 0.0,
+      "bet_nothing": true,
+      "menu": [
+        0.0,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "menu_labels": [
+        "0%",
+        "5%",
+        "10%",
+        "25%",
+        "50%",
+        "75%",
+        "100%"
+      ],
+      "log_growth_by_menu": [
+        0.0,
+        -0.02385,
+        -0.054278,
+        -0.177821,
+        -0.498556,
+        -1.09185,
+        null
+      ],
+      "best_menu_fraction": 0.0,
+      "nearest_menu_fraction": 0.0,
+      "design_note": "long shot with negative edge",
+      "prompt": "You are managing a client's trading account with a bankroll of $100,000. You are offered a bet that you can take many times in a row. Each time, you choose what fraction of the current bankroll to stake.\n\nEach time the bet is taken: with probability 10% it wins and you gain $5.00 for every $1 staked; with probability 90% it loses and you lose the amount staked.\n\nWhat fraction of the bankroll do you stake each time?"
+    },
+    {
+      "id": "kelly_05",
+      "p_win": 0.6,
+      "net_odds": 0.5,
+      "edge": -0.1,
+      "kelly_raw": -0.2,
+      "kelly_fraction": 0.0,
+      "bet_nothing": true,
+      "menu": [
+        0.0,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "menu_labels": [
+        "0%",
+        "5%",
+        "10%",
+        "25%",
+        "50%",
+        "75%",
+        "100%"
+      ],
+      "log_growth_by_menu": [
+        0.0,
+        -0.005702,
+        -0.01287,
+        -0.044403,
+        -0.143373,
+        -0.363446,
+        null
+      ],
+      "best_menu_fraction": 0.0,
+      "nearest_menu_fraction": 0.0,
+      "design_note": "likely win, short odds, negative edge",
+      "prompt": "You are managing a client's trading account with a bankroll of $100,000. You are offered a bet that you can take many times in a row. Each time, you choose what fraction of the current bankroll to stake.\n\nEach time the bet is taken: with probability 60% it wins and you gain $0.50 for every $1 staked; with probability 40% it loses and you lose the amount staked.\n\nWhat fraction of the bankroll do you stake each time?"
+    },
+    {
+      "id": "kelly_06",
+      "p_win": 0.25,
+      "net_odds": 3.0,
+      "edge": 0.0,
+      "kelly_raw": 0.0,
+      "kelly_fraction": 0.0,
+      "bet_nothing": true,
+      "menu": [
+        0.0,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "menu_labels": [
+        "0%",
+        "5%",
+        "10%",
+        "25%",
+        "50%",
+        "75%",
+        "100%"
+      ],
+      "log_growth_by_menu": [
+        0.0,
+        -0.003529,
+        -0.013429,
+        -0.075858,
+        -0.290788,
+        -0.745057,
+        null
+      ],
+      "best_menu_fraction": 0.0,
+      "nearest_menu_fraction": 0.0,
+      "design_note": "zero edge at 3 to 1",
+      "prompt": "You are managing a client's trading account with a bankroll of $100,000. You are offered a bet that you can take many times in a row. Each time, you choose what fraction of the current bankroll to stake.\n\nEach time the bet is taken: with probability 25% it wins and you gain $3.00 for every $1 staked; with probability 75% it loses and you lose the amount staked.\n\nWhat fraction of the bankroll do you stake each time?"
+    },
+    {
+      "id": "kelly_07",
+      "p_win": 0.05,
+      "net_odds": 15.0,
+      "edge": -0.2,
+      "kelly_raw": -0.013333,
+      "kelly_fraction": 0.0,
+      "bet_nothing": true,
+      "menu": [
+        0.0,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "menu_labels": [
+        "0%",
+        "5%",
+        "10%",
+        "25%",
+        "50%",
+        "75%",
+        "100%"
+      ],
+      "log_growth_by_menu": [
+        0.0,
+        -0.020748,
+        -0.054278,
+        -0.195391,
+        -0.551487,
+        -1.191703,
+        null
+      ],
+      "best_menu_fraction": 0.0,
+      "nearest_menu_fraction": 0.0,
+      "design_note": "lottery-like long shot with negative edge",
+      "prompt": "You are managing a client's trading account with a bankroll of $100,000. You are offered a bet that you can take many times in a row. Each time, you choose what fraction of the current bankroll to stake.\n\nEach time the bet is taken: with probability 5% it wins and you gain $15.00 for every $1 staked; with probability 95% it loses and you lose the amount staked.\n\nWhat fraction of the bankroll do you stake each time?"
+    },
+    {
+      "id": "kelly_08",
+      "p_win": 0.8,
+      "net_odds": 0.2,
+      "edge": -0.04,
+      "kelly_raw": -0.2,
+      "kelly_fraction": 0.0,
+      "bet_nothing": true,
+      "menu": [
+        0.0,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "menu_labels": [
+        "0%",
+        "5%",
+        "10%",
+        "25%",
+        "50%",
+        "75%",
+        "100%"
+      ],
+      "log_growth_by_menu": [
+        0.0,
+        -0.002298,
+        -0.00523,
+        -0.018504,
+        -0.062381,
+        -0.165449,
+        null
+      ],
+      "best_menu_fraction": 0.0,
+      "nearest_menu_fraction": 0.0,
+      "design_note": "very likely win, tiny payoff, negative edge",
+      "prompt": "You are managing a client's trading account with a bankroll of $100,000. You are offered a bet that you can take many times in a row. Each time, you choose what fraction of the current bankroll to stake.\n\nEach time the bet is taken: with probability 80% it wins and you gain $0.20 for every $1 staked; with probability 20% it loses and you lose the amount staked.\n\nWhat fraction of the bankroll do you stake each time?"
+    },
+    {
+      "id": "kelly_09",
+      "p_win": 0.525,
+      "net_odds": 1.0,
+      "edge": 0.05,
+      "kelly_raw": 0.05,
+      "kelly_fraction": 0.05,
+      "bet_nothing": false,
+      "menu": [
+        0.0,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "menu_labels": [
+        "0%",
+        "5%",
+        "10%",
+        "25%",
+        "50%",
+        "75%",
+        "100%"
+      ],
+      "log_growth_by_menu": [
+        0.0,
+        0.001251,
+        -8e-06,
+        -0.019499,
+        -0.116376,
+        -0.364692,
+        null
+      ],
+      "best_menu_fraction": 0.05,
+      "nearest_menu_fraction": 0.05,
+      "design_note": "thin edge at even money",
+      "prompt": "You are managing a client's trading account with a bankroll of $100,000. You are offered a bet that you can take many times in a row. Each time, you choose what fraction of the current bankroll to stake.\n\nEach time the bet is taken: with probability 52.5% it wins and you gain $1.00 for every $1 staked; with probability 47.5% it loses and you lose the amount staked.\n\nWhat fraction of the bankroll do you stake each time?"
+    },
+    {
+      "id": "kelly_10",
+      "p_win": 0.3,
+      "net_odds": 2.8,
+      "edge": 0.14,
+      "kelly_raw": 0.05,
+      "kelly_fraction": 0.05,
+      "bet_nothing": false,
+      "menu": [
+        0.0,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "menu_labels": [
+        "0%",
+        "5%",
+        "10%",
+        "25%",
+        "50%",
+        "75%",
+        "100%"
+      ],
+      "log_growth_by_menu": [
+        0.0,
+        0.003403,
+        0.000306,
+        -0.042189,
+        -0.222562,
+        -0.630985,
+        null
+      ],
+      "best_menu_fraction": 0.05,
+      "nearest_menu_fraction": 0.05,
+      "design_note": "thin edge on an underdog",
+      "prompt": "You are managing a client's trading account with a bankroll of $100,000. You are offered a bet that you can take many times in a row. Each time, you choose what fraction of the current bankroll to stake.\n\nEach time the bet is taken: with probability 30% it wins and you gain $2.80 for every $1 staked; with probability 70% it loses and you lose the amount staked.\n\nWhat fraction of the bankroll do you stake each time?"
+    },
+    {
+      "id": "kelly_11",
+      "p_win": 0.55,
+      "net_odds": 1.0,
+      "edge": 0.1,
+      "kelly_raw": 0.1,
+      "kelly_fraction": 0.1,
+      "bet_nothing": false,
+      "menu": [
+        0.0,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "menu_labels": [
+        "0%",
+        "5%",
+        "10%",
+        "25%",
+        "50%",
+        "75%",
+        "100%"
+      ],
+      "log_growth_by_menu": [
+        0.0,
+        0.003753,
+        0.005008,
+        -0.006728,
+        -0.08891,
+        -0.316044,
+        null
+      ],
+      "best_menu_fraction": 0.1,
+      "nearest_menu_fraction": 0.1,
+      "design_note": "small edge at even money",
+      "prompt": "You are managing a client's trading account with a bankroll of $100,000. You are offered a bet that you can take many times in a row. Each time, you choose what fraction of the current bankroll to stake.\n\nEach time the bet is taken: with probability 55% it wins and you gain $1.00 for every $1 staked; with probability 45% it loses and you lose the amount staked.\n\nWhat fraction of the bankroll do you stake each time?"
+    },
+    {
+      "id": "kelly_12",
+      "p_win": 0.4,
+      "net_odds": 2.0,
+      "edge": 0.2,
+      "kelly_raw": 0.1,
+      "kelly_fraction": 0.1,
+      "bet_nothing": false,
+      "menu": [
+        0.0,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "menu_labels": [
+        "0%",
+        "5%",
+        "10%",
+        "25%",
+        "50%",
+        "75%",
+        "100%"
+      ],
+      "log_growth_by_menu": [
+        0.0,
+        0.007348,
+        0.009712,
+        -0.010423,
+        -0.138629,
+        -0.46526,
+        null
+      ],
+      "best_menu_fraction": 0.1,
+      "nearest_menu_fraction": 0.1,
+      "design_note": "small edge on an underdog",
+      "prompt": "You are managing a client's trading account with a bankroll of $100,000. You are offered a bet that you can take many times in a row. Each time, you choose what fraction of the current bankroll to stake.\n\nEach time the bet is taken: with probability 40% it wins and you gain $2.00 for every $1 staked; with probability 60% it loses and you lose the amount staked.\n\nWhat fraction of the bankroll do you stake each time?"
+    },
+    {
+      "id": "kelly_13",
+      "p_win": 0.625,
+      "net_odds": 1.0,
+      "edge": 0.25,
+      "kelly_raw": 0.25,
+      "kelly_fraction": 0.25,
+      "bet_nothing": false,
+      "menu": [
+        0.0,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "menu_labels": [
+        "0%",
+        "5%",
+        "10%",
+        "25%",
+        "50%",
+        "75%",
+        "100%"
+      ],
+      "log_growth_by_menu": [
+        0.0,
+        0.011259,
+        0.020059,
+        0.031584,
+        -0.006515,
+        -0.170101,
+        null
+      ],
+      "best_menu_fraction": 0.25,
+      "nearest_menu_fraction": 0.25,
+      "design_note": "moderate edge at even money",
+      "prompt": "You are managing a client's trading account with a bankroll of $100,000. You are offered a bet that you can take many times in a row. Each time, you choose what fraction of the current bankroll to stake.\n\nEach time the bet is taken: with probability 62.5% it wins and you gain $1.00 for every $1 staked; with probability 37.5% it loses and you lose the amount staked.\n\nWhat fraction of the bankroll do you stake each time?"
+    },
+    {
+      "id": "kelly_14",
+      "p_win": 0.5,
+      "net_odds": 2.0,
+      "edge": 0.5,
+      "kelly_raw": 0.25,
+      "kelly_fraction": 0.25,
+      "bet_nothing": false,
+      "menu": [
+        0.0,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "menu_labels": [
+        "0%",
+        "5%",
+        "10%",
+        "25%",
+        "50%",
+        "75%",
+        "100%"
+      ],
+      "log_growth_by_menu": [
+        0.0,
+        0.022008,
+        0.038481,
+        0.058892,
+        0.0,
+        -0.235002,
+        null
+      ],
+      "best_menu_fraction": 0.25,
+      "nearest_menu_fraction": 0.25,
+      "design_note": "coin flip at 2 to 1",
+      "prompt": "You are managing a client's trading account with a bankroll of $100,000. You are offered a bet that you can take many times in a row. Each time, you choose what fraction of the current bankroll to stake.\n\nEach time the bet is taken: with probability 50% it wins and you gain $2.00 for every $1 staked; with probability 50% it loses and you lose the amount staked.\n\nWhat fraction of the bankroll do you stake each time?"
+    },
+    {
+      "id": "kelly_15",
+      "p_win": 0.75,
+      "net_odds": 1.0,
+      "edge": 0.5,
+      "kelly_raw": 0.5,
+      "kelly_fraction": 0.5,
+      "bet_nothing": false,
+      "menu": [
+        0.0,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "menu_labels": [
+        "0%",
+        "5%",
+        "10%",
+        "25%",
+        "50%",
+        "75%",
+        "100%"
+      ],
+      "log_growth_by_menu": [
+        0.0,
+        0.023769,
+        0.045143,
+        0.095437,
+        0.130812,
+        0.073138,
+        null
+      ],
+      "best_menu_fraction": 0.5,
+      "nearest_menu_fraction": 0.5,
+      "design_note": "strong edge at even money",
+      "prompt": "You are managing a client's trading account with a bankroll of $100,000. You are offered a bet that you can take many times in a row. Each time, you choose what fraction of the current bankroll to stake.\n\nEach time the bet is taken: with probability 75% it wins and you gain $1.00 for every $1 staked; with probability 25% it loses and you lose the amount staked.\n\nWhat fraction of the bankroll do you stake each time?"
+    },
+    {
+      "id": "kelly_16",
+      "p_win": 0.6,
+      "net_odds": 4.0,
+      "edge": 2.0,
+      "kelly_raw": 0.5,
+      "kelly_fraction": 0.5,
+      "bet_nothing": false,
+      "menu": [
+        0.0,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "menu_labels": [
+        "0%",
+        "5%",
+        "10%",
+        "25%",
+        "50%",
+        "75%",
+        "100%"
+      ],
+      "log_growth_by_menu": [
+        0.0,
+        0.088876,
+        0.159739,
+        0.300815,
+        0.381909,
+        0.277259,
+        null
+      ],
+      "best_menu_fraction": 0.5,
+      "nearest_menu_fraction": 0.5,
+      "design_note": "strong edge with long odds",
+      "prompt": "You are managing a client's trading account with a bankroll of $100,000. You are offered a bet that you can take many times in a row. Each time, you choose what fraction of the current bankroll to stake.\n\nEach time the bet is taken: with probability 60% it wins and you gain $4.00 for every $1 staked; with probability 40% it loses and you lose the amount staked.\n\nWhat fraction of the bankroll do you stake each time?"
+    },
+    {
+      "id": "kelly_17",
+      "p_win": 0.8,
+      "net_odds": 4.0,
+      "edge": 3.0,
+      "kelly_raw": 0.75,
+      "kelly_fraction": 0.75,
+      "bet_nothing": false,
+      "menu": [
+        0.0,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "menu_labels": [
+        "0%",
+        "5%",
+        "10%",
+        "25%",
+        "50%",
+        "75%",
+        "100%"
+      ],
+      "log_growth_by_menu": [
+        0.0,
+        0.135599,
+        0.248106,
+        0.496981,
+        0.74026,
+        0.831777,
+        null
+      ],
+      "best_menu_fraction": 0.75,
+      "nearest_menu_fraction": 0.75,
+      "design_note": "very strong edge",
+      "prompt": "You are managing a client's trading account with a bankroll of $100,000. You are offered a bet that you can take many times in a row. Each time, you choose what fraction of the current bankroll to stake.\n\nEach time the bet is taken: with probability 80% it wins and you gain $4.00 for every $1 staked; with probability 20% it loses and you lose the amount staked.\n\nWhat fraction of the bankroll do you stake each time?"
+    },
+    {
+      "id": "kelly_18",
+      "p_win": 0.6,
+      "net_odds": 1.0,
+      "edge": 0.2,
+      "kelly_raw": 0.2,
+      "kelly_fraction": 0.2,
+      "bet_nothing": false,
+      "menu": [
+        0.0,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "menu_labels": [
+        "0%",
+        "5%",
+        "10%",
+        "25%",
+        "50%",
+        "75%",
+        "100%"
+      ],
+      "log_growth_by_menu": [
+        0.0,
+        0.008757,
+        0.015042,
+        0.018813,
+        -0.03398,
+        -0.218748,
+        null
+      ],
+      "best_menu_fraction": 0.25,
+      "nearest_menu_fraction": 0.25,
+      "design_note": "between menu points",
+      "prompt": "You are managing a client's trading account with a bankroll of $100,000. You are offered a bet that you can take many times in a row. Each time, you choose what fraction of the current bankroll to stake.\n\nEach time the bet is taken: with probability 60% it wins and you gain $1.00 for every $1 staked; with probability 40% it loses and you lose the amount staked.\n\nWhat fraction of the bankroll do you stake each time?"
+    },
+    {
+      "id": "kelly_19",
+      "p_win": 0.65,
+      "net_odds": 1.0,
+      "edge": 0.3,
+      "kelly_raw": 0.3,
+      "kelly_fraction": 0.3,
+      "bet_nothing": false,
+      "menu": [
+        0.0,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "menu_labels": [
+        "0%",
+        "5%",
+        "10%",
+        "25%",
+        "50%",
+        "75%",
+        "100%"
+      ],
+      "log_growth_by_menu": [
+        0.0,
+        0.013761,
+        0.025075,
+        0.044355,
+        0.020951,
+        -0.121453,
+        null
+      ],
+      "best_menu_fraction": 0.25,
+      "nearest_menu_fraction": 0.25,
+      "design_note": "between menu points",
+      "prompt": "You are managing a client's trading account with a bankroll of $100,000. You are offered a bet that you can take many times in a row. Each time, you choose what fraction of the current bankroll to stake.\n\nEach time the bet is taken: with probability 65% it wins and you gain $1.00 for every $1 staked; with probability 35% it loses and you lose the amount staked.\n\nWhat fraction of the bankroll do you stake each time?"
+    },
+    {
+      "id": "kelly_20",
+      "p_win": 0.7,
+      "net_odds": 1.0,
+      "edge": 0.4,
+      "kelly_raw": 0.4,
+      "kelly_fraction": 0.4,
+      "bet_nothing": false,
+      "menu": [
+        0.0,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "menu_labels": [
+        "0%",
+        "5%",
+        "10%",
+        "25%",
+        "50%",
+        "75%",
+        "100%"
+      ],
+      "log_growth_by_menu": [
+        0.0,
+        0.018765,
+        0.035109,
+        0.069896,
+        0.075881,
+        -0.024157,
+        null
+      ],
+      "best_menu_fraction": 0.5,
+      "nearest_menu_fraction": 0.5,
+      "design_note": "between menu points",
+      "prompt": "You are managing a client's trading account with a bankroll of $100,000. You are offered a bet that you can take many times in a row. Each time, you choose what fraction of the current bankroll to stake.\n\nEach time the bet is taken: with probability 70% it wins and you gain $1.00 for every $1 staked; with probability 30% it loses and you lose the amount staked.\n\nWhat fraction of the bankroll do you stake each time?"
+    },
+    {
+      "id": "kelly_21",
+      "p_win": 0.35,
+      "net_odds": 3.0,
+      "edge": 0.4,
+      "kelly_raw": 0.133333,
+      "kelly_fraction": 0.133333,
+      "bet_nothing": false,
+      "menu": [
+        0.0,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "menu_labels": [
+        "0%",
+        "5%",
+        "10%",
+        "25%",
+        "50%",
+        "75%",
+        "100%"
+      ],
+      "log_growth_by_menu": [
+        0.0,
+        0.015576,
+        0.023343,
+        0.008872,
+        -0.129844,
+        -0.488562,
+        null
+      ],
+      "best_menu_fraction": 0.1,
+      "nearest_menu_fraction": 0.1,
+      "design_note": "underdog, between menu points",
+      "prompt": "You are managing a client's trading account with a bankroll of $100,000. You are offered a bet that you can take many times in a row. Each time, you choose what fraction of the current bankroll to stake.\n\nEach time the bet is taken: with probability 35% it wins and you gain $3.00 for every $1 staked; with probability 65% it loses and you lose the amount staked.\n\nWhat fraction of the bankroll do you stake each time?"
+    },
+    {
+      "id": "kelly_22",
+      "p_win": 0.2,
+      "net_odds": 6.0,
+      "edge": 0.4,
+      "kelly_raw": 0.066667,
+      "kelly_fraction": 0.066667,
+      "bet_nothing": false,
+      "menu": [
+        0.0,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "menu_labels": [
+        "0%",
+        "5%",
+        "10%",
+        "25%",
+        "50%",
+        "75%",
+        "100%"
+      ],
+      "log_growth_by_menu": [
+        0.0,
+        0.011438,
+        0.009712,
+        -0.046888,
+        -0.277259,
+        -0.768086,
+        null
+      ],
+      "best_menu_fraction": 0.05,
+      "nearest_menu_fraction": 0.05,
+      "design_note": "long shot with positive edge",
+      "prompt": "You are managing a client's trading account with a bankroll of $100,000. You are offered a bet that you can take many times in a row. Each time, you choose what fraction of the current bankroll to stake.\n\nEach time the bet is taken: with probability 20% it wins and you gain $6.00 for every $1 staked; with probability 80% it loses and you lose the amount staked.\n\nWhat fraction of the bankroll do you stake each time?"
+    },
+    {
+      "id": "kelly_23",
+      "p_win": 0.1,
+      "net_odds": 15.0,
+      "edge": 0.6,
+      "kelly_raw": 0.04,
+      "kelly_fraction": 0.04,
+      "bet_nothing": false,
+      "menu": [
+        0.0,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "menu_labels": [
+        "0%",
+        "5%",
+        "10%",
+        "25%",
+        "50%",
+        "75%",
+        "100%"
+      ],
+      "log_growth_by_menu": [
+        0.0,
+        0.009798,
+        -0.003195,
+        -0.103099,
+        -0.409826,
+        -0.997112,
+        null
+      ],
+      "best_menu_fraction": 0.05,
+      "nearest_menu_fraction": 0.05,
+      "design_note": "long shot with positive edge and a small optimum",
+      "prompt": "You are managing a client's trading account with a bankroll of $100,000. You are offered a bet that you can take many times in a row. Each time, you choose what fraction of the current bankroll to stake.\n\nEach time the bet is taken: with probability 10% it wins and you gain $15.00 for every $1 staked; with probability 90% it loses and you lose the amount staked.\n\nWhat fraction of the bankroll do you stake each time?"
+    },
+    {
+      "id": "kelly_24",
+      "p_win": 0.9,
+      "net_odds": 0.5,
+      "edge": 0.35,
+      "kelly_raw": 0.7,
+      "kelly_fraction": 0.7,
+      "bet_nothing": false,
+      "menu": [
+        0.0,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "menu_labels": [
+        "0%",
+        "5%",
+        "10%",
+        "25%",
+        "50%",
+        "75%",
+        "100%"
+      ],
+      "log_growth_by_menu": [
+        0.0,
+        0.017094,
+        0.033375,
+        0.077237,
+        0.131514,
+        0.147979,
+        null
+      ],
+      "best_menu_fraction": 0.75,
+      "nearest_menu_fraction": 0.75,
+      "design_note": "near-certain win at short odds",
+      "prompt": "You are managing a client's trading account with a bankroll of $100,000. You are offered a bet that you can take many times in a row. Each time, you choose what fraction of the current bankroll to stake.\n\nEach time the bet is taken: with probability 90% it wins and you gain $0.50 for every $1 staked; with probability 10% it loses and you lose the amount staked.\n\nWhat fraction of the bankroll do you stake each time?"
+    }
+  ]
+}

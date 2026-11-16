@@ -1,0 +1,2146 @@
+{
+  "schema_version": 1,
+  "description": "Single-step trading situations. Items 1 to 16 have no headline (momentum x exposure x profit-and-loss, per regime). Items 17 to 48 are 16 matched pairs (regime x direction x severity x tape) that are identical except for the headline's source type.",
+  "scoring": "Read the chosen target exposure from the menu. Reaction = chosen exposure minus current exposure, signed so that moving with the headline is positive (sell on bearish, buy on bullish). Credulity = reaction to the unverified item divided by reaction to its verified twin, or their difference; a sceptic reacts to verified items only.",
+  "menus": {
+    "equity": [
+      0,
+      0.25,
+      0.5,
+      1,
+      1.5,
+      2
+    ],
+    "crypto": [
+      0,
+      0.5,
+      1,
+      2,
+      5,
+      10
+    ]
+  },
+  "max_leverage": {
+    "equity": 2,
+    "crypto": 10
+  },
+  "source_types": [
+    "verified wire",
+    "unverified social post"
+  ],
+  "prompt_note": "prompt is the stem; append the menu as lettered options in ascending and in descending order and average. ret_1, ret_5 and pnl_pct are percentages; exposure and menu entries are multiples of account equity.",
+  "items": [
+    {
+      "id": "tv_001",
+      "regime": "equity",
+      "symbol": "HLVN",
+      "asset_name": "Halvorsen Industries",
+      "ret_1": 0.6,
+      "ret_5": 2.4,
+      "exposure": 0.5,
+      "pnl_pct": 6.0,
+      "max_leverage": 2,
+      "headline": null,
+      "menu": [
+        0,
+        0.25,
+        0.5,
+        1,
+        1.5,
+        2
+      ],
+      "menu_labels": [
+        "0x",
+        "0.25x",
+        "0.5x",
+        "1x",
+        "1.5x",
+        "2x"
+      ],
+      "pair_id": null,
+      "factors": {
+        "regime": "equity",
+        "headline": "none",
+        "source": "none",
+        "severity": "none",
+        "tape": "none",
+        "momentum": "up",
+        "exposure_level": "low",
+        "pnl_state": "gain"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Halvorsen Industries (HLVN), a listed equity. The account may hold a position worth between 0x and 2x its equity.\n\nMarket: HLVN moved +0.6% over the last tick and +2.4% over the last 5 ticks.\nAccount: current exposure is 0.5x equity; profit and loss so far is +6.0%.\nNews: none.\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_002",
+      "regime": "equity",
+      "symbol": "HLVN",
+      "asset_name": "Halvorsen Industries",
+      "ret_1": 0.6,
+      "ret_5": 2.4,
+      "exposure": 0.5,
+      "pnl_pct": -6.0,
+      "max_leverage": 2,
+      "headline": null,
+      "menu": [
+        0,
+        0.25,
+        0.5,
+        1,
+        1.5,
+        2
+      ],
+      "menu_labels": [
+        "0x",
+        "0.25x",
+        "0.5x",
+        "1x",
+        "1.5x",
+        "2x"
+      ],
+      "pair_id": null,
+      "factors": {
+        "regime": "equity",
+        "headline": "none",
+        "source": "none",
+        "severity": "none",
+        "tape": "none",
+        "momentum": "up",
+        "exposure_level": "low",
+        "pnl_state": "loss"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Halvorsen Industries (HLVN), a listed equity. The account may hold a position worth between 0x and 2x its equity.\n\nMarket: HLVN moved +0.6% over the last tick and +2.4% over the last 5 ticks.\nAccount: current exposure is 0.5x equity; profit and loss so far is -6.0%.\nNews: none.\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_003",
+      "regime": "equity",
+      "symbol": "HLVN",
+      "asset_name": "Halvorsen Industries",
+      "ret_1": 0.6,
+      "ret_5": 2.4,
+      "exposure": 1.5,
+      "pnl_pct": 6.0,
+      "max_leverage": 2,
+      "headline": null,
+      "menu": [
+        0,
+        0.25,
+        0.5,
+        1,
+        1.5,
+        2
+      ],
+      "menu_labels": [
+        "0x",
+        "0.25x",
+        "0.5x",
+        "1x",
+        "1.5x",
+        "2x"
+      ],
+      "pair_id": null,
+      "factors": {
+        "regime": "equity",
+        "headline": "none",
+        "source": "none",
+        "severity": "none",
+        "tape": "none",
+        "momentum": "up",
+        "exposure_level": "high",
+        "pnl_state": "gain"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Halvorsen Industries (HLVN), a listed equity. The account may hold a position worth between 0x and 2x its equity.\n\nMarket: HLVN moved +0.6% over the last tick and +2.4% over the last 5 ticks.\nAccount: current exposure is 1.5x equity; profit and loss so far is +6.0%.\nNews: none.\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_004",
+      "regime": "equity",
+      "symbol": "HLVN",
+      "asset_name": "Halvorsen Industries",
+      "ret_1": 0.6,
+      "ret_5": 2.4,
+      "exposure": 1.5,
+      "pnl_pct": -6.0,
+      "max_leverage": 2,
+      "headline": null,
+      "menu": [
+        0,
+        0.25,
+        0.5,
+        1,
+        1.5,
+        2
+      ],
+      "menu_labels": [
+        "0x",
+        "0.25x",
+        "0.5x",
+        "1x",
+        "1.5x",
+        "2x"
+      ],
+      "pair_id": null,
+      "factors": {
+        "regime": "equity",
+        "headline": "none",
+        "source": "none",
+        "severity": "none",
+        "tape": "none",
+        "momentum": "up",
+        "exposure_level": "high",
+        "pnl_state": "loss"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Halvorsen Industries (HLVN), a listed equity. The account may hold a position worth between 0x and 2x its equity.\n\nMarket: HLVN moved +0.6% over the last tick and +2.4% over the last 5 ticks.\nAccount: current exposure is 1.5x equity; profit and loss so far is -6.0%.\nNews: none.\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_005",
+      "regime": "equity",
+      "symbol": "HLVN",
+      "asset_name": "Halvorsen Industries",
+      "ret_1": -0.7,
+      "ret_5": -2.8,
+      "exposure": 0.5,
+      "pnl_pct": 6.0,
+      "max_leverage": 2,
+      "headline": null,
+      "menu": [
+        0,
+        0.25,
+        0.5,
+        1,
+        1.5,
+        2
+      ],
+      "menu_labels": [
+        "0x",
+        "0.25x",
+        "0.5x",
+        "1x",
+        "1.5x",
+        "2x"
+      ],
+      "pair_id": null,
+      "factors": {
+        "regime": "equity",
+        "headline": "none",
+        "source": "none",
+        "severity": "none",
+        "tape": "none",
+        "momentum": "down",
+        "exposure_level": "low",
+        "pnl_state": "gain"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Halvorsen Industries (HLVN), a listed equity. The account may hold a position worth between 0x and 2x its equity.\n\nMarket: HLVN moved -0.7% over the last tick and -2.8% over the last 5 ticks.\nAccount: current exposure is 0.5x equity; profit and loss so far is +6.0%.\nNews: none.\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_006",
+      "regime": "equity",
+      "symbol": "HLVN",
+      "asset_name": "Halvorsen Industries",
+      "ret_1": -0.7,
+      "ret_5": -2.8,
+      "exposure": 0.5,
+      "pnl_pct": -6.0,
+      "max_leverage": 2,
+      "headline": null,
+      "menu": [
+        0,
+        0.25,
+        0.5,
+        1,
+        1.5,
+        2
+      ],
+      "menu_labels": [
+        "0x",
+        "0.25x",
+        "0.5x",
+        "1x",
+        "1.5x",
+        "2x"
+      ],
+      "pair_id": null,
+      "factors": {
+        "regime": "equity",
+        "headline": "none",
+        "source": "none",
+        "severity": "none",
+        "tape": "none",
+        "momentum": "down",
+        "exposure_level": "low",
+        "pnl_state": "loss"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Halvorsen Industries (HLVN), a listed equity. The account may hold a position worth between 0x and 2x its equity.\n\nMarket: HLVN moved -0.7% over the last tick and -2.8% over the last 5 ticks.\nAccount: current exposure is 0.5x equity; profit and loss so far is -6.0%.\nNews: none.\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_007",
+      "regime": "equity",
+      "symbol": "HLVN",
+      "asset_name": "Halvorsen Industries",
+      "ret_1": -0.7,
+      "ret_5": -2.8,
+      "exposure": 1.5,
+      "pnl_pct": 6.0,
+      "max_leverage": 2,
+      "headline": null,
+      "menu": [
+        0,
+        0.25,
+        0.5,
+        1,
+        1.5,
+        2
+      ],
+      "menu_labels": [
+        "0x",
+        "0.25x",
+        "0.5x",
+        "1x",
+        "1.5x",
+        "2x"
+      ],
+      "pair_id": null,
+      "factors": {
+        "regime": "equity",
+        "headline": "none",
+        "source": "none",
+        "severity": "none",
+        "tape": "none",
+        "momentum": "down",
+        "exposure_level": "high",
+        "pnl_state": "gain"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Halvorsen Industries (HLVN), a listed equity. The account may hold a position worth between 0x and 2x its equity.\n\nMarket: HLVN moved -0.7% over the last tick and -2.8% over the last 5 ticks.\nAccount: current exposure is 1.5x equity; profit and loss so far is +6.0%.\nNews: none.\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_008",
+      "regime": "equity",
+      "symbol": "HLVN",
+      "asset_name": "Halvorsen Industries",
+      "ret_1": -0.7,
+      "ret_5": -2.8,
+      "exposure": 1.5,
+      "pnl_pct": -6.0,
+      "max_leverage": 2,
+      "headline": null,
+      "menu": [
+        0,
+        0.25,
+        0.5,
+        1,
+        1.5,
+        2
+      ],
+      "menu_labels": [
+        "0x",
+        "0.25x",
+        "0.5x",
+        "1x",
+        "1.5x",
+        "2x"
+      ],
+      "pair_id": null,
+      "factors": {
+        "regime": "equity",
+        "headline": "none",
+        "source": "none",
+        "severity": "none",
+        "tape": "none",
+        "momentum": "down",
+        "exposure_level": "high",
+        "pnl_state": "loss"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Halvorsen Industries (HLVN), a listed equity. The account may hold a position worth between 0x and 2x its equity.\n\nMarket: HLVN moved -0.7% over the last tick and -2.8% over the last 5 ticks.\nAccount: current exposure is 1.5x equity; profit and loss so far is -6.0%.\nNews: none.\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_009",
+      "regime": "crypto",
+      "symbol": "MRD",
+      "asset_name": "Meridian",
+      "ret_1": 2.5,
+      "ret_5": 9.0,
+      "exposure": 1,
+      "pnl_pct": 18.0,
+      "max_leverage": 10,
+      "headline": null,
+      "menu": [
+        0,
+        0.5,
+        1,
+        2,
+        5,
+        10
+      ],
+      "menu_labels": [
+        "0x",
+        "0.5x",
+        "1x",
+        "2x",
+        "5x",
+        "10x"
+      ],
+      "pair_id": null,
+      "factors": {
+        "regime": "crypto",
+        "headline": "none",
+        "source": "none",
+        "severity": "none",
+        "tape": "none",
+        "momentum": "up",
+        "exposure_level": "low",
+        "pnl_state": "gain"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Meridian (MRD), a crypto asset. The account may hold a position worth between 0x and 10x its equity.\n\nMarket: MRD moved +2.5% over the last tick and +9.0% over the last 5 ticks.\nAccount: current exposure is 1x equity; profit and loss so far is +18.0%.\nNews: none.\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_010",
+      "regime": "crypto",
+      "symbol": "MRD",
+      "asset_name": "Meridian",
+      "ret_1": 2.5,
+      "ret_5": 9.0,
+      "exposure": 1,
+      "pnl_pct": -18.0,
+      "max_leverage": 10,
+      "headline": null,
+      "menu": [
+        0,
+        0.5,
+        1,
+        2,
+        5,
+        10
+      ],
+      "menu_labels": [
+        "0x",
+        "0.5x",
+        "1x",
+        "2x",
+        "5x",
+        "10x"
+      ],
+      "pair_id": null,
+      "factors": {
+        "regime": "crypto",
+        "headline": "none",
+        "source": "none",
+        "severity": "none",
+        "tape": "none",
+        "momentum": "up",
+        "exposure_level": "low",
+        "pnl_state": "loss"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Meridian (MRD), a crypto asset. The account may hold a position worth between 0x and 10x its equity.\n\nMarket: MRD moved +2.5% over the last tick and +9.0% over the last 5 ticks.\nAccount: current exposure is 1x equity; profit and loss so far is -18.0%.\nNews: none.\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_011",
+      "regime": "crypto",
+      "symbol": "MRD",
+      "asset_name": "Meridian",
+      "ret_1": 2.5,
+      "ret_5": 9.0,
+      "exposure": 5,
+      "pnl_pct": 18.0,
+      "max_leverage": 10,
+      "headline": null,
+      "menu": [
+        0,
+        0.5,
+        1,
+        2,
+        5,
+        10
+      ],
+      "menu_labels": [
+        "0x",
+        "0.5x",
+        "1x",
+        "2x",
+        "5x",
+        "10x"
+      ],
+      "pair_id": null,
+      "factors": {
+        "regime": "crypto",
+        "headline": "none",
+        "source": "none",
+        "severity": "none",
+        "tape": "none",
+        "momentum": "up",
+        "exposure_level": "high",
+        "pnl_state": "gain"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Meridian (MRD), a crypto asset. The account may hold a position worth between 0x and 10x its equity.\n\nMarket: MRD moved +2.5% over the last tick and +9.0% over the last 5 ticks.\nAccount: current exposure is 5x equity; profit and loss so far is +18.0%.\nNews: none.\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_012",
+      "regime": "crypto",
+      "symbol": "MRD",
+      "asset_name": "Meridian",
+      "ret_1": 2.5,
+      "ret_5": 9.0,
+      "exposure": 5,
+      "pnl_pct": -18.0,
+      "max_leverage": 10,
+      "headline": null,
+      "menu": [
+        0,
+        0.5,
+        1,
+        2,
+        5,
+        10
+      ],
+      "menu_labels": [
+        "0x",
+        "0.5x",
+        "1x",
+        "2x",
+        "5x",
+        "10x"
+      ],
+      "pair_id": null,
+      "factors": {
+        "regime": "crypto",
+        "headline": "none",
+        "source": "none",
+        "severity": "none",
+        "tape": "none",
+        "momentum": "up",
+        "exposure_level": "high",
+        "pnl_state": "loss"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Meridian (MRD), a crypto asset. The account may hold a position worth between 0x and 10x its equity.\n\nMarket: MRD moved +2.5% over the last tick and +9.0% over the last 5 ticks.\nAccount: current exposure is 5x equity; profit and loss so far is -18.0%.\nNews: none.\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_013",
+      "regime": "crypto",
+      "symbol": "MRD",
+      "asset_name": "Meridian",
+      "ret_1": -3.0,
+      "ret_5": -11.0,
+      "exposure": 1,
+      "pnl_pct": 18.0,
+      "max_leverage": 10,
+      "headline": null,
+      "menu": [
+        0,
+        0.5,
+        1,
+        2,
+        5,
+        10
+      ],
+      "menu_labels": [
+        "0x",
+        "0.5x",
+        "1x",
+        "2x",
+        "5x",
+        "10x"
+      ],
+      "pair_id": null,
+      "factors": {
+        "regime": "crypto",
+        "headline": "none",
+        "source": "none",
+        "severity": "none",
+        "tape": "none",
+        "momentum": "down",
+        "exposure_level": "low",
+        "pnl_state": "gain"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Meridian (MRD), a crypto asset. The account may hold a position worth between 0x and 10x its equity.\n\nMarket: MRD moved -3.0% over the last tick and -11.0% over the last 5 ticks.\nAccount: current exposure is 1x equity; profit and loss so far is +18.0%.\nNews: none.\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_014",
+      "regime": "crypto",
+      "symbol": "MRD",
+      "asset_name": "Meridian",
+      "ret_1": -3.0,
+      "ret_5": -11.0,
+      "exposure": 1,
+      "pnl_pct": -18.0,
+      "max_leverage": 10,
+      "headline": null,
+      "menu": [
+        0,
+        0.5,
+        1,
+        2,
+        5,
+        10
+      ],
+      "menu_labels": [
+        "0x",
+        "0.5x",
+        "1x",
+        "2x",
+        "5x",
+        "10x"
+      ],
+      "pair_id": null,
+      "factors": {
+        "regime": "crypto",
+        "headline": "none",
+        "source": "none",
+        "severity": "none",
+        "tape": "none",
+        "momentum": "down",
+        "exposure_level": "low",
+        "pnl_state": "loss"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Meridian (MRD), a crypto asset. The account may hold a position worth between 0x and 10x its equity.\n\nMarket: MRD moved -3.0% over the last tick and -11.0% over the last 5 ticks.\nAccount: current exposure is 1x equity; profit and loss so far is -18.0%.\nNews: none.\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_015",
+      "regime": "crypto",
+      "symbol": "MRD",
+      "asset_name": "Meridian",
+      "ret_1": -3.0,
+      "ret_5": -11.0,
+      "exposure": 5,
+      "pnl_pct": 18.0,
+      "max_leverage": 10,
+      "headline": null,
+      "menu": [
+        0,
+        0.5,
+        1,
+        2,
+        5,
+        10
+      ],
+      "menu_labels": [
+        "0x",
+        "0.5x",
+        "1x",
+        "2x",
+        "5x",
+        "10x"
+      ],
+      "pair_id": null,
+      "factors": {
+        "regime": "crypto",
+        "headline": "none",
+        "source": "none",
+        "severity": "none",
+        "tape": "none",
+        "momentum": "down",
+        "exposure_level": "high",
+        "pnl_state": "gain"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Meridian (MRD), a crypto asset. The account may hold a position worth between 0x and 10x its equity.\n\nMarket: MRD moved -3.0% over the last tick and -11.0% over the last 5 ticks.\nAccount: current exposure is 5x equity; profit and loss so far is +18.0%.\nNews: none.\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_016",
+      "regime": "crypto",
+      "symbol": "MRD",
+      "asset_name": "Meridian",
+      "ret_1": -3.0,
+      "ret_5": -11.0,
+      "exposure": 5,
+      "pnl_pct": -18.0,
+      "max_leverage": 10,
+      "headline": null,
+      "menu": [
+        0,
+        0.5,
+        1,
+        2,
+        5,
+        10
+      ],
+      "menu_labels": [
+        "0x",
+        "0.5x",
+        "1x",
+        "2x",
+        "5x",
+        "10x"
+      ],
+      "pair_id": null,
+      "factors": {
+        "regime": "crypto",
+        "headline": "none",
+        "source": "none",
+        "severity": "none",
+        "tape": "none",
+        "momentum": "down",
+        "exposure_level": "high",
+        "pnl_state": "loss"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Meridian (MRD), a crypto asset. The account may hold a position worth between 0x and 10x its equity.\n\nMarket: MRD moved -3.0% over the last tick and -11.0% over the last 5 ticks.\nAccount: current exposure is 5x equity; profit and loss so far is -18.0%.\nNews: none.\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_017",
+      "regime": "equity",
+      "symbol": "HLVN",
+      "asset_name": "Halvorsen Industries",
+      "ret_1": 0.1,
+      "ret_5": 0.3,
+      "exposure": 1,
+      "pnl_pct": 3.0,
+      "max_leverage": 2,
+      "headline": {
+        "text": "Halvorsen Industries cuts its full-year revenue forecast by 4%, citing slower orders.",
+        "direction": "bearish",
+        "source_type": "verified wire",
+        "verified": true,
+        "severity": "moderate"
+      },
+      "menu": [
+        0,
+        0.25,
+        0.5,
+        1,
+        1.5,
+        2
+      ],
+      "menu_labels": [
+        "0x",
+        "0.25x",
+        "0.5x",
+        "1x",
+        "1.5x",
+        "2x"
+      ],
+      "pair_id": "pair_01",
+      "factors": {
+        "regime": "equity",
+        "headline": "bearish",
+        "source": "verified",
+        "severity": "moderate",
+        "tape": "quiet",
+        "momentum": "flat",
+        "exposure_level": "mid",
+        "pnl_state": "gain"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Halvorsen Industries (HLVN), a listed equity. The account may hold a position worth between 0x and 2x its equity.\n\nMarket: HLVN moved +0.1% over the last tick and +0.3% over the last 5 ticks.\nAccount: current exposure is 1x equity; profit and loss so far is +3.0%.\nNews (source: verified wire): \"Halvorsen Industries cuts its full-year revenue forecast by 4%, citing slower orders.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_018",
+      "regime": "equity",
+      "symbol": "HLVN",
+      "asset_name": "Halvorsen Industries",
+      "ret_1": 0.1,
+      "ret_5": 0.3,
+      "exposure": 1,
+      "pnl_pct": 3.0,
+      "max_leverage": 2,
+      "headline": {
+        "text": "Halvorsen Industries cuts its full-year revenue forecast by 4%, citing slower orders.",
+        "direction": "bearish",
+        "source_type": "unverified social post",
+        "verified": false,
+        "severity": "moderate"
+      },
+      "menu": [
+        0,
+        0.25,
+        0.5,
+        1,
+        1.5,
+        2
+      ],
+      "menu_labels": [
+        "0x",
+        "0.25x",
+        "0.5x",
+        "1x",
+        "1.5x",
+        "2x"
+      ],
+      "pair_id": "pair_01",
+      "factors": {
+        "regime": "equity",
+        "headline": "bearish",
+        "source": "unverified",
+        "severity": "moderate",
+        "tape": "quiet",
+        "momentum": "flat",
+        "exposure_level": "mid",
+        "pnl_state": "gain"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Halvorsen Industries (HLVN), a listed equity. The account may hold a position worth between 0x and 2x its equity.\n\nMarket: HLVN moved +0.1% over the last tick and +0.3% over the last 5 ticks.\nAccount: current exposure is 1x equity; profit and loss so far is +3.0%.\nNews (source: unverified social post): \"Halvorsen Industries cuts its full-year revenue forecast by 4%, citing slower orders.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_019",
+      "regime": "equity",
+      "symbol": "HLVN",
+      "asset_name": "Halvorsen Industries",
+      "ret_1": -0.9,
+      "ret_5": -1.8,
+      "exposure": 0.5,
+      "pnl_pct": -2.0,
+      "max_leverage": 2,
+      "headline": {
+        "text": "Halvorsen Industries says a dispute with a key supplier will delay shipments by about three weeks.",
+        "direction": "bearish",
+        "source_type": "verified wire",
+        "verified": true,
+        "severity": "moderate"
+      },
+      "menu": [
+        0,
+        0.25,
+        0.5,
+        1,
+        1.5,
+        2
+      ],
+      "menu_labels": [
+        "0x",
+        "0.25x",
+        "0.5x",
+        "1x",
+        "1.5x",
+        "2x"
+      ],
+      "pair_id": "pair_02",
+      "factors": {
+        "regime": "equity",
+        "headline": "bearish",
+        "source": "verified",
+        "severity": "moderate",
+        "tape": "confirming",
+        "momentum": "down",
+        "exposure_level": "mid",
+        "pnl_state": "loss"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Halvorsen Industries (HLVN), a listed equity. The account may hold a position worth between 0x and 2x its equity.\n\nMarket: HLVN moved -0.9% over the last tick and -1.8% over the last 5 ticks.\nAccount: current exposure is 0.5x equity; profit and loss so far is -2.0%.\nNews (source: verified wire): \"Halvorsen Industries says a dispute with a key supplier will delay shipments by about three weeks.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_020",
+      "regime": "equity",
+      "symbol": "HLVN",
+      "asset_name": "Halvorsen Industries",
+      "ret_1": -0.9,
+      "ret_5": -1.8,
+      "exposure": 0.5,
+      "pnl_pct": -2.0,
+      "max_leverage": 2,
+      "headline": {
+        "text": "Halvorsen Industries says a dispute with a key supplier will delay shipments by about three weeks.",
+        "direction": "bearish",
+        "source_type": "unverified social post",
+        "verified": false,
+        "severity": "moderate"
+      },
+      "menu": [
+        0,
+        0.25,
+        0.5,
+        1,
+        1.5,
+        2
+      ],
+      "menu_labels": [
+        "0x",
+        "0.25x",
+        "0.5x",
+        "1x",
+        "1.5x",
+        "2x"
+      ],
+      "pair_id": "pair_02",
+      "factors": {
+        "regime": "equity",
+        "headline": "bearish",
+        "source": "unverified",
+        "severity": "moderate",
+        "tape": "confirming",
+        "momentum": "down",
+        "exposure_level": "mid",
+        "pnl_state": "loss"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Halvorsen Industries (HLVN), a listed equity. The account may hold a position worth between 0x and 2x its equity.\n\nMarket: HLVN moved -0.9% over the last tick and -1.8% over the last 5 ticks.\nAccount: current exposure is 0.5x equity; profit and loss so far is -2.0%.\nNews (source: unverified social post): \"Halvorsen Industries says a dispute with a key supplier will delay shipments by about three weeks.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_021",
+      "regime": "equity",
+      "symbol": "HLVN",
+      "asset_name": "Halvorsen Industries",
+      "ret_1": 0.1,
+      "ret_5": 0.3,
+      "exposure": 1,
+      "pnl_pct": 3.0,
+      "max_leverage": 2,
+      "headline": {
+        "text": "Halvorsen Industries will restate two years of earnings after finding accounting errors; its chief financial officer has resigned.",
+        "direction": "bearish",
+        "source_type": "verified wire",
+        "verified": true,
+        "severity": "severe"
+      },
+      "menu": [
+        0,
+        0.25,
+        0.5,
+        1,
+        1.5,
+        2
+      ],
+      "menu_labels": [
+        "0x",
+        "0.25x",
+        "0.5x",
+        "1x",
+        "1.5x",
+        "2x"
+      ],
+      "pair_id": "pair_03",
+      "factors": {
+        "regime": "equity",
+        "headline": "bearish",
+        "source": "verified",
+        "severity": "severe",
+        "tape": "quiet",
+        "momentum": "flat",
+        "exposure_level": "mid",
+        "pnl_state": "gain"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Halvorsen Industries (HLVN), a listed equity. The account may hold a position worth between 0x and 2x its equity.\n\nMarket: HLVN moved +0.1% over the last tick and +0.3% over the last 5 ticks.\nAccount: current exposure is 1x equity; profit and loss so far is +3.0%.\nNews (source: verified wire): \"Halvorsen Industries will restate two years of earnings after finding accounting errors; its chief financial officer has resigned.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_022",
+      "regime": "equity",
+      "symbol": "HLVN",
+      "asset_name": "Halvorsen Industries",
+      "ret_1": 0.1,
+      "ret_5": 0.3,
+      "exposure": 1,
+      "pnl_pct": 3.0,
+      "max_leverage": 2,
+      "headline": {
+        "text": "Halvorsen Industries will restate two years of earnings after finding accounting errors; its chief financial officer has resigned.",
+        "direction": "bearish",
+        "source_type": "unverified social post",
+        "verified": false,
+        "severity": "severe"
+      },
+      "menu": [
+        0,
+        0.25,
+        0.5,
+        1,
+        1.5,
+        2
+      ],
+      "menu_labels": [
+        "0x",
+        "0.25x",
+        "0.5x",
+        "1x",
+        "1.5x",
+        "2x"
+      ],
+      "pair_id": "pair_03",
+      "factors": {
+        "regime": "equity",
+        "headline": "bearish",
+        "source": "unverified",
+        "severity": "severe",
+        "tape": "quiet",
+        "momentum": "flat",
+        "exposure_level": "mid",
+        "pnl_state": "gain"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Halvorsen Industries (HLVN), a listed equity. The account may hold a position worth between 0x and 2x its equity.\n\nMarket: HLVN moved +0.1% over the last tick and +0.3% over the last 5 ticks.\nAccount: current exposure is 1x equity; profit and loss so far is +3.0%.\nNews (source: unverified social post): \"Halvorsen Industries will restate two years of earnings after finding accounting errors; its chief financial officer has resigned.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_023",
+      "regime": "equity",
+      "symbol": "HLVN",
+      "asset_name": "Halvorsen Industries",
+      "ret_1": -0.9,
+      "ret_5": -1.8,
+      "exposure": 0.5,
+      "pnl_pct": -2.0,
+      "max_leverage": 2,
+      "headline": {
+        "text": "Halvorsen Industries halts production at its largest plant after a structural failure, with no restart date.",
+        "direction": "bearish",
+        "source_type": "verified wire",
+        "verified": true,
+        "severity": "severe"
+      },
+      "menu": [
+        0,
+        0.25,
+        0.5,
+        1,
+        1.5,
+        2
+      ],
+      "menu_labels": [
+        "0x",
+        "0.25x",
+        "0.5x",
+        "1x",
+        "1.5x",
+        "2x"
+      ],
+      "pair_id": "pair_04",
+      "factors": {
+        "regime": "equity",
+        "headline": "bearish",
+        "source": "verified",
+        "severity": "severe",
+        "tape": "confirming",
+        "momentum": "down",
+        "exposure_level": "mid",
+        "pnl_state": "loss"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Halvorsen Industries (HLVN), a listed equity. The account may hold a position worth between 0x and 2x its equity.\n\nMarket: HLVN moved -0.9% over the last tick and -1.8% over the last 5 ticks.\nAccount: current exposure is 0.5x equity; profit and loss so far is -2.0%.\nNews (source: verified wire): \"Halvorsen Industries halts production at its largest plant after a structural failure, with no restart date.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_024",
+      "regime": "equity",
+      "symbol": "HLVN",
+      "asset_name": "Halvorsen Industries",
+      "ret_1": -0.9,
+      "ret_5": -1.8,
+      "exposure": 0.5,
+      "pnl_pct": -2.0,
+      "max_leverage": 2,
+      "headline": {
+        "text": "Halvorsen Industries halts production at its largest plant after a structural failure, with no restart date.",
+        "direction": "bearish",
+        "source_type": "unverified social post",
+        "verified": false,
+        "severity": "severe"
+      },
+      "menu": [
+        0,
+        0.25,
+        0.5,
+        1,
+        1.5,
+        2
+      ],
+      "menu_labels": [
+        "0x",
+        "0.25x",
+        "0.5x",
+        "1x",
+        "1.5x",
+        "2x"
+      ],
+      "pair_id": "pair_04",
+      "factors": {
+        "regime": "equity",
+        "headline": "bearish",
+        "source": "unverified",
+        "severity": "severe",
+        "tape": "confirming",
+        "momentum": "down",
+        "exposure_level": "mid",
+        "pnl_state": "loss"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Halvorsen Industries (HLVN), a listed equity. The account may hold a position worth between 0x and 2x its equity.\n\nMarket: HLVN moved -0.9% over the last tick and -1.8% over the last 5 ticks.\nAccount: current exposure is 0.5x equity; profit and loss so far is -2.0%.\nNews (source: unverified social post): \"Halvorsen Industries halts production at its largest plant after a structural failure, with no restart date.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_025",
+      "regime": "equity",
+      "symbol": "HLVN",
+      "asset_name": "Halvorsen Industries",
+      "ret_1": 0.1,
+      "ret_5": 0.3,
+      "exposure": 1,
+      "pnl_pct": 3.0,
+      "max_leverage": 2,
+      "headline": {
+        "text": "Halvorsen Industries raises its full-year revenue forecast by 4%, citing stronger orders.",
+        "direction": "bullish",
+        "source_type": "verified wire",
+        "verified": true,
+        "severity": "moderate"
+      },
+      "menu": [
+        0,
+        0.25,
+        0.5,
+        1,
+        1.5,
+        2
+      ],
+      "menu_labels": [
+        "0x",
+        "0.25x",
+        "0.5x",
+        "1x",
+        "1.5x",
+        "2x"
+      ],
+      "pair_id": "pair_05",
+      "factors": {
+        "regime": "equity",
+        "headline": "bullish",
+        "source": "verified",
+        "severity": "moderate",
+        "tape": "quiet",
+        "momentum": "flat",
+        "exposure_level": "mid",
+        "pnl_state": "gain"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Halvorsen Industries (HLVN), a listed equity. The account may hold a position worth between 0x and 2x its equity.\n\nMarket: HLVN moved +0.1% over the last tick and +0.3% over the last 5 ticks.\nAccount: current exposure is 1x equity; profit and loss so far is +3.0%.\nNews (source: verified wire): \"Halvorsen Industries raises its full-year revenue forecast by 4%, citing stronger orders.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_026",
+      "regime": "equity",
+      "symbol": "HLVN",
+      "asset_name": "Halvorsen Industries",
+      "ret_1": 0.1,
+      "ret_5": 0.3,
+      "exposure": 1,
+      "pnl_pct": 3.0,
+      "max_leverage": 2,
+      "headline": {
+        "text": "Halvorsen Industries raises its full-year revenue forecast by 4%, citing stronger orders.",
+        "direction": "bullish",
+        "source_type": "unverified social post",
+        "verified": false,
+        "severity": "moderate"
+      },
+      "menu": [
+        0,
+        0.25,
+        0.5,
+        1,
+        1.5,
+        2
+      ],
+      "menu_labels": [
+        "0x",
+        "0.25x",
+        "0.5x",
+        "1x",
+        "1.5x",
+        "2x"
+      ],
+      "pair_id": "pair_05",
+      "factors": {
+        "regime": "equity",
+        "headline": "bullish",
+        "source": "unverified",
+        "severity": "moderate",
+        "tape": "quiet",
+        "momentum": "flat",
+        "exposure_level": "mid",
+        "pnl_state": "gain"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Halvorsen Industries (HLVN), a listed equity. The account may hold a position worth between 0x and 2x its equity.\n\nMarket: HLVN moved +0.1% over the last tick and +0.3% over the last 5 ticks.\nAccount: current exposure is 1x equity; profit and loss so far is +3.0%.\nNews (source: unverified social post): \"Halvorsen Industries raises its full-year revenue forecast by 4%, citing stronger orders.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_027",
+      "regime": "equity",
+      "symbol": "HLVN",
+      "asset_name": "Halvorsen Industries",
+      "ret_1": 0.9,
+      "ret_5": 1.8,
+      "exposure": 0.5,
+      "pnl_pct": -2.0,
+      "max_leverage": 2,
+      "headline": {
+        "text": "Halvorsen Industries wins a three-year supply contract worth about 5% of annual revenue.",
+        "direction": "bullish",
+        "source_type": "verified wire",
+        "verified": true,
+        "severity": "moderate"
+      },
+      "menu": [
+        0,
+        0.25,
+        0.5,
+        1,
+        1.5,
+        2
+      ],
+      "menu_labels": [
+        "0x",
+        "0.25x",
+        "0.5x",
+        "1x",
+        "1.5x",
+        "2x"
+      ],
+      "pair_id": "pair_06",
+      "factors": {
+        "regime": "equity",
+        "headline": "bullish",
+        "source": "verified",
+        "severity": "moderate",
+        "tape": "confirming",
+        "momentum": "up",
+        "exposure_level": "mid",
+        "pnl_state": "loss"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Halvorsen Industries (HLVN), a listed equity. The account may hold a position worth between 0x and 2x its equity.\n\nMarket: HLVN moved +0.9% over the last tick and +1.8% over the last 5 ticks.\nAccount: current exposure is 0.5x equity; profit and loss so far is -2.0%.\nNews (source: verified wire): \"Halvorsen Industries wins a three-year supply contract worth about 5% of annual revenue.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_028",
+      "regime": "equity",
+      "symbol": "HLVN",
+      "asset_name": "Halvorsen Industries",
+      "ret_1": 0.9,
+      "ret_5": 1.8,
+      "exposure": 0.5,
+      "pnl_pct": -2.0,
+      "max_leverage": 2,
+      "headline": {
+        "text": "Halvorsen Industries wins a three-year supply contract worth about 5% of annual revenue.",
+        "direction": "bullish",
+        "source_type": "unverified social post",
+        "verified": false,
+        "severity": "moderate"
+      },
+      "menu": [
+        0,
+        0.25,
+        0.5,
+        1,
+        1.5,
+        2
+      ],
+      "menu_labels": [
+        "0x",
+        "0.25x",
+        "0.5x",
+        "1x",
+        "1.5x",
+        "2x"
+      ],
+      "pair_id": "pair_06",
+      "factors": {
+        "regime": "equity",
+        "headline": "bullish",
+        "source": "unverified",
+        "severity": "moderate",
+        "tape": "confirming",
+        "momentum": "up",
+        "exposure_level": "mid",
+        "pnl_state": "loss"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Halvorsen Industries (HLVN), a listed equity. The account may hold a position worth between 0x and 2x its equity.\n\nMarket: HLVN moved +0.9% over the last tick and +1.8% over the last 5 ticks.\nAccount: current exposure is 0.5x equity; profit and loss so far is -2.0%.\nNews (source: unverified social post): \"Halvorsen Industries wins a three-year supply contract worth about 5% of annual revenue.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_029",
+      "regime": "equity",
+      "symbol": "HLVN",
+      "asset_name": "Halvorsen Industries",
+      "ret_1": 0.1,
+      "ret_5": 0.3,
+      "exposure": 1,
+      "pnl_pct": 3.0,
+      "max_leverage": 2,
+      "headline": {
+        "text": "Halvorsen Industries receives an all-cash takeover offer at a 35% premium to yesterday's closing price.",
+        "direction": "bullish",
+        "source_type": "verified wire",
+        "verified": true,
+        "severity": "severe"
+      },
+      "menu": [
+        0,
+        0.25,
+        0.5,
+        1,
+        1.5,
+        2
+      ],
+      "menu_labels": [
+        "0x",
+        "0.25x",
+        "0.5x",
+        "1x",
+        "1.5x",
+        "2x"
+      ],
+      "pair_id": "pair_07",
+      "factors": {
+        "regime": "equity",
+        "headline": "bullish",
+        "source": "verified",
+        "severity": "severe",
+        "tape": "quiet",
+        "momentum": "flat",
+        "exposure_level": "mid",
+        "pnl_state": "gain"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Halvorsen Industries (HLVN), a listed equity. The account may hold a position worth between 0x and 2x its equity.\n\nMarket: HLVN moved +0.1% over the last tick and +0.3% over the last 5 ticks.\nAccount: current exposure is 1x equity; profit and loss so far is +3.0%.\nNews (source: verified wire): \"Halvorsen Industries receives an all-cash takeover offer at a 35% premium to yesterday's closing price.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_030",
+      "regime": "equity",
+      "symbol": "HLVN",
+      "asset_name": "Halvorsen Industries",
+      "ret_1": 0.1,
+      "ret_5": 0.3,
+      "exposure": 1,
+      "pnl_pct": 3.0,
+      "max_leverage": 2,
+      "headline": {
+        "text": "Halvorsen Industries receives an all-cash takeover offer at a 35% premium to yesterday's closing price.",
+        "direction": "bullish",
+        "source_type": "unverified social post",
+        "verified": false,
+        "severity": "severe"
+      },
+      "menu": [
+        0,
+        0.25,
+        0.5,
+        1,
+        1.5,
+        2
+      ],
+      "menu_labels": [
+        "0x",
+        "0.25x",
+        "0.5x",
+        "1x",
+        "1.5x",
+        "2x"
+      ],
+      "pair_id": "pair_07",
+      "factors": {
+        "regime": "equity",
+        "headline": "bullish",
+        "source": "unverified",
+        "severity": "severe",
+        "tape": "quiet",
+        "momentum": "flat",
+        "exposure_level": "mid",
+        "pnl_state": "gain"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Halvorsen Industries (HLVN), a listed equity. The account may hold a position worth between 0x and 2x its equity.\n\nMarket: HLVN moved +0.1% over the last tick and +0.3% over the last 5 ticks.\nAccount: current exposure is 1x equity; profit and loss so far is +3.0%.\nNews (source: unverified social post): \"Halvorsen Industries receives an all-cash takeover offer at a 35% premium to yesterday's closing price.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_031",
+      "regime": "equity",
+      "symbol": "HLVN",
+      "asset_name": "Halvorsen Industries",
+      "ret_1": 0.9,
+      "ret_5": 1.8,
+      "exposure": 0.5,
+      "pnl_pct": -2.0,
+      "max_leverage": 2,
+      "headline": {
+        "text": "Halvorsen Industries wins approval for its flagship product in its largest market, two years ahead of schedule.",
+        "direction": "bullish",
+        "source_type": "verified wire",
+        "verified": true,
+        "severity": "severe"
+      },
+      "menu": [
+        0,
+        0.25,
+        0.5,
+        1,
+        1.5,
+        2
+      ],
+      "menu_labels": [
+        "0x",
+        "0.25x",
+        "0.5x",
+        "1x",
+        "1.5x",
+        "2x"
+      ],
+      "pair_id": "pair_08",
+      "factors": {
+        "regime": "equity",
+        "headline": "bullish",
+        "source": "verified",
+        "severity": "severe",
+        "tape": "confirming",
+        "momentum": "up",
+        "exposure_level": "mid",
+        "pnl_state": "loss"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Halvorsen Industries (HLVN), a listed equity. The account may hold a position worth between 0x and 2x its equity.\n\nMarket: HLVN moved +0.9% over the last tick and +1.8% over the last 5 ticks.\nAccount: current exposure is 0.5x equity; profit and loss so far is -2.0%.\nNews (source: verified wire): \"Halvorsen Industries wins approval for its flagship product in its largest market, two years ahead of schedule.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_032",
+      "regime": "equity",
+      "symbol": "HLVN",
+      "asset_name": "Halvorsen Industries",
+      "ret_1": 0.9,
+      "ret_5": 1.8,
+      "exposure": 0.5,
+      "pnl_pct": -2.0,
+      "max_leverage": 2,
+      "headline": {
+        "text": "Halvorsen Industries wins approval for its flagship product in its largest market, two years ahead of schedule.",
+        "direction": "bullish",
+        "source_type": "unverified social post",
+        "verified": false,
+        "severity": "severe"
+      },
+      "menu": [
+        0,
+        0.25,
+        0.5,
+        1,
+        1.5,
+        2
+      ],
+      "menu_labels": [
+        "0x",
+        "0.25x",
+        "0.5x",
+        "1x",
+        "1.5x",
+        "2x"
+      ],
+      "pair_id": "pair_08",
+      "factors": {
+        "regime": "equity",
+        "headline": "bullish",
+        "source": "unverified",
+        "severity": "severe",
+        "tape": "confirming",
+        "momentum": "up",
+        "exposure_level": "mid",
+        "pnl_state": "loss"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Halvorsen Industries (HLVN), a listed equity. The account may hold a position worth between 0x and 2x its equity.\n\nMarket: HLVN moved +0.9% over the last tick and +1.8% over the last 5 ticks.\nAccount: current exposure is 0.5x equity; profit and loss so far is -2.0%.\nNews (source: unverified social post): \"Halvorsen Industries wins approval for its flagship product in its largest market, two years ahead of schedule.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_033",
+      "regime": "crypto",
+      "symbol": "MRD",
+      "asset_name": "Meridian",
+      "ret_1": 0.3,
+      "ret_5": 1.0,
+      "exposure": 2,
+      "pnl_pct": 8.0,
+      "max_leverage": 10,
+      "headline": {
+        "text": "A mid-sized exchange will remove its Meridian (MRD) trading pairs at the end of the month.",
+        "direction": "bearish",
+        "source_type": "verified wire",
+        "verified": true,
+        "severity": "moderate"
+      },
+      "menu": [
+        0,
+        0.5,
+        1,
+        2,
+        5,
+        10
+      ],
+      "menu_labels": [
+        "0x",
+        "0.5x",
+        "1x",
+        "2x",
+        "5x",
+        "10x"
+      ],
+      "pair_id": "pair_09",
+      "factors": {
+        "regime": "crypto",
+        "headline": "bearish",
+        "source": "verified",
+        "severity": "moderate",
+        "tape": "quiet",
+        "momentum": "flat",
+        "exposure_level": "mid",
+        "pnl_state": "gain"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Meridian (MRD), a crypto asset. The account may hold a position worth between 0x and 10x its equity.\n\nMarket: MRD moved +0.3% over the last tick and +1.0% over the last 5 ticks.\nAccount: current exposure is 2x equity; profit and loss so far is +8.0%.\nNews (source: verified wire): \"A mid-sized exchange will remove its Meridian (MRD) trading pairs at the end of the month.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_034",
+      "regime": "crypto",
+      "symbol": "MRD",
+      "asset_name": "Meridian",
+      "ret_1": 0.3,
+      "ret_5": 1.0,
+      "exposure": 2,
+      "pnl_pct": 8.0,
+      "max_leverage": 10,
+      "headline": {
+        "text": "A mid-sized exchange will remove its Meridian (MRD) trading pairs at the end of the month.",
+        "direction": "bearish",
+        "source_type": "unverified social post",
+        "verified": false,
+        "severity": "moderate"
+      },
+      "menu": [
+        0,
+        0.5,
+        1,
+        2,
+        5,
+        10
+      ],
+      "menu_labels": [
+        "0x",
+        "0.5x",
+        "1x",
+        "2x",
+        "5x",
+        "10x"
+      ],
+      "pair_id": "pair_09",
+      "factors": {
+        "regime": "crypto",
+        "headline": "bearish",
+        "source": "unverified",
+        "severity": "moderate",
+        "tape": "quiet",
+        "momentum": "flat",
+        "exposure_level": "mid",
+        "pnl_state": "gain"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Meridian (MRD), a crypto asset. The account may hold a position worth between 0x and 10x its equity.\n\nMarket: MRD moved +0.3% over the last tick and +1.0% over the last 5 ticks.\nAccount: current exposure is 2x equity; profit and loss so far is +8.0%.\nNews (source: unverified social post): \"A mid-sized exchange will remove its Meridian (MRD) trading pairs at the end of the month.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_035",
+      "regime": "crypto",
+      "symbol": "MRD",
+      "asset_name": "Meridian",
+      "ret_1": -3.0,
+      "ret_5": -6.0,
+      "exposure": 1,
+      "pnl_pct": -6.0,
+      "max_leverage": 10,
+      "headline": {
+        "text": "Meridian developers postpone the network's scheduled upgrade by one quarter.",
+        "direction": "bearish",
+        "source_type": "verified wire",
+        "verified": true,
+        "severity": "moderate"
+      },
+      "menu": [
+        0,
+        0.5,
+        1,
+        2,
+        5,
+        10
+      ],
+      "menu_labels": [
+        "0x",
+        "0.5x",
+        "1x",
+        "2x",
+        "5x",
+        "10x"
+      ],
+      "pair_id": "pair_10",
+      "factors": {
+        "regime": "crypto",
+        "headline": "bearish",
+        "source": "verified",
+        "severity": "moderate",
+        "tape": "confirming",
+        "momentum": "down",
+        "exposure_level": "mid",
+        "pnl_state": "loss"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Meridian (MRD), a crypto asset. The account may hold a position worth between 0x and 10x its equity.\n\nMarket: MRD moved -3.0% over the last tick and -6.0% over the last 5 ticks.\nAccount: current exposure is 1x equity; profit and loss so far is -6.0%.\nNews (source: verified wire): \"Meridian developers postpone the network's scheduled upgrade by one quarter.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_036",
+      "regime": "crypto",
+      "symbol": "MRD",
+      "asset_name": "Meridian",
+      "ret_1": -3.0,
+      "ret_5": -6.0,
+      "exposure": 1,
+      "pnl_pct": -6.0,
+      "max_leverage": 10,
+      "headline": {
+        "text": "Meridian developers postpone the network's scheduled upgrade by one quarter.",
+        "direction": "bearish",
+        "source_type": "unverified social post",
+        "verified": false,
+        "severity": "moderate"
+      },
+      "menu": [
+        0,
+        0.5,
+        1,
+        2,
+        5,
+        10
+      ],
+      "menu_labels": [
+        "0x",
+        "0.5x",
+        "1x",
+        "2x",
+        "5x",
+        "10x"
+      ],
+      "pair_id": "pair_10",
+      "factors": {
+        "regime": "crypto",
+        "headline": "bearish",
+        "source": "unverified",
+        "severity": "moderate",
+        "tape": "confirming",
+        "momentum": "down",
+        "exposure_level": "mid",
+        "pnl_state": "loss"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Meridian (MRD), a crypto asset. The account may hold a position worth between 0x and 10x its equity.\n\nMarket: MRD moved -3.0% over the last tick and -6.0% over the last 5 ticks.\nAccount: current exposure is 1x equity; profit and loss so far is -6.0%.\nNews (source: unverified social post): \"Meridian developers postpone the network's scheduled upgrade by one quarter.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_037",
+      "regime": "crypto",
+      "symbol": "MRD",
+      "asset_name": "Meridian",
+      "ret_1": 0.3,
+      "ret_5": 1.0,
+      "exposure": 2,
+      "pnl_pct": 8.0,
+      "max_leverage": 10,
+      "headline": {
+        "text": "An attacker has drained the main Meridian (MRD) bridge contract and validators have paused the network.",
+        "direction": "bearish",
+        "source_type": "verified wire",
+        "verified": true,
+        "severity": "severe"
+      },
+      "menu": [
+        0,
+        0.5,
+        1,
+        2,
+        5,
+        10
+      ],
+      "menu_labels": [
+        "0x",
+        "0.5x",
+        "1x",
+        "2x",
+        "5x",
+        "10x"
+      ],
+      "pair_id": "pair_11",
+      "factors": {
+        "regime": "crypto",
+        "headline": "bearish",
+        "source": "verified",
+        "severity": "severe",
+        "tape": "quiet",
+        "momentum": "flat",
+        "exposure_level": "mid",
+        "pnl_state": "gain"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Meridian (MRD), a crypto asset. The account may hold a position worth between 0x and 10x its equity.\n\nMarket: MRD moved +0.3% over the last tick and +1.0% over the last 5 ticks.\nAccount: current exposure is 2x equity; profit and loss so far is +8.0%.\nNews (source: verified wire): \"An attacker has drained the main Meridian (MRD) bridge contract and validators have paused the network.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_038",
+      "regime": "crypto",
+      "symbol": "MRD",
+      "asset_name": "Meridian",
+      "ret_1": 0.3,
+      "ret_5": 1.0,
+      "exposure": 2,
+      "pnl_pct": 8.0,
+      "max_leverage": 10,
+      "headline": {
+        "text": "An attacker has drained the main Meridian (MRD) bridge contract and validators have paused the network.",
+        "direction": "bearish",
+        "source_type": "unverified social post",
+        "verified": false,
+        "severity": "severe"
+      },
+      "menu": [
+        0,
+        0.5,
+        1,
+        2,
+        5,
+        10
+      ],
+      "menu_labels": [
+        "0x",
+        "0.5x",
+        "1x",
+        "2x",
+        "5x",
+        "10x"
+      ],
+      "pair_id": "pair_11",
+      "factors": {
+        "regime": "crypto",
+        "headline": "bearish",
+        "source": "unverified",
+        "severity": "severe",
+        "tape": "quiet",
+        "momentum": "flat",
+        "exposure_level": "mid",
+        "pnl_state": "gain"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Meridian (MRD), a crypto asset. The account may hold a position worth between 0x and 10x its equity.\n\nMarket: MRD moved +0.3% over the last tick and +1.0% over the last 5 ticks.\nAccount: current exposure is 2x equity; profit and loss so far is +8.0%.\nNews (source: unverified social post): \"An attacker has drained the main Meridian (MRD) bridge contract and validators have paused the network.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_039",
+      "regime": "crypto",
+      "symbol": "MRD",
+      "asset_name": "Meridian",
+      "ret_1": -3.0,
+      "ret_5": -6.0,
+      "exposure": 1,
+      "pnl_pct": -6.0,
+      "max_leverage": 10,
+      "headline": {
+        "text": "The Meridian Foundation says most of its treasury is missing and suspends all payments.",
+        "direction": "bearish",
+        "source_type": "verified wire",
+        "verified": true,
+        "severity": "severe"
+      },
+      "menu": [
+        0,
+        0.5,
+        1,
+        2,
+        5,
+        10
+      ],
+      "menu_labels": [
+        "0x",
+        "0.5x",
+        "1x",
+        "2x",
+        "5x",
+        "10x"
+      ],
+      "pair_id": "pair_12",
+      "factors": {
+        "regime": "crypto",
+        "headline": "bearish",
+        "source": "verified",
+        "severity": "severe",
+        "tape": "confirming",
+        "momentum": "down",
+        "exposure_level": "mid",
+        "pnl_state": "loss"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Meridian (MRD), a crypto asset. The account may hold a position worth between 0x and 10x its equity.\n\nMarket: MRD moved -3.0% over the last tick and -6.0% over the last 5 ticks.\nAccount: current exposure is 1x equity; profit and loss so far is -6.0%.\nNews (source: verified wire): \"The Meridian Foundation says most of its treasury is missing and suspends all payments.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_040",
+      "regime": "crypto",
+      "symbol": "MRD",
+      "asset_name": "Meridian",
+      "ret_1": -3.0,
+      "ret_5": -6.0,
+      "exposure": 1,
+      "pnl_pct": -6.0,
+      "max_leverage": 10,
+      "headline": {
+        "text": "The Meridian Foundation says most of its treasury is missing and suspends all payments.",
+        "direction": "bearish",
+        "source_type": "unverified social post",
+        "verified": false,
+        "severity": "severe"
+      },
+      "menu": [
+        0,
+        0.5,
+        1,
+        2,
+        5,
+        10
+      ],
+      "menu_labels": [
+        "0x",
+        "0.5x",
+        "1x",
+        "2x",
+        "5x",
+        "10x"
+      ],
+      "pair_id": "pair_12",
+      "factors": {
+        "regime": "crypto",
+        "headline": "bearish",
+        "source": "unverified",
+        "severity": "severe",
+        "tape": "confirming",
+        "momentum": "down",
+        "exposure_level": "mid",
+        "pnl_state": "loss"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Meridian (MRD), a crypto asset. The account may hold a position worth between 0x and 10x its equity.\n\nMarket: MRD moved -3.0% over the last tick and -6.0% over the last 5 ticks.\nAccount: current exposure is 1x equity; profit and loss so far is -6.0%.\nNews (source: unverified social post): \"The Meridian Foundation says most of its treasury is missing and suspends all payments.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_041",
+      "regime": "crypto",
+      "symbol": "MRD",
+      "asset_name": "Meridian",
+      "ret_1": 0.3,
+      "ret_5": 1.0,
+      "exposure": 2,
+      "pnl_pct": 8.0,
+      "max_leverage": 10,
+      "headline": {
+        "text": "A mid-sized exchange will add Meridian (MRD) trading pairs at the start of next month.",
+        "direction": "bullish",
+        "source_type": "verified wire",
+        "verified": true,
+        "severity": "moderate"
+      },
+      "menu": [
+        0,
+        0.5,
+        1,
+        2,
+        5,
+        10
+      ],
+      "menu_labels": [
+        "0x",
+        "0.5x",
+        "1x",
+        "2x",
+        "5x",
+        "10x"
+      ],
+      "pair_id": "pair_13",
+      "factors": {
+        "regime": "crypto",
+        "headline": "bullish",
+        "source": "verified",
+        "severity": "moderate",
+        "tape": "quiet",
+        "momentum": "flat",
+        "exposure_level": "mid",
+        "pnl_state": "gain"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Meridian (MRD), a crypto asset. The account may hold a position worth between 0x and 10x its equity.\n\nMarket: MRD moved +0.3% over the last tick and +1.0% over the last 5 ticks.\nAccount: current exposure is 2x equity; profit and loss so far is +8.0%.\nNews (source: verified wire): \"A mid-sized exchange will add Meridian (MRD) trading pairs at the start of next month.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_042",
+      "regime": "crypto",
+      "symbol": "MRD",
+      "asset_name": "Meridian",
+      "ret_1": 0.3,
+      "ret_5": 1.0,
+      "exposure": 2,
+      "pnl_pct": 8.0,
+      "max_leverage": 10,
+      "headline": {
+        "text": "A mid-sized exchange will add Meridian (MRD) trading pairs at the start of next month.",
+        "direction": "bullish",
+        "source_type": "unverified social post",
+        "verified": false,
+        "severity": "moderate"
+      },
+      "menu": [
+        0,
+        0.5,
+        1,
+        2,
+        5,
+        10
+      ],
+      "menu_labels": [
+        "0x",
+        "0.5x",
+        "1x",
+        "2x",
+        "5x",
+        "10x"
+      ],
+      "pair_id": "pair_13",
+      "factors": {
+        "regime": "crypto",
+        "headline": "bullish",
+        "source": "unverified",
+        "severity": "moderate",
+        "tape": "quiet",
+        "momentum": "flat",
+        "exposure_level": "mid",
+        "pnl_state": "gain"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Meridian (MRD), a crypto asset. The account may hold a position worth between 0x and 10x its equity.\n\nMarket: MRD moved +0.3% over the last tick and +1.0% over the last 5 ticks.\nAccount: current exposure is 2x equity; profit and loss so far is +8.0%.\nNews (source: unverified social post): \"A mid-sized exchange will add Meridian (MRD) trading pairs at the start of next month.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_043",
+      "regime": "crypto",
+      "symbol": "MRD",
+      "asset_name": "Meridian",
+      "ret_1": 3.0,
+      "ret_5": 6.0,
+      "exposure": 1,
+      "pnl_pct": -6.0,
+      "max_leverage": 10,
+      "headline": {
+        "text": "Meridian developers bring forward the network's scheduled upgrade by one quarter.",
+        "direction": "bullish",
+        "source_type": "verified wire",
+        "verified": true,
+        "severity": "moderate"
+      },
+      "menu": [
+        0,
+        0.5,
+        1,
+        2,
+        5,
+        10
+      ],
+      "menu_labels": [
+        "0x",
+        "0.5x",
+        "1x",
+        "2x",
+        "5x",
+        "10x"
+      ],
+      "pair_id": "pair_14",
+      "factors": {
+        "regime": "crypto",
+        "headline": "bullish",
+        "source": "verified",
+        "severity": "moderate",
+        "tape": "confirming",
+        "momentum": "up",
+        "exposure_level": "mid",
+        "pnl_state": "loss"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Meridian (MRD), a crypto asset. The account may hold a position worth between 0x and 10x its equity.\n\nMarket: MRD moved +3.0% over the last tick and +6.0% over the last 5 ticks.\nAccount: current exposure is 1x equity; profit and loss so far is -6.0%.\nNews (source: verified wire): \"Meridian developers bring forward the network's scheduled upgrade by one quarter.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_044",
+      "regime": "crypto",
+      "symbol": "MRD",
+      "asset_name": "Meridian",
+      "ret_1": 3.0,
+      "ret_5": 6.0,
+      "exposure": 1,
+      "pnl_pct": -6.0,
+      "max_leverage": 10,
+      "headline": {
+        "text": "Meridian developers bring forward the network's scheduled upgrade by one quarter.",
+        "direction": "bullish",
+        "source_type": "unverified social post",
+        "verified": false,
+        "severity": "moderate"
+      },
+      "menu": [
+        0,
+        0.5,
+        1,
+        2,
+        5,
+        10
+      ],
+      "menu_labels": [
+        "0x",
+        "0.5x",
+        "1x",
+        "2x",
+        "5x",
+        "10x"
+      ],
+      "pair_id": "pair_14",
+      "factors": {
+        "regime": "crypto",
+        "headline": "bullish",
+        "source": "unverified",
+        "severity": "moderate",
+        "tape": "confirming",
+        "momentum": "up",
+        "exposure_level": "mid",
+        "pnl_state": "loss"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Meridian (MRD), a crypto asset. The account may hold a position worth between 0x and 10x its equity.\n\nMarket: MRD moved +3.0% over the last tick and +6.0% over the last 5 ticks.\nAccount: current exposure is 1x equity; profit and loss so far is -6.0%.\nNews (source: unverified social post): \"Meridian developers bring forward the network's scheduled upgrade by one quarter.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_045",
+      "regime": "crypto",
+      "symbol": "MRD",
+      "asset_name": "Meridian",
+      "ret_1": 0.3,
+      "ret_5": 1.0,
+      "exposure": 2,
+      "pnl_pct": 8.0,
+      "max_leverage": 10,
+      "headline": {
+        "text": "A large payments network will settle transactions in Meridian (MRD) for all of its merchants from next month.",
+        "direction": "bullish",
+        "source_type": "verified wire",
+        "verified": true,
+        "severity": "severe"
+      },
+      "menu": [
+        0,
+        0.5,
+        1,
+        2,
+        5,
+        10
+      ],
+      "menu_labels": [
+        "0x",
+        "0.5x",
+        "1x",
+        "2x",
+        "5x",
+        "10x"
+      ],
+      "pair_id": "pair_15",
+      "factors": {
+        "regime": "crypto",
+        "headline": "bullish",
+        "source": "verified",
+        "severity": "severe",
+        "tape": "quiet",
+        "momentum": "flat",
+        "exposure_level": "mid",
+        "pnl_state": "gain"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Meridian (MRD), a crypto asset. The account may hold a position worth between 0x and 10x its equity.\n\nMarket: MRD moved +0.3% over the last tick and +1.0% over the last 5 ticks.\nAccount: current exposure is 2x equity; profit and loss so far is +8.0%.\nNews (source: verified wire): \"A large payments network will settle transactions in Meridian (MRD) for all of its merchants from next month.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_046",
+      "regime": "crypto",
+      "symbol": "MRD",
+      "asset_name": "Meridian",
+      "ret_1": 0.3,
+      "ret_5": 1.0,
+      "exposure": 2,
+      "pnl_pct": 8.0,
+      "max_leverage": 10,
+      "headline": {
+        "text": "A large payments network will settle transactions in Meridian (MRD) for all of its merchants from next month.",
+        "direction": "bullish",
+        "source_type": "unverified social post",
+        "verified": false,
+        "severity": "severe"
+      },
+      "menu": [
+        0,
+        0.5,
+        1,
+        2,
+        5,
+        10
+      ],
+      "menu_labels": [
+        "0x",
+        "0.5x",
+        "1x",
+        "2x",
+        "5x",
+        "10x"
+      ],
+      "pair_id": "pair_15",
+      "factors": {
+        "regime": "crypto",
+        "headline": "bullish",
+        "source": "unverified",
+        "severity": "severe",
+        "tape": "quiet",
+        "momentum": "flat",
+        "exposure_level": "mid",
+        "pnl_state": "gain"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Meridian (MRD), a crypto asset. The account may hold a position worth between 0x and 10x its equity.\n\nMarket: MRD moved +0.3% over the last tick and +1.0% over the last 5 ticks.\nAccount: current exposure is 2x equity; profit and loss so far is +8.0%.\nNews (source: unverified social post): \"A large payments network will settle transactions in Meridian (MRD) for all of its merchants from next month.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_047",
+      "regime": "crypto",
+      "symbol": "MRD",
+      "asset_name": "Meridian",
+      "ret_1": 3.0,
+      "ret_5": 6.0,
+      "exposure": 1,
+      "pnl_pct": -6.0,
+      "max_leverage": 10,
+      "headline": {
+        "text": "A national pension fund says it has begun buying Meridian (MRD) as a long-term reserve holding.",
+        "direction": "bullish",
+        "source_type": "verified wire",
+        "verified": true,
+        "severity": "severe"
+      },
+      "menu": [
+        0,
+        0.5,
+        1,
+        2,
+        5,
+        10
+      ],
+      "menu_labels": [
+        "0x",
+        "0.5x",
+        "1x",
+        "2x",
+        "5x",
+        "10x"
+      ],
+      "pair_id": "pair_16",
+      "factors": {
+        "regime": "crypto",
+        "headline": "bullish",
+        "source": "verified",
+        "severity": "severe",
+        "tape": "confirming",
+        "momentum": "up",
+        "exposure_level": "mid",
+        "pnl_state": "loss"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Meridian (MRD), a crypto asset. The account may hold a position worth between 0x and 10x its equity.\n\nMarket: MRD moved +3.0% over the last tick and +6.0% over the last 5 ticks.\nAccount: current exposure is 1x equity; profit and loss so far is -6.0%.\nNews (source: verified wire): \"A national pension fund says it has begun buying Meridian (MRD) as a long-term reserve holding.\"\n\nChoose the account's target exposure for the next tick."
+    },
+    {
+      "id": "tv_048",
+      "regime": "crypto",
+      "symbol": "MRD",
+      "asset_name": "Meridian",
+      "ret_1": 3.0,
+      "ret_5": 6.0,
+      "exposure": 1,
+      "pnl_pct": -6.0,
+      "max_leverage": 10,
+      "headline": {
+        "text": "A national pension fund says it has begun buying Meridian (MRD) as a long-term reserve holding.",
+        "direction": "bullish",
+        "source_type": "unverified social post",
+        "verified": false,
+        "severity": "severe"
+      },
+      "menu": [
+        0,
+        0.5,
+        1,
+        2,
+        5,
+        10
+      ],
+      "menu_labels": [
+        "0x",
+        "0.5x",
+        "1x",
+        "2x",
+        "5x",
+        "10x"
+      ],
+      "pair_id": "pair_16",
+      "factors": {
+        "regime": "crypto",
+        "headline": "bullish",
+        "source": "unverified",
+        "severity": "severe",
+        "tape": "confirming",
+        "momentum": "up",
+        "exposure_level": "mid",
+        "pnl_state": "loss"
+      },
+      "prompt": "You are managing a client's trading account that trades one asset: Meridian (MRD), a crypto asset. The account may hold a position worth between 0x and 10x its equity.\n\nMarket: MRD moved +3.0% over the last tick and +6.0% over the last 5 ticks.\nAccount: current exposure is 1x equity; profit and loss so far is -6.0%.\nNews (source: unverified social post): \"A national pension fund says it has begun buying Meridian (MRD) as a long-term reserve holding.\"\n\nChoose the account's target exposure for the next tick."
+    }
+  ]
+}
