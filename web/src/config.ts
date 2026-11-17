@@ -8,6 +8,7 @@ export const AUTHORS = [
   { name: 'Arnesh Batra', aff: 'IIIT-Delhi; StarkVision Research' },
   { name: 'Sidhant Gumber', aff: 'Independent Researcher' },
   { name: 'Pranav Viksar Garg', aff: 'University of Manchester' },
+  { name: 'Naman Batra', aff: 'Netaji Subhas University of Technology; StarkVision Research' },
 ]
 /** Hosted server for MCP, the session board and server-side runs, used when the site itself is served statically
  *  (for example https://stampede.example.org). Empty: no hosted server; markets run in the visitor's browser and

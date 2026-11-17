@@ -81,4 +81,9 @@ withheld for the ethics dilemmas. See the paper's ethics section.
 ## Authors
 
 Arush Gumber (IIIT-Delhi; StarkVision Research), Arnesh Batra (IIIT-Delhi; StarkVision Research),
-Sidhant Gumber (StarkVision Research).
+Sidhant Gumber (Independent Researcher), Pranav Viksar Garg (University of Manchester),
+Naman Batra (Netaji Subhas University of Technology; StarkVision Research).
+
+## License
+
+MIT (see `LICENSE`).
