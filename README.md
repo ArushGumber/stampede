@@ -12,6 +12,7 @@ Demo paper: WWW 2027 Demo Track. Everything is simulated: fictional assets, fict
 
 - Project page: https://stampede-agents.vercel.app
 - Live demo: https://arushthegarlic-stampede.static.hf.space (markets run in your browser; no server needed)
+- Video: https://youtu.be/0TXZchiaieM
 
 ## What is in the box
 

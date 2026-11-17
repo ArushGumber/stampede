@@ -20,7 +20,7 @@ export const HOSTED_MCP: string = 'https://stampede-mcp.vercel.app/mcp/'
 export const CODE_REPO: string = 'https://github.com/ArushGumber/stampede'
 export const repoReady = () => !CODE_REPO.includes('<owner>')
 /** Video walkthrough URL (for example an unlisted YouTube link). Empty: "link to come". */
-export const VIDEO_URL: string = ''
+export const VIDEO_URL: string = 'https://youtu.be/0TXZchiaieM'
 
 // null renders as "link to come".
 export const PROJECT_PAGE = 'https://stampede-agents.vercel.app'
