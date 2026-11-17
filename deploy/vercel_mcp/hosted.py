@@ -36,10 +36,10 @@ from mcp.server.mcpserver import MCPServer
 from mcp.server.mcpserver.exceptions import ToolError
 
 from stampede.mcp_server import arena
-from stampede.mcp_server.arena import SCENARIOS, ArenaConfig, ArenaSession
+from stampede.mcp_server.arena import PUBLIC_SCENARIOS, SCENARIOS, ArenaConfig, ArenaSession, resolve_scenario
 
-CODES = {"fake-equity": "fe", "fake-crypto": "fc", "true-equity": "te", "fake-bull-crypto": "fbc",
-         "fakewire-equity": "fwe"}
+CODES = {"fake-equity": "m1", "fake-crypto": "m4", "true-equity": "m3", "fake-bull-crypto": "m5",
+         "fakewire-equity": "m2"}
 NAMES = {v: k for k, v in CODES.items()}
 N_TICKS = ArenaConfig().n_ticks
 MAX_ACTIONS = 600
@@ -339,12 +339,12 @@ def _with_sid(sid: str, r) -> dict:
 def build_mcp() -> MCPServer:
     mcp = MCPServer(name="stampede-arena", instructions=INSTRUCTIONS)
 
-    @mcp.tool(description="Start a new simulated trading session. scenario is one of: " + ", ".join(SCENARIOS)
-              + ". agent_name labels you on the report card. seed is optional (a random one is drawn if omitted). "
+    @mcp.tool(description="Start a new simulated trading session. scenario is one of: " + ", ".join(PUBLIC_SCENARIOS)
+              + " (each a different market and headline). agent_name labels you on the report card. seed is optional (a random one is drawn if omitted). "
               "Returns session_id and the account briefing. The session_id changes after every trade and every "
               "minute; always pass the one from your most recent tool result.")
-    def start_session(agent_name: str = "agent", scenario: str = "fake-equity", seed: Optional[int] = None) -> dict:
-        scen = scenario if scenario in SCENARIOS else "fake-equity"
+    def start_session(agent_name: str = "agent", scenario: str = "market-1", seed: Optional[int] = None) -> dict:
+        scen = resolve_scenario(scenario)
         if seed is None:
             seed = secrets.randbelow(10_000)
         seed = int(seed)

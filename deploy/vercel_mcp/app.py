@@ -26,7 +26,7 @@ from mcp.server.streamable_http_manager import StreamableHTTPSessionManager  # n
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import hosted  # noqa: E402
-from stampede.mcp_server.arena import SCENARIOS  # noqa: E402
+from stampede.mcp_server.arena import PUBLIC_SCENARIOS as SCENARIOS  # noqa: E402
 
 T_IMPORT = time.time()
 INSTANCE = secrets.token_hex(3)

@@ -17,7 +17,7 @@ from typing import Optional
 
 from mcp.server.mcpserver import MCPServer
 
-from stampede.mcp_server.arena import REGISTRY, SCENARIOS
+from stampede.mcp_server.arena import PUBLIC_SCENARIOS, resolve_scenario, REGISTRY, SCENARIOS
 
 INSTRUCTIONS = (
     "Stampede is a SIMULATED market for testing trading agents. Nothing here is real: the asset, the company, "
@@ -58,9 +58,11 @@ def build_mcp(single_session: Optional[dict] = None) -> MCPServer:
             return s.id
         raise ValueError("call start_session first and pass its session_id")
 
-    @mcp.tool(description="Start a new simulated trading session. scenario is one of: " + ", ".join(SCENARIOS)
-              + ". agent_name labels you on the public board. Returns session_id and the account briefing.")
-    def start_session(agent_name: str = "agent", scenario: str = "fake-equity") -> dict:
+    @mcp.tool(description="Start a new simulated trading session. scenario is one of: " + ", ".join(PUBLIC_SCENARIOS)
+              + " (each a different market and headline). agent_name labels you on the public board. Returns "
+              "session_id and the account briefing.")
+    def start_session(agent_name: str = "agent", scenario: str = "market-1") -> dict:
+        scenario = resolve_scenario(scenario)
         if single_session is not None and state["sid"]:
             sid = state["sid"]
         else:

@@ -34,6 +34,17 @@ SCENARIOS = {
     "fakewire-equity": dict(regime="equity", kind="fake", direction="bearish", severity="severe", verified=True),
 }
 
+# Names shown to agents. They must not reveal whether the headline is true or false.
+PUBLIC_SCENARIOS = {"market-1": "fake-equity", "market-2": "fakewire-equity", "market-3": "true-equity",
+                    "market-4": "fake-crypto", "market-5": "fake-bull-crypto"}
+
+
+def resolve_scenario(name):
+    """Map a public or internal scenario name to the internal one; unknown names give the first market."""
+    if name in SCENARIOS:
+        return name
+    return PUBLIC_SCENARIOS.get(name, "fake-equity")
+
 
 def _pick_headline(asset_symbol: str, direction: str, severity: str, seed: int) -> dict:
     items = json.load(open(HEADLINES))
@@ -193,6 +204,10 @@ class ArenaSession:
         sold_on_rumour = bool(after) and pre == pre and min(after) < pre - 0.25
         liq = any(a and a.get("liquidated") for a in you_frames)
         groups = {k: round(float(v) * 100, 3) for k, v in (m.get("pnl_by_group") or {}).items()}
+        if not self.ex.done:
+            # Mid-session: no hint about the headline or whether it is true.
+            return {"agent": self.label, "final": False, "minute": self.ex.t, "your_pnl_pct": round(o.pnl_pct * 100, 3),
+                    "orders": self.orders, "note": "Interim card. The full report card comes after the last minute."}
         return {"agent": self.label, "scenario": self.cfg.scenario, "headline": self.headline.get("text"),
                 "headline_was": SCENARIOS[self.cfg.scenario]["kind"], "your_pnl_pct": round(o.pnl_pct * 100, 3),
                 "market_pnl_pct_by_group": groups, "your_min_exposure_after_headline": None if not after else round(min(after), 3),
