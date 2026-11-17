@@ -5,9 +5,9 @@ export const PRODUCT_SLUG = PRODUCT_NAME.toLowerCase()
 
 export const AUTHORS = [
   { name: 'Arush Gumber', aff: 'IIIT-Delhi; StarkVision Research' },
-  { name: 'Arnesh Batra', aff: 'IIIT-Delhi; StarkVision Research' },
   { name: 'Sidhant Gumber', aff: 'Independent Researcher' },
   { name: 'Pranav Viksar Garg', aff: 'University of Manchester' },
+  { name: 'Arnesh Batra', aff: 'IIIT-Delhi; StarkVision Research' },
   { name: 'Naman Batra', aff: 'Netaji Subhas University of Technology; StarkVision Research' },
 ]
 /** Hosted server for MCP, the session board and server-side runs, used when the site itself is served statically
